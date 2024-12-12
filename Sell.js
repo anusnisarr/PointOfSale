@@ -21,22 +21,6 @@ leftSideOption.addEventListener("click", (event) => {
     }  
 });
 
-
-// Animate an element with a smooth ease-in effect
-// gsap.to(".items", {
-//     opacity: 1, // Fade in to full opacity
-//     y: 0, // Move to the original position
-//     duration: 0.7, // Duration of animation
-//     stagger: 0.2 // Stagger the start of the animation for each item
-// });
-
-// gsap.to(".category", {
-//     opacity: 1, // Fade in to full opacity
-//     y: 0, // Move to the original position
-//     duration: 0.6, // Duration of animation
-//     stagger: 0.06 // Stagger the start of the animation for each item
-// });
-
 const categories = [
     { id: "cat01", name: "Pizza" },
     { id: "cat02", name: "Burger" },
@@ -74,8 +58,6 @@ categoryContainer.forEach((cat) => {
     cat.addEventListener("click", () => {
         clickedCategory = cat.attributes.value.nodeValue
         showTheseItems(clickedCategory);
-        console.log(cat);
-
     });
 
 });
@@ -85,7 +67,7 @@ const showTheseItems = (categoryCode) => {
     items.forEach((item) => {
         if (item.categoryId === categoryCode) {
             itemContainer.innerHTML +=
-                `   <div class="items">
+                `   <div class="items" id="${item.id}">
                         <h2 class="items-name">${item.name}</h2>
                         <h3 class="items-price">${item.price} Pkr</h3>
                         <div class="items-select-color"></div>
@@ -102,19 +84,6 @@ const showTheseItems = (categoryCode) => {
     })
 };
 
-// itemContainer.addEventListener("click", (event) => {
-//     const clickedElement = event.target;    
-//     const item = clickedElement.closest(".items");    
-//     // Add the 'clicked' class to trigger the CSS effect
-//     item.classList.add("clicked");
-//     item.style.color = "black";
-
-//     const  itemQty = document.querySelector("#qtycontainer").querySelectorAll(".items-qty").forEach((qty)=>qty.innerText ++);
-//     console.log(itemQty);
-
-// });
-
-
 itemContainer.addEventListener("click", (event) => {
     const clickedElement = event.target;
     const item = clickedElement.closest(".items");
@@ -123,25 +92,46 @@ itemContainer.addEventListener("click", (event) => {
         item.style.color = "black";
 }
 addItemInCart(item)
+
 });
 
 const cart = document.querySelector(".cart-items-container");
 
 addItemInCart = (item) => {
+const itemId = item.id;
 const itemName =item.querySelector(".items-name");
 const itemPrice =item.querySelector(".items-price");
 
+const existingItem = cart.querySelector(`.cart-items`);
+console.log("existingItem" , existingItem);
+console.log("itemid" ,itemId);
 if(item){
     cart.innerHTML += 
     `
-                    <div class="cart-items">
+                    <div class="cart-items" id="${item.id}">
                         <div class="cart-items-left">
                             <h4 class="cart-items-qty">1</h4>
                             <h3 class="cart-items-name">${itemName.innerText}</h3>
                         </div>
                         <h4 class="cart-items-price">${itemPrice.innerText}</h4>
                     </div>
+
     `
 }
     
 }
+
+// Animate an element with a smooth ease-in effect
+// gsap.to(".items", {
+//     opacity: 1, // Fade in to full opacity
+//     y: 0, // Move to the original position
+//     duration: 0.7, // Duration of animation
+//     stagger: 0.2 // Stagger the start of the animation for each item
+// });
+
+// gsap.to(".category", {
+//     opacity: 1, // Fade in to full opacity
+//     y: 0, // Move to the original position
+//     duration: 0.6, // Duration of animation
+//     stagger: 0.06 // Stagger the start of the animation for each item
+// });
