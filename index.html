@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>POS</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=credit_card" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=local_atm" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="leftSidePanel">
+            <h2 id="posNameHeading">ANePOS</h2>
+            <h3 class="leftSideOption">Dashboard</h3>
+            <h3 class="leftSideOption">Reservation</h3>
+            <h3 class="leftSideOption">Items</h3>
+            <h3 class="leftSideOption" id="sell-btn">Sell</h3>
+            <h3 class="leftSideOption">Pending Orders</h3>
+            <h3 class="leftSideOption">Reports</h3>
+        </div>
+        <div class="container" id="selectedContainers">
+            <div class="cat-items-container">
+                <div class="categorycontainer">
+                    <div class="category" id="pizza" value="cat01">
+                        <h2 class="category-name">Pizza</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="burger" value="cat02">
+                        <h2 class="category-name">Burger</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="pasta" value="cat03">
+                        <h2 class="category-name">Pasta</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="sandwitch" value="cat04">
+                        <h2 class="category-name">Sandwitch</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="appetizer" value="cat05">
+                        <h2 class="category-name">Appetizer</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="drinks" value="cat06">
+                        <h2 class="category-name">Drinks</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="deals" value="cat07">
+                        <h2 class="category-name">Deals</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                    <div class="category" id="extras" value="cat08">
+                        <h2 class="category-name">Extras</h2>
+                        <h3 class="items-count">2 Items</h3>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+                <div id="search-item">
+                    <i class="ri-search-line"></i>
+                    <input type="search" name="Search" id="searchbox" placeholder="Search">
+                </div>
+
+                <br>
+
+                <div class="itemcontainer">
+                    <!-- <div class="items" id="color-7">
+                        <h2 class="items-name">Margherita</h2>
+                        <h3 class="items-price">350 Pkr</h3>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">Pepperoni</h2>
+                        <h3 class="items-price">450 Pkr</h3>
+                        <div class="items-select-color"></div>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">BBQ Chicken</h2>
+                        <h3 class="items-price">550 Pkr</h3>
+                        <div class="items-select-color"></div>
+                        <div class="qtycontainer">
+                            <div id="plusbutton">
+                                <h4><i class="ri-add-line"></i></h4>
+                            </div>
+                            <h4 id="items-qty">1</h4>
+                            <div id="minusbutton">
+                                <h4><i class="ri-subtract-line"></i></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">Hawaiian</h2>
+                        <h3 class="items-price">400 Pkr</h3>
+                        <div class="items-select-color"></div>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">Veggie Supreme</h2>
+                        <h3 class="items-price">380 Pkr</h3>
+                        <div class="items-select-color"></div>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">Four Cheese</h2>
+                        <h3 class="items-price">500 Pkr</h3>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">Meat Feast</h2>
+                        <h3 class="items-price">600 Pkr</h3>
+                        <div class="items-select-color"></div>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div>
+                    <div class="items" id="color-7">
+                        <h2 class="items-name">Spicy Mexican</h2>
+                        <h3 class="items-price">420 Pkr</h3>
+                        <div class="items-select-color"></div>
+                        <div class="qtycontainer">
+                            <div id="plusbutton"><i class="ri-add-line"></i></div>
+                            <div id="items-qty">1</div>
+                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="rightSidePanel">
+                <div class="cart-items-container">
+                    <!-- <div class="cart-items">
+                        <div class="cart-items-left">
+                            <h4 class="cart-items-qty">1</h4>
+                            <h3 class="cart-items-name">Margherita</h3>
+                        </div>
+                        <h4 class="cart-items-price">PKR 200</h4>
+                    </div>
+                    <div class="cart-items">
+                        <div class="cart-items-left">
+                            <h4 class="cart-items-qty">1</h4>
+                            <h3 class="cart-items-name">Meat Feast</h3>
+                        </div>
+                        <h4 class="cart-items-price">PKR 200</h4>
+                    </div>
+                    <div class="cart-items">
+                        <div class="cart-items-left">
+                            <h4 class="cart-items-qty">1</h4>
+                            <h3 class="cart-items-name">Hawaiian</h3>
+                        </div>
+                        <h4 class="cart-items-price">PKR 200</h4>
+                    </div>
+                    <div class="cart-items">
+                        <div class="cart-items-left">
+                            <h4 class="cart-items-qty">1</h4>
+                            <h3 class="cart-items-name">Spicy Mexican</h3>
+                        </div>
+                        <h4 class="cart-items-price">PKR 200</h4>
+                    </div>
+                    <div class="cart-items">
+                        <div class="cart-items-left">
+                            <h4 class="cart-items-qty">1</h4>
+                            <h3 class="cart-items-name">Four Cheese</h3>
+                        </div>
+                        <h4 class="cart-items-price">PKR 200</h4>
+                    </div> -->
+                </div>
+                <div class="rightSidePanelBottom">
+                    <div class="bill-calc-container">
+                        <div class="calc-lines" id="subtotal">
+                            <h3 class="calc-title" id="subtotal-title">Subtotal</h3>
+                            <h4 class="calc-values" id=" subtotal-values">PKR 1000</h4>
+                        </div>
+                        <div class="calc-lines" id="tax">
+                            <h3 class="calc-title" id="tax-title">Tax 15%</h3>
+                            <h4 class="calc-values" id=" tax-values">PKR 150</h4>
+                        </div>
+                        <br>
+    
+                        <div class="line"></div>
+    
+                        <div class="calc-lines" id="total">
+                            <h3 class="calc-title-tax" id="tax-title">Total</h3>
+                            <h4 class="calc-values-tax" id=" tax-values">PKR 1150</h4>
+                        </div>
+                    </div>
+                    <h3 id="total-payment-title">Payment Methods:</h3>
+                    <div class="payment-methods-container">
+                        <div class="payment-methods-btns">
+                            <div id="cash-btn"><i class="ri-cash-fill payment-methods-icons"></i>
+                            </div>
+                            <h4>CASH</h4>
+                        </div>
+                        <div class="payment-methods-btns">
+                            <div id="card-btn"><i class="ri-bank-card-fill payment-methods-icons"></i>
+                            </div>
+                            <h4>CARD</h4>
+                        </div>
+                        <div class="payment-methods-btns">
+                            <div id="party-btn"><i class="ri-split-cells-vertical payment-methods-icons"></i>
+                            </div>
+                            <h4>SPLIT</h4>
+                        </div>
+                    </div>
+                    <div class="placeorder-btn">
+                        <h2 id="placeorder-btn-name">PAY</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="Sell.js"></script>
+    <script src="Dashboard.js"></script>
+
+
+</body>
+
+</html>
