@@ -1,7 +1,7 @@
 // Select the container and button
 const sellScreenElements = document.querySelector("#selectedContainers");
 const leftSideOption = document.querySelector(".leftSidePanel");
-const selectedItems = document.querySelector(".cart-items-container");
+const cartContainer = document.querySelector(".cart-items-container");
 let itemContainer = document.querySelector(".itemcontainer");
 const categoryContainer = document.querySelectorAll(".category");
 
@@ -11,14 +11,12 @@ leftSideOption.addEventListener("click", (event) => {
         clickedValue.innerText === "Reservation" ||
         clickedValue.innerText === "Items" ||
         clickedValue.innerText === "Pending Orders" ||
-        clickedValue.innerText === "Reports") 
-    {
+        clickedValue.innerText === "Reports") {
         sellScreenElements.style.display = "none";
     }
-    else if (clickedValue.innerText === "Sell")
-    {
-    sellScreenElements.style.display = "flex";
-    }  
+    else if (clickedValue.innerText === "Sell") {
+        sellScreenElements.style.display = "flex";
+    }
 });
 
 const categories = [
@@ -73,16 +71,18 @@ const showTheseItems = (categoryCode) => {
                         <div class="items-select-color"></div>
                         </div>
                         `
-                        // <div id="qtycontainer">
-                        // <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        // <div class="items-qty">0</div>
-                        // <div id="plusbutton"><i class="ri-add-line"></i></div>
-                        // </div>
-                        // addItemInCart(item.name , item.price)
+            // <div id="qtycontainer">
+            // <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+            // <div class="items-qty">0</div>
+            // <div id="plusbutton"><i class="ri-add-line"></i></div>
+            // </div>
+            // addItemInCart(item.name , item.price)
         }
 
     })
 };
+
+let selectedItems = [] // GLOBAL
 
 itemContainer.addEventListener("click", (event) => {
     const clickedElement = event.target;
@@ -90,35 +90,70 @@ itemContainer.addEventListener("click", (event) => {
     if (item) {
         item.classList.add("clicked");
         item.style.color = "black";
-}
-addItemInCart(item)
-
+    }
+    selectedItems.push(item) // make an array of selected item id's
+    addItemInCart(selectedItems);
 });
 
-const cart = document.querySelector(".cart-items-container");
 
-addItemInCart = (item) => {
-const itemId = item.id;
-const itemName =item.querySelector(".items-name");
-const itemPrice =item.querySelector(".items-price");
+addItemInCart = (items) => {
+    console.log(items);
 
-const existingItem = cart.querySelector(`.cart-items`);
-console.log("existingItem" , existingItem);
-console.log("itemid" ,itemId);
-if(item){
-    cart.innerHTML += 
-    `
-                    <div class="cart-items" id="${item.id}">
-                        <div class="cart-items-left">
-                            <h4 class="cart-items-qty">1</h4>
-                            <h3 class="cart-items-name">${itemName.innerText}</h3>
-                        </div>
-                        <h4 class="cart-items-price">${itemPrice.innerText}</h4>
-                    </div>
+    console.log(items.length);
 
-    `
-}
+    items.forEach((i)=>{
+        console.log(i.target);
+        
+        const itemId = i.id;
+        const itemName = i.querySelector(".items-name");
+        const itemPrice = i.querySelector(".items-price");
+
+        i.addEventListener("click", (i)=>{
+            console.log(i);
+            
+
+            if (i) {
+                // Create the main container div for cart item
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-items');
+                cartItem.id = itemId;
+            
+                // Create the left section of the cart item
+                const cartItemsLeft = document.createElement('div');
+                cartItemsLeft.classList.add('cart-items-left');
+            
+                // Create and append the quantity element
+                const cartItemsQty = document.createElement('h4');
+                cartItemsQty.classList.add('cart-items-qty');
+                cartItemsQty.textContent = '1'; // Set text content
+                cartItemsLeft.appendChild(cartItemsQty);
+            
+                // Create and append the item name element
+                const cartItemsName = document.createElement('h3');
+                cartItemsName.classList.add('cart-items-name');
+                cartItemsName.textContent = itemName.innerText; // Use text from itemName
+                cartItemsLeft.appendChild(cartItemsName);
+            
+                // Append the left section to the main cart item container
+                cartItem.appendChild(cartItemsLeft);
+            
+                // Create and append the price element
+                const cartItemsPrice = document.createElement('h4');
+                cartItemsPrice.classList.add('cart-items-price');
+                cartItemsPrice.textContent = itemPrice.innerText; // Use text from itemPrice
+                cartItem.appendChild(cartItemsPrice);
+            
+                // Append the entire cart item to the cart container
+                cartContainer.appendChild(cartItem);
+            }
+
+        })
+
+        
+
+    })
     
+
 }
 
 // Animate an element with a smooth ease-in effect
