@@ -1,0 +1,175 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+a {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Inherits text color from parent */
+    outline: none; /* Removes focus outline */
+}
+
+#posNameHeading {
+    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size:3.2vh;
+}
+
+/* Body - Dark Theme */
+html , body{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #111315;
+    color: #E5E5E6ff;
+    }
+
+/* Setup Container */
+.setup-container {
+    display: flex;
+    justify-content: space-between ;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    border: 2px solid #555;
+    border-radius: 15px;
+    background-color: #1f1f1f; /* Slightly lighter dark */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: 20px;
+}
+
+/* Title Styling */
+.setup-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: left;
+    color: #ddd;
+}
+
+/* Toggle Section */
+.toggle-section {
+    margin-bottom: 30px;
+    height: 100%;
+    margin: 40px;
+}
+
+.toggle-label {
+    font-size: 18px;
+    margin-right: 10px;
+    color: #aaa;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3; /* Blue when checked */
+}
+
+input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* Update Button */
+.update-btn {
+    width: 120px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #2196F3; /* Light blue button */
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px #0b7dda;
+    outline: none;
+}
+
+.update-btn:hover {
+    background-color: #1976D2;
+}
+
+.update-btn:active {
+    box-shadow: 0 2px #0b7dda;
+    transform: translateY(2px);
+}
+
+.main-container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    /* justify-content: space-between; */
+    font-family: "Inter", sans-serif;
+    padding: 0px 20px 40px 20px;
+}
+
+.leftSidePanel{
+    display: flex;
+    height: 100%;
+    width: 13vw; 
+    flex-direction: column; 
+    gap: 3vh;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.leftSideOption{
+    display: flex;
+    align-items: center;
+    font-weight: 300;
+    opacity: 70%;
+    font-size:1.2vmax;
+    width: 12vw;
+    cursor: pointer;
+    height: 5vh;
+    padding-left: 10px;
+    transition: ease-out;
+}
+.leftSideOption:hover{
+    background-color: #2d2d2d;
+    opacity: 100%;
+    font-weight: 500;
+    border-radius: 6px;
+
+
+}

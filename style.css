@@ -8,6 +8,12 @@
     display: none;
 }
 
+a {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Inherits text color from parent */
+    outline: none; /* Removes focus outline */
+}
+
 #pizza {
     background-color: #CFDDDBff;
     background-image: url("./image-removebg-preview1.png");
