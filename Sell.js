@@ -10,12 +10,14 @@ leftSideOption.addEventListener("click", (event) => {
     if (clickedValue.innerText === "Dashboard" ||
         clickedValue.innerText === "Reservation" ||
         clickedValue.innerText === "Items" ||
-        clickedValue.innerText === "Pending Orders" ||
         clickedValue.innerText === "Reports") {
         sellScreenElements.style.display = "none";
     }
     else if (clickedValue.innerText === "Sell") {
         sellScreenElements.style.display = "flex";
+    }
+    else if (clickedValue.innerText === "Setup") {
+        sellScreenElements.style.display = "none";
     }
 });
 
@@ -87,74 +89,101 @@ let selectedItems = [] // GLOBAL
 itemContainer.addEventListener("click", (event) => {
     const clickedElement = event.target;
     const item = clickedElement.closest(".items");
+
     if (item) {
+        //change item Color on click
         item.classList.add("clicked");
         item.style.color = "black";
-    }
-    selectedItems.push(item) // make an array of selected item id's
-    addItemInCart(selectedItems);
-});
 
+        let addItemInCart = () => {
+            const itemId = item.id;
+            const itemName = item.querySelector(".items-name");
+            const itemPrice = item.querySelector(".items-price");
+            let clubItemOnSale = true
 
-addItemInCart = (items) => {
-    console.log(items);
+            // Create the main container div for cart item
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-items');
+            cartItem.id = itemId;
 
-    console.log(items.length);
+            // Check if the item is already added or not
+            const clubItemId = selectedItems.find((id) => id.id === itemId);
 
-    items.forEach((i)=>{
-        console.log(i.target);
-        
-        const itemId = i.id;
-        const itemName = i.querySelector(".items-name");
-        const itemPrice = i.querySelector(".items-price");
+            if (clubItemOnSale === false || clubItemId === undefined) {
 
-        i.addEventListener("click", (i)=>{
-            console.log(i);
-            
-
-            if (i) {
-                // Create the main container div for cart item
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-items');
-                cartItem.id = itemId;
-            
                 // Create the left section of the cart item
-                const cartItemsLeft = document.createElement('div');
+                let cartItemsLeft = document.createElement('div');
                 cartItemsLeft.classList.add('cart-items-left');
-            
+
                 // Create and append the quantity element
                 const cartItemsQty = document.createElement('h4');
                 cartItemsQty.classList.add('cart-items-qty');
-                cartItemsQty.textContent = '1'; // Set text content
+                cartItemsQty.textContent = 1; // Set text content
+                qtyToInt = parseInt(cartItemsQty.textContent)
                 cartItemsLeft.appendChild(cartItemsQty);
-            
+
                 // Create and append the item name element
                 const cartItemsName = document.createElement('h3');
                 cartItemsName.classList.add('cart-items-name');
                 cartItemsName.textContent = itemName.innerText; // Use text from itemName
                 cartItemsLeft.appendChild(cartItemsName);
-            
+
                 // Append the left section to the main cart item container
                 cartItem.appendChild(cartItemsLeft);
-            
+
                 // Create and append the price element
                 const cartItemsPrice = document.createElement('h4');
                 cartItemsPrice.classList.add('cart-items-price');
-                cartItemsPrice.textContent = itemPrice.innerText; // Use text from itemPrice
+                cartItemsPrice.textContent = parseInt(itemPrice.innerText); // Use text from itemPrice                     
                 cartItem.appendChild(cartItemsPrice);
-            
+
                 // Append the entire cart item to the cart container
                 cartContainer.appendChild(cartItem);
             }
+            else if (clubItemOnSale === true || clubItemId === !undefined) {
+                // Club Quantity
+                const CartItems = document.querySelectorAll(".cart-items")
+                const itemsWithId = Array.from(CartItems).find(el => el.matches(`#${itemId}`));
+                const qtyDiv = itemsWithId.querySelector(`.cart-items-qty`)
+                qtyToInt = parseInt(qtyDiv.innerText++)
 
-        })
+                // Club Rates
+                const cartItemsPrice = itemsWithId.querySelector('.cart-items-price');
+                cartItemsPrice.textContent = parseInt(itemPrice.innerText) * parseInt(qtyDiv.innerText)
+            }
+        };
 
+        addItemInCart();
         
+        selectedItems.push(item) // make an array of selected item id's
 
-    })
-    
+        const calulateInvoice = () => {
+            let subtotal = null;
 
-}
+            let ItemAmountArray = [];
+            const ItemAmount = document.querySelectorAll(".cart-items-price");
+            ItemAmount.forEach((item) => {
+                ItemAmountArray.push(item.innerText)                                   
+                
+            })
+            for (let index = 0; index < ItemAmountArray.length; index++) {
+               subtotal += parseInt(ItemAmountArray[index]);
+            }
+
+            console.log(ItemAmountArray);
+            console.log(subtotal);
+            document.querySelector("#subtotal-values").innerHTML = `PKR ${subtotal}`
+            document.querySelector("#total-values").innerHTML = `PKR ${subtotal}`
+        }
+        calulateInvoice()
+
+    }
+
+
+});
+
+
+
 
 // Animate an element with a smooth ease-in effect
 // gsap.to(".items", {
