@@ -15,47 +15,50 @@
 
 <body>
     <div class="main-container">
+        <!-- Sidebar -->
         <div class="leftSidePanel">
-            <h2 id="posNameHeading">ANePOS</h2>
-            <h3 class="leftSideOption">Dashboard</h3>
-            <h3 class="leftSideOption">Reservation</h3>
-            <h3 class="leftSideOption">Items</h3>
-            <a class="leftSideOption" href="index.html">Sell</a>
-            <a class="leftSideOption" href="setup.html">Setup</a>
-            <h3 class="leftSideOption">Reports</h3>
+            <h1 class="logo">ANePOS</h1>
+            <ul class="menu">
+                <li>Dashboard</li>
+                <li>Reservation</li>
+                <li><a href="item.html">Items</a></li>
+                <li class="active"> <a href="index.html">Sell</a></li>
+                <li><a href="setup.html">Setup</a></li>
+                <li>Reports</li>
+            </ul>
         </div>
         <div class="container" id="selectedContainers">
             <div class="cat-items-container">
                 <div class="categorycontainer">
-                    <div class="category" id="pizza" value="cat01">
+                    <div class="category" id="pizza" data-categoryId="cat01">
                         <h2 class="category-name">Pizza</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="burger" value="cat02">
+                    <div class="category" id="burger" data-categoryId="cat02">
                         <h2 class="category-name">Burger</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="pasta" value="cat03">
+                    <div class="category" id="pasta" data-categoryId="cat03">
                         <h2 class="category-name">Pasta</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="sandwitch" value="cat04">
+                    <div class="category" id="sandwitch" data-categoryId="cat04">
                         <h2 class="category-name">Sandwitch</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="appetizer" value="cat05">
+                    <div class="category" id="appetizer" data-categoryId="cat05">
                         <h2 class="category-name">Appetizer</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="drinks" value="cat06">
+                    <div class="category" id="drinks" data-categoryId="cat06">
                         <h2 class="category-name">Drinks</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="deals" value="cat07">
+                    <div class="category" id="deals" data-categoryId="cat07">
                         <h2 class="category-name">Deals</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
-                    <div class="category" id="extras" value="cat08">
+                    <div class="category" id="extras" data-categoryId="cat08">
                         <h2 class="category-name">Extras</h2>
                         <h3 class="items-count">2 Items</h3>
                     </div>
@@ -77,81 +80,7 @@
                             <div id="plusbutton"><i class="ri-add-line"></i></div>
                             <div id="items-qty">1</div>
                             <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">Pepperoni</h2>
-                        <h3 class="items-price">450 Pkr</h3>
-                        <div class="items-select-color"></div>
-                        <div class="qtycontainer">
-                            <div id="plusbutton"><i class="ri-add-line"></i></div>
-                            <div id="items-qty">1</div>
-                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">BBQ Chicken</h2>
-                        <h3 class="items-price">550 Pkr</h3>
-                        <div class="items-select-color"></div>
-                        <div class="qtycontainer">
-                            <div id="plusbutton">
-                                <h4><i class="ri-add-line"></i></h4>
-                            </div>
-                            <h4 id="items-qty">1</h4>
-                            <div id="minusbutton">
-                                <h4><i class="ri-subtract-line"></i></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">Hawaiian</h2>
-                        <h3 class="items-price">400 Pkr</h3>
-                        <div class="items-select-color"></div>
-                        <div class="qtycontainer">
-                            <div id="plusbutton"><i class="ri-add-line"></i></div>
-                            <div id="items-qty">1</div>
-                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">Veggie Supreme</h2>
-                        <h3 class="items-price">380 Pkr</h3>
-                        <div class="items-select-color"></div>
-                        <div class="qtycontainer">
-                            <div id="plusbutton"><i class="ri-add-line"></i></div>
-                            <div id="items-qty">1</div>
-                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">Four Cheese</h2>
-                        <h3 class="items-price">500 Pkr</h3>
-                        <div class="qtycontainer">
-                            <div id="plusbutton"><i class="ri-add-line"></i></div>
-                            <div id="items-qty">1</div>
-                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">Meat Feast</h2>
-                        <h3 class="items-price">600 Pkr</h3>
-                        <div class="items-select-color"></div>
-                        <div class="qtycontainer">
-                            <div id="plusbutton"><i class="ri-add-line"></i></div>
-                            <div id="items-qty">1</div>
-                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div>
-                    <div class="items" id="color-7">
-                        <h2 class="items-name">Spicy Mexican</h2>
-                        <h3 class="items-price">420 Pkr</h3>
-                        <div class="items-select-color"></div>
-                        <div class="qtycontainer">
-                            <div id="plusbutton"><i class="ri-add-line"></i></div>
-                            <div id="items-qty">1</div>
-                            <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-                        </div>
-                    </div> -->
+                        </div> -->
                 </div>
             </div>
             <div class="rightSidePanel">
@@ -203,9 +132,9 @@
                             <h4 class="calc-values" id="tax-values">PKR 0</h4>
                         </div>
                         <br>
-    
+
                         <div class="line"></div>
-    
+
                         <div class="calc-lines" id="total">
                             <h3 class="calc-title-tax" id="total-title">Total</h3>
                             <h4 class="calc-values-tax" id="total-values">PKR 0</h4>
@@ -236,7 +165,9 @@
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+        integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="Sell.js"></script>
     <script src="Dashboard.js"></script>
 
