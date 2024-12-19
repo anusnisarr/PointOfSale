@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Creating Screen</title>
+    <title>Items</title>
     <link rel="stylesheet" href="item.css">
 </head>
 <body>
@@ -20,38 +20,34 @@
             </ul>
         </div>
 
-    <!-- Main Content -->
-    <div class="content">
-        <h2>Create New Item</h2>
-        <form class="item-form">
-            <div class="form-group">
-                <label for="itemName">Item Name</label>
-                <input type="text" id="itemName" value="Burger" placeholder="Enter item name">
+        <div class="content">
+            <div class="header-bar">
+                <h2>Item List</h2>
+                <button class="add-item-btn">+ Add Item</button>
             </div>
-
-            <div class="form-group">
-                <label for="itemCode">Item Code</label>
-                <input type="text" id="itemCode" placeholder="Enter item code">
+            <div class="table-wrapper">
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Item Name</th>
+                            <th>Item Code</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="itemPrice">Price</label>
-                <input type="number" id="itemPrice" placeholder="Enter price">
-            </div>
 
-            <div class="form-group">
-                <label for="itemCategory">Category</label>
-                <select id="itemCategory">
-                    <option value="default">Select Category</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="groceries">Groceries</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn">Save Item</button>
-        </form>
-    </div>
     <script src="Sell.js"></script>
 </body>
 </html>
+
+

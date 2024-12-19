@@ -85,7 +85,7 @@ color: #E5E5E6ff;
     height: 100%;
     /* justify-content: space-between; */
     font-family: "Inter", sans-serif;
-    
+    margin-left: 20px;
 }
 #posNameHeading {
     padding-left: 10px;
