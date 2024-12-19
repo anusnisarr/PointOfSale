@@ -13,7 +13,7 @@ leftSideOption.forEach((li) => {
         // Add 'active' class to the clicked item
         clicked.classList.add("active");
     });
-    
+
 })
 
 
@@ -49,7 +49,8 @@ let items = [
     { id: "item17", barcode: 1017, categoryId: "cat08", name: "Mayo Sauce", price: 50, IsActive: true }
 
 ];
-// JSON.parse(localStorage.getItem("items")) || [];
+// items = JSON.parse(localStorage.getItem("items")) || [];
+
 const addItemScreen = () => {
     const additembutton = document.querySelector(".add-item-btn")
     additembutton.addEventListener("click", (screen) => {
@@ -88,6 +89,34 @@ const addItemScreen = () => {
             </form>
         </div>
         `
+
+
+        const addItem = () => {
+            document.querySelector(".btn")
+                .addEventListener("click", (e) => {
+                    e.preventDefault()
+                    const itemName = document.querySelector("#itemName").value
+                    const itemCode = document.querySelector("#itemCode").value
+                    const itemPrice = document.querySelector("#itemPrice").value
+    
+                    // Push new item to the array
+                    items.push(
+                        {
+                            id: items.length + 1,
+                            barcode: itemCode,
+                            categoryId: "cat08",
+                            name: itemName,
+                            price: Number(itemPrice),
+                            IsActive: true
+                        }
+                    );
+                    console.log(items);
+    
+                    localStorage.setItem("items", JSON.stringify(items));
+    
+                })
+            }
+            addItem()
     })
 }
 
@@ -121,35 +150,10 @@ if (document.title === "Items") {
 
 
 
-const addItem = () => {
-    if (document.title === "Items") {
-        document.querySelector(".btn")
-            .addEventListener("click", (e) => {
-                e.preventDefault()
-                const itemName = document.querySelector("#itemName").value
-                const itemCode = document.querySelector("#itemCode").value
-                const itemPrice = document.querySelector("#itemPrice").value
+if (document.title === "Items") {
 
-                // Push new item to the array
-                items.push(
-                    {
-                        id: items.length + 1,
-                        barcode: itemCode,
-                        categoryId: "cat08",
-                        name: itemName,
-                        price: Number(itemPrice),
-                        IsActive: true
-                    }
-                );
-                console.log(items);
-
-                localStorage.setItem("items", JSON.stringify(items));
-
-            })
-    }
 
 }
-
 // let items =JSON.parse(localStorage.getItem("items")) || []
 console.log(items);
 
