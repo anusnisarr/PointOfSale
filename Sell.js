@@ -5,11 +5,11 @@ const cartContainer = document.querySelector(".cart-items-container");
 let itemContainer = document.querySelector(".itemcontainer");
 const categoryContainer = document.querySelectorAll(".category");
 
-leftSideOption.forEach((li) => {    
+leftSideOption.forEach((li) => {
     li.addEventListener("click", (li) => {
         let clicked = li.target
         // Remove 'active' class from all list items
-        leftSideOption.forEach((item) =>item.classList.remove("active"));
+        leftSideOption.forEach((item) => item.classList.remove("active"));
         // Add 'active' class to the clicked item
         clicked.classList.add("active");
     });
@@ -29,133 +29,157 @@ const categories = [
     { id: "cat08", name: "Deals" }
 ];
 
-let items = [
-    { id: "item01", barcode: 1001, categoryId: "cat01", name: "Margherita Pizza", price: 800, IsActive: true },
-    { id: "item02", barcode: 1002, categoryId: "cat01", name: "Pepperoni Pizza", price: 900, IsActive: true },
-    { id: "item03", barcode: 1003, categoryId: "cat02", name: "Cheese burger", price: 500, IsActive: true },
-    { id: "item04", barcode: 1004, categoryId: "cat02", name: "Chicken Burger", price: 550, IsActive: true },
-    { id: "item05", barcode: 1005, categoryId: "cat03", name: "Spaghetti Bolognese", price: 700, IsActive: true },
-    { id: "item06", barcode: 1006, categoryId: "cat03", name: "Penne Alfredo", price: 750, IsActive: true },
-    { id: "item07", barcode: 1007, categoryId: "cat04", name: "Grilled Cheese Sandwich", price: 300, IsActive: true },
-    { id: "item08", barcode: 1008, categoryId: "cat04", name: "Club Sandwich", price: 400, IsActive: true },
-    { id: "item09", barcode: 1009, categoryId: "cat05", name: "French Fries", price: 200, IsActive: true },
-    { id: "item10", barcode: 1010, categoryId: "cat05", name: "Mozzarella Sticks", price: 250, IsActive: true },
-    { id: "item11", barcode: 1011, categoryId: "cat06", name: "Cola", price: 150, IsActive: true },
-    { id: "item12", barcode: 1012, categoryId: "cat06", name: "Orange Juice", price: 200, IsActive: true },
-    { id: "item13", barcode: 1013, categoryId: "cat07", name: "Pizza & Drink Combo", price: 1000, IsActive: true },
-    { id: "item14", barcode: 1014, categoryId: "cat07", name: "Burger & Fries Combo", price: 800, IsActive: true },
-    { id: "item15", barcode: 1015, categoryId: "cat08", name: "Extra Cheese", price: 50, IsActive: true },
-    { id: "item16", barcode: 1016, categoryId: "cat08", name: "Dipping Sauce", price: 30, IsActive: true },
-    { id: "item17", barcode: 1017, categoryId: "cat08", name: "Mayo Sauce", price: 50, IsActive: true }
+// let items = [
+//     { id: "item01", barcode: 1001, categoryId: "cat01", name: "Margherita Pizza", price: 800, IsActive: true },
+//     { id: "item02", barcode: 1002, categoryId: "cat01", name: "Pepperoni Pizza", price: 900, IsActive: true },
+//     { id: "item03", barcode: 1003, categoryId: "cat02", name: "Cheese burger", price: 500, IsActive: true },
+//     { id: "item04", barcode: 1004, categoryId: "cat02", name: "Chicken Burger", price: 550, IsActive: true },
+//     { id: "item05", barcode: 1005, categoryId: "cat03", name: "Spaghetti Bolognese", price: 700, IsActive: true },
+//     { id: "item06", barcode: 1006, categoryId: "cat03", name: "Penne Alfredo", price: 750, IsActive: true },
+//     { id: "item07", barcode: 1007, categoryId: "cat04", name: "Grilled Cheese Sandwich", price: 300, IsActive: true },
+//     { id: "item08", barcode: 1008, categoryId: "cat04", name: "Club Sandwich", price: 400, IsActive: true },
+//     { id: "item09", barcode: 1009, categoryId: "cat05", name: "French Fries", price: 200, IsActive: true },
+//     { id: "item10", barcode: 1010, categoryId: "cat05", name: "Mozzarella Sticks", price: 250, IsActive: true },
+//     { id: "item11", barcode: 1011, categoryId: "cat06", name: "Cola", price: 150, IsActive: true },
+//     { id: "item12", barcode: 1012, categoryId: "cat06", name: "Orange Juice", price: 200, IsActive: true },
+//     { id: "item13", barcode: 1013, categoryId: "cat07", name: "Pizza & Drink Combo", price: 1000, IsActive: true },
+//     { id: "item14", barcode: 1014, categoryId: "cat07", name: "Burger & Fries Combo", price: 800, IsActive: true },
+//     { id: "item15", barcode: 1015, categoryId: "cat08", name: "Extra Cheese", price: 50, IsActive: true },
+//     { id: "item16", barcode: 1016, categoryId: "cat08", name: "Dipping Sauce", price: 30, IsActive: true },
+//     { id: "item17", barcode: 1017, categoryId: "cat08", name: "Mayo Sauce", price: 50, IsActive: true }
 
-];
-// items = JSON.parse(localStorage.getItem("items")) || [];
+// ];
+const items = JSON.parse(localStorage.getItem("items")) || [];
+const allBarcode = items.map(item => item.barcode); // Extract all barcodes
 
 const addItemScreen = () => {
-    const additembutton = document.querySelector(".add-item-btn")
-    additembutton.addEventListener("click", (screen) => {
-        document.querySelector(".content").
-            innerHTML =
-            `
-        <div class="content">
-            <h2>Create New Item</h2>
-            <form class="item-form">
-                <div class="form-group">
-                    <label for="itemName">Item Name</label>
-                    <input type="text" id="itemName" value="Burger" placeholder="Enter item name">
-                </div>
-    
-                <div class="form-group">
-                    <label for="itemCode">Item Code</label>
-                    <input type="text" id="itemCode" placeholder="Enter item code">
-                </div>
-    
-                <div class="form-group">
-                    <label for="itemPrice">Price</label>
-                    <input type="number" id="itemPrice" placeholder="Enter price">
-                </div>
-    
-                <div class="form-group">
-                    <label for="itemCategory">Category</label>
-                    <select id="itemCategory">
-                        <option value="default">Select Category</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="clothing">Clothing</option>
-                        <option value="groceries">Groceries</option>
-                    </select>
-                </div>
-    
-                <button type="submit" class="btn">Save Item</button>
-            </form>
-        </div>
-        `
+    let CategoryCode = null;
 
+    const addItemButton = document.querySelector(".add-item-btn");
+    addItemButton.addEventListener("click", () => {
+        document.querySelector(".content").innerHTML = `
+            <div class="content">
+                <h2>Create New Item</h2>
+                <form class="item-form">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" value="Burger" placeholder="Enter item name">
+                    </div>
 
-        const addItem = () => {
-            document.querySelector(".btn")
-                .addEventListener("click", (e) => {
-                    e.preventDefault()
-                    const itemName = document.querySelector("#itemName").value
-                    const itemCode = document.querySelector("#itemCode").value
-                    const itemPrice = document.querySelector("#itemPrice").value
-    
-                    // Push new item to the array
-                    items.push(
-                        {
-                            id: items.length + 1,
-                            barcode: itemCode,
-                            categoryId: "cat08",
-                            name: itemName,
-                            price: Number(itemPrice),
-                            IsActive: true
-                        }
-                    );
-                    console.log(items);
-    
-                    localStorage.setItem("items", JSON.stringify(items));
-    
-                })
+                    <div class="form-group">
+                        <label for="itemCode">Item Code</label>
+                        <input type="text" id="itemCode" placeholder="Enter item code">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="itemPrice">Price</label>
+                        <input type="number" id="itemPrice" placeholder="Enter price">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="itemCategory">Category</label>
+                        <select id="itemCategory">
+                            <option value="default">Select Category</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn">Save Item</button>
+                </form>
+            </div>
+        `;
+
+        const categoryDropDown = document.querySelector("#itemCategory");
+        categories.forEach((cat) => {
+            categoryDropDown.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+        });
+
+        const categorySelection = document.querySelector("#itemCategory");
+        categorySelection.addEventListener("change", () => {
+            CategoryCode = categorySelection.value;
+            console.log(CategoryCode);
+        });
+
+        setupAddItemHandler();
+    });
+
+    const showLoader = () => {
+        const content = document.querySelector(".content");
+        content.innerHTML = `<span class="loader"></span>`;
+        document.querySelector(".loader").style.display = 'block';
+    };
+
+    const hideLoader = () => {
+        const content = document.querySelector(".content");
+        content.innerHTML = `<span class="loader"></span>`;
+        document.querySelector(".loader").style.display = 'none';
+    };
+
+    const setupAddItemHandler = () => {
+        const saveButton = document.querySelector(".btn");
+        saveButton.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const itemName = document.querySelector("#itemName").value;
+            const itemCode = Number(document.querySelector("#itemCode").value);
+            const itemPrice = Number(document.querySelector("#itemPrice").value);
+            
+            let barocdeCheck = allBarcode.find((barcode)=> barcode === itemCode)
+            
+            if (!itemName || !itemCode || !itemPrice || CategoryCode === null) {
+                alert("Please fill out all fields correctly.");
+                return;
             }
-            addItem()
-    })
-}
+
+            else if (barocdeCheck){
+                alert("Barcode Already Exist");
+            }
+            else{
+            items.push({
+                id: items.length + 1,
+                barcode: itemCode,
+                categoryId: CategoryCode,
+                name: itemName,
+                price: Number(itemPrice),
+                IsActive: true
+            });
+
+            showLoader();
+            setTimeout(() => {
+                hideLoader();
+                location.reload();
+            }, 1000);
+
+            localStorage.setItem("items", JSON.stringify(items));
+        }
+        });
+    };
+};
 
 const itemListScreen = () => {
-    const itemrow = document.querySelector(".item-table tbody")
+    const itemRow = document.querySelector(".item-table tbody");
     items.forEach((item, index) => {
-        itemrow.innerHTML +=
-            `                    <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${items[index].name}</td>
-                                    <td>${items[index].barcode}</td>
-                                    <td>${categories.find((cat) => cat.id === items[index].categoryId).name}</td>
-                                    <td>${items[index].price}</td>
-                                    <td>${(items[index].IsActive ? "Active" : "Inactive")}</td>
-                                    <td>
-                                        <button class="edit-btn">Edit</button>
-                                        <button class="delete-btn">Delete</button>
-                                    </td>
-                                </tr>
-            `
-    }
-    )
-
-}
+        itemRow.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.name}</td>
+                <td>${item.barcode}</td>
+                <td>${categories.find((cat) => cat.id === item.categoryId).name}</td>
+                <td>${item.price}</td>
+                <td>${item.IsActive ? "Active" : "Inactive"}</td>
+                <td>
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+};
 
 if (document.title === "Items") {
     itemListScreen();
     addItemScreen();
-
 }
 
-
-
-if (document.title === "Items") {
-
-
-}
-// let items =JSON.parse(localStorage.getItem("items")) || []
-console.log(items);
 
 
 categoryContainer.forEach((cat) => {
