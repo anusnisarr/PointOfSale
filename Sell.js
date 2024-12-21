@@ -4,6 +4,22 @@ const leftSideOption = document.querySelectorAll(".menu li");
 const cartContainer = document.querySelector(".cart-items-container");
 let itemContainer = document.querySelector(".itemcontainer");
 const categoryContainer = document.querySelectorAll(".category");
+const items = JSON.parse(localStorage.getItem("items")) || [];
+
+let CategoryArray = Array.from(categoryContainer)
+
+// Iterate over each category and count items
+CategoryArray.forEach(category => {
+    let itemCount =  category.querySelector(".items-count")
+    let categoryId = category.dataset.categoryid; // Get the category ID from dataset
+
+    // Filter items belonging to this category
+    let itemsInCategory = items.filter(item => item.categoryId === categoryId);
+
+    itemCount.innerText = `${itemsInCategory.length} Items`
+    // console.log(`Category ID: ${categoryId}, Count: ${itemsInCategory.length}`);
+   
+});
 
 leftSideOption.forEach((li) => {
     li.addEventListener("click", (li) => {
@@ -25,8 +41,7 @@ const categories = [
     { id: "cat04", name: "Sandwitch" },
     { id: "cat05", name: "Appetizer" },
     { id: "cat06", name: "Drinks" },
-    { id: "cat07", name: "Deals" },
-    { id: "cat08", name: "Deals" }
+    { id: "cat07", name: "Deals" }
 ];
 
 // let items = [
@@ -49,7 +64,7 @@ const categories = [
 //     { id: "item17", barcode: 1017, categoryId: "cat08", name: "Mayo Sauce", price: 50, IsActive: true }
 
 // ];
-const items = JSON.parse(localStorage.getItem("items")) || [];
+
 const allBarcode = items.map(item => item.barcode); // Extract all barcodes
 
 const addItemScreen = () => {
@@ -63,7 +78,7 @@ const addItemScreen = () => {
                 <form class="item-form">
                     <div class="form-group">
                         <label for="itemName">Item Name</label>
-                        <input type="text" id="itemName" value="Burger" placeholder="Enter item name">
+                        <input type="text" id="itemName" placeholder="Enter item name">
                     </div>
 
                     <div class="form-group">
@@ -122,35 +137,35 @@ const addItemScreen = () => {
             const itemName = document.querySelector("#itemName").value;
             const itemCode = Number(document.querySelector("#itemCode").value);
             const itemPrice = Number(document.querySelector("#itemPrice").value);
-            
-            let barocdeCheck = allBarcode.find((barcode)=> barcode === itemCode)
-            
+
+            let barocdeCheck = allBarcode.find((barcode) => barcode === itemCode)
+
             if (!itemName || !itemCode || !itemPrice || CategoryCode === null) {
                 alert("Please fill out all fields correctly.");
                 return;
             }
 
-            else if (barocdeCheck){
+            else if (barocdeCheck) {
                 alert("Barcode Already Exist");
             }
-            else{
-            items.push({
-                id: items.length + 1,
-                barcode: itemCode,
-                categoryId: CategoryCode,
-                name: itemName,
-                price: Number(itemPrice),
-                IsActive: true
-            });
+            else {
+                items.push({
+                    id: items.length + 1,
+                    barcode: itemCode,
+                    categoryId: CategoryCode,
+                    name: itemName,
+                    price: Number(itemPrice),
+                    IsActive: true
+                });
 
-            showLoader();
-            setTimeout(() => {
-                hideLoader();
-                location.reload();
-            }, 1000);
+                showLoader();
+                setTimeout(() => {
+                    hideLoader();
+                    location.reload();
+                }, 1000);
 
-            localStorage.setItem("items", JSON.stringify(items));
-        }
+                localStorage.setItem("items", JSON.stringify(items));
+            }
         });
     };
 };
@@ -274,7 +289,7 @@ if (document.title === "POS") {
                 else if (clubItemOnSale === true || clubItemId === !undefined) {
                     // Club Quantity
                     const CartItems = document.querySelectorAll(".cart-items")
-                    const itemsWithId = Array.from(CartItems).find(el => el.matches(`#${itemId}`));
+                    const itemsWithId = Array.from(CartItems).find(el => el.id === itemId);
                     const qtyDiv = itemsWithId.querySelector(`.cart-items-qty`)
                     qtyToInt = parseInt(qtyDiv.innerText++)
 
@@ -301,8 +316,6 @@ if (document.title === "POS") {
                     subtotal += parseInt(ItemAmountArray[index]);
                 }
 
-                console.log(ItemAmountArray);
-                console.log(subtotal);
                 document.querySelector("#subtotal-values").innerHTML = `PKR ${subtotal}`
                 document.querySelector("#total-values").innerHTML = `PKR ${subtotal}`
             }
