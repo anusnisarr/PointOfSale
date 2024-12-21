@@ -325,7 +325,22 @@ if (document.title === "POS") {
 
 
     });
+
+    const paymentBtn = document.querySelectorAll(".payment-methods-icons")
+    paymentBtn.forEach((btn)=>{
+        btn.addEventListener("click" ,(e) => {
+            paymentBtn.forEach((remove)=>{
+                remove.style.backgroundColor = ""  
+                remove.style.color = ""      
+            })
+            btn.style.backgroundColor = "white"  
+            btn.style.color = "black"         
+  
+        })
+    })
 }
+
+
 
 // Update and save parameter in Setup
 const setupChange = () => {

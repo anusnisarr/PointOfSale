@@ -127,7 +127,7 @@ outline: none; /* Removes focus outline */
 .leftSidePanel {
     background-color: #1e1e2d; /* Darker sidebar background */
     width: 250px;
-    min-height: 100vh;
+    height: 100vh;
     padding: 20px 15px;
     display: flex;
     flex-direction: column;
@@ -248,7 +248,7 @@ outline: none; /* Removes focus outline */
 .items{
     color: #f1f1f1;
     /* background-color: #fac1da; */
-    background-color: #34344a;
+    background-color: #37373c;
     display: flex;
     height: 11vh;
     width: 14vw;
@@ -368,7 +368,7 @@ outline: none; /* Removes focus outline */
     background-color: #34344a;
     width: 100%;
     border-radius: 5px;
-    padding: 13px 10px 13px 10px;
+    padding: 7px 10px 7px 6px;
 }
 .cart-items-left{
     display: flex;
@@ -382,12 +382,12 @@ outline: none; /* Removes focus outline */
     background-color: white;
     color: #111315;
     border-radius: 60px;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center; 
     justify-content: center; 
-    font-size: 12px; 
+    font-size: 10px; 
     font-weight: bold; 
     line-height: 1; 
     margin-right: 8px;
@@ -419,15 +419,15 @@ outline: none; /* Removes focus outline */
 }
 .calc-title{
     font-weight: 300;
-    font-size: 1.5vmin;
+    font-size: 1em;
 }
 .calc-values{
-    font-size: 1.5vmin;
+    font-size: 1em;
     font-weight: bold; 
     line-height: 1; 
 }
 .calc-total{
-    font-size: 1.5vmin;
+    font-size: 1em;
     font-weight: bold; 
     line-height: 1; 
 }
@@ -478,7 +478,14 @@ outline: none; /* Removes focus outline */
     background-color: white;
     color: #111315;
     font-size: 2vmin;
+    cursor: pointer;
 }
 .ri-cash-fill, .ri-bank-card-fill, .ri-split-cells-vertical{
     font-size: 23px;  /*icon size*/
+    cursor: pointer;
+}
+
+.payment-methods-icons:hover{
+    background-color: white;
+    color: black;
 }
