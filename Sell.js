@@ -4,7 +4,7 @@ const leftSideOption = document.querySelectorAll(".menu li");
 const cartContainer = document.querySelector(".cart-items-container");
 let itemContainer = document.querySelector(".itemcontainer");
 const categoryContainer = document.querySelectorAll(".category");
-const items = JSON.parse(localStorage.getItem("items")) || [];
+let items = JSON.parse(localStorage.getItem("items")) || [];
 
 let CategoryArray = Array.from(categoryContainer)
 
@@ -183,16 +183,27 @@ const itemListScreen = () => {
                 <td>${item.IsActive ? "Active" : "Inactive"}</td>
                 <td>
                     <button class="edit-btn">Edit</button>
-                    <button class="delete-btn">Delete</button>
+                    <button class="delete-btn" id="${item.barcode}">Delete</button>
                 </td>
             </tr>
         `;
     });
 };
 
+const itemDeleteBtn = () => {
+    let deleteBtn = document.querySelectorAll(".delete-btn")
+    deleteBtn.forEach((btn, index)=>{
+        btn.addEventListener("click",(e)=>{
+            items = items.filter((item)=> e.target.id != item.barcode)
+            localStorage.setItem("items", JSON.stringify(items));
+            location.reload();        
+        })
+    })    
+}
 if (document.title === "Items") {
     itemListScreen();
     addItemScreen();
+    itemDeleteBtn();
 }
 
 
