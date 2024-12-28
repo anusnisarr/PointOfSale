@@ -489,3 +489,90 @@ outline: none; /* Removes focus outline */
     background-color: white;
     color: black;
 }
+
+
+/* Recipt Styling */
+#receiptbody {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #111315;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+}
+
+.header img {
+    max-height: 40px;
+    width: auto;
+}
+
+.barcode img {
+    max-width: 100%;
+    height: auto;
+}
+
+.receipt {
+    width: 80mm;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header img {
+    height: 40px;
+}
+
+.cart {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-top: 10px;
+    border-top: 2px solid #fdd835;
+    padding-top: 10px;
+}
+
+.barcode {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.print-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.print-button:hover {
+    background-color: #f0f0f0;
+}

@@ -5,43 +5,46 @@ const cartContainer = document.querySelector(".cart-items-container");
 let itemContainer = document.querySelector(".itemcontainer");
 const categoryContainer = document.querySelectorAll(".category");
 let items = JSON.parse(localStorage.getItem("items")) || [];
+const payButton = document.querySelector("#placeorder-btn-name");
+const currentDate = new Date().toDateString();
+let subtotal = null; // Global variable to store subtotal
+let cartItems = []  //  Array to store cart item
+console.log(cartItems);
 
-let CategoryArray = Array.from(categoryContainer)
+
+
+let CategoryArray = Array.from(categoryContainer);
 
 // Iterate over each category and count items
-CategoryArray.forEach(category => {
-    let itemCount =  category.querySelector(".items-count")
-    let categoryId = category.dataset.categoryid; // Get the category ID from dataset
+CategoryArray.forEach((category) => {
+  let itemCount = category.querySelector(".items-count");
+  let categoryId = category.dataset.categoryid; // Get the category ID from dataset
 
-    // Filter items belonging to this category
-    let itemsInCategory = items.filter(item => item.categoryId === categoryId);
+  // Filter items belonging to this category
+  let itemsInCategory = items.filter((item) => item.categoryId === categoryId);
 
-    itemCount.innerText = `${itemsInCategory.length} Items`
-    // console.log(`Category ID: ${categoryId}, Count: ${itemsInCategory.length}`);
-   
+  itemCount.innerText = `${itemsInCategory.length} Items`;
+  // console.log(`Category ID: ${categoryId}, Count: ${itemsInCategory.length}`);
 });
 
 leftSideOption.forEach((li) => {
-    li.addEventListener("click", (li) => {
-        let clicked = li.target
-        // Remove 'active' class from all list items
-        leftSideOption.forEach((item) => item.classList.remove("active"));
-        // Add 'active' class to the clicked item
-        clicked.classList.add("active");
-    });
-
-})
-
-
+  li.addEventListener("click", (li) => {
+    let clicked = li.target;
+    // Remove 'active' class from all list items
+    leftSideOption.forEach((item) => item.classList.remove("active"));
+    // Add 'active' class to the clicked item
+    clicked.classList.add("active");
+  });
+});
 
 const categories = [
-    { id: "cat01", name: "Pizza" },
-    { id: "cat02", name: "Burger" },
-    { id: "cat03", name: "Pasta" },
-    { id: "cat04", name: "Sandwitch" },
-    { id: "cat05", name: "Appetizer" },
-    { id: "cat06", name: "Drinks" },
-    { id: "cat07", name: "Deals" }
+  { id: "cat01", name: "Pizza" },
+  { id: "cat02", name: "Burger" },
+  { id: "cat03", name: "Pasta" },
+  { id: "cat04", name: "Sandwitch" },
+  { id: "cat05", name: "Appetizer" },
+  { id: "cat06", name: "Drinks" },
+  { id: "cat07", name: "Deals" },
 ];
 
 // let items = [
@@ -65,14 +68,26 @@ const categories = [
 
 // ];
 
-const allBarcode = items.map(item => item.barcode); // Extract all barcodes
+const allBarcode = items.map((item) => item.barcode); // Extract all barcodes
+
+const showLoader = () => {
+  const content = document.querySelector(".content");
+  content.innerHTML = `<span class="loader"></span>`;
+  document.querySelector(".loader").style.display = "block";
+};
+
+const hideLoader = () => {
+  const content = document.querySelector(".content");
+  content.innerHTML = `<span class="loader"></span>`;
+  document.querySelector(".loader").style.display = "none";
+};
 
 const addItemScreen = () => {
-    let CategoryCode = null;
+  let CategoryCode = null;
 
-    const addItemButton = document.querySelector(".add-item-btn");
-    addItemButton.addEventListener("click", () => {
-        document.querySelector(".content").innerHTML = `
+  const addItemButton = document.querySelector(".add-item-btn");
+  addItemButton.addEventListener("click", () => {
+    document.querySelector(".content").innerHTML = `
             <div class="content">
                 <h2>Create New Item</h2>
                 <form class="item-form">
@@ -103,282 +118,327 @@ const addItemScreen = () => {
             </div>
         `;
 
-        const categoryDropDown = document.querySelector("#itemCategory");
-        categories.forEach((cat) => {
-            categoryDropDown.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-        });
-
-        const categorySelection = document.querySelector("#itemCategory");
-        categorySelection.addEventListener("change", () => {
-            CategoryCode = categorySelection.value;
-            console.log(CategoryCode);
-        });
-
-        setupAddItemHandler();
+    const categoryDropDown = document.querySelector("#itemCategory");
+    categories.forEach((cat) => {
+      categoryDropDown.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
     });
 
-    const showLoader = () => {
-        const content = document.querySelector(".content");
-        content.innerHTML = `<span class="loader"></span>`;
-        document.querySelector(".loader").style.display = 'block';
-    };
+    const categorySelection = document.querySelector("#itemCategory");
+    categorySelection.addEventListener("change", () => {
+      CategoryCode = categorySelection.value;
+      console.log(CategoryCode);
+    });
 
-    const hideLoader = () => {
-        const content = document.querySelector(".content");
-        content.innerHTML = `<span class="loader"></span>`;
-        document.querySelector(".loader").style.display = 'none';
-    };
+    setupAddItemHandler();
+  });
 
-    const setupAddItemHandler = () => {
-        const saveButton = document.querySelector(".btn");
-        saveButton.addEventListener("click", (e) => {
-            e.preventDefault();
+  const setupAddItemHandler = () => {
+    const saveButton = document.querySelector(".btn");
+    saveButton.addEventListener("click", (e) => {
+      e.preventDefault();
 
-            const itemName = document.querySelector("#itemName").value;
-            const itemCode = Number(document.querySelector("#itemCode").value);
-            const itemPrice = Number(document.querySelector("#itemPrice").value);
+      const itemName = document.querySelector("#itemName").value;
+      const itemCode = Number(document.querySelector("#itemCode").value);
+      const itemPrice = Number(document.querySelector("#itemPrice").value);
 
-            let barocdeCheck = allBarcode.find((barcode) => barcode === itemCode)
+      let barocdeCheck = allBarcode.find((barcode) => barcode === itemCode);
 
-            if (!itemName || !itemCode || !itemPrice || CategoryCode === null) {
-                alert("Please fill out all fields correctly.");
-                return;
-            }
-
-            else if (barocdeCheck) {
-                alert("Barcode Already Exist");
-            }
-            else {
-                items.push({
-                    id: items.length + 1,
-                    barcode: itemCode,
-                    categoryId: CategoryCode,
-                    name: itemName,
-                    price: Number(itemPrice),
-                    IsActive: true
-                });
-
-                showLoader();
-                setTimeout(() => {
-                    hideLoader();
-                    location.reload();
-                }, 1000);
-
-                localStorage.setItem("items", JSON.stringify(items));
-            }
+      if (!itemName || !itemCode || !itemPrice || CategoryCode === null) {
+        alert("Please fill out all fields correctly.");
+        return;
+      } else if (barocdeCheck) {
+        alert("Barcode Already Exist");
+      } else {
+        items.push({
+          id: items.length + 1,
+          barcode: itemCode,
+          categoryId: CategoryCode,
+          name: itemName,
+          price: Number(itemPrice),
+          IsActive: true,
         });
-    };
+
+        showLoader();
+        setTimeout(() => {
+          hideLoader();
+          location.reload();
+        }, 1000);
+
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+    });
+  };
 };
 
 const itemListScreen = () => {
-    const itemRow = document.querySelector(".item-table tbody");
-    items.forEach((item, index) => {
-        itemRow.innerHTML += `
+  const itemRow = document.querySelector(".item-table tbody");
+  items.forEach((item, index) => {
+    itemRow.innerHTML += `
             <tr>
                 <td>${index + 1}</td>
                 <td>${item.name}</td>
                 <td>${item.barcode}</td>
-                <td>${categories.find((cat) => cat.id === item.categoryId).name}</td>
+                <td>${
+                  categories.find((cat) => cat.id === item.categoryId).name
+                }</td>
                 <td>${item.price}</td>
                 <td>${item.IsActive ? "Active" : "Inactive"}</td>
                 <td>
                     <button class="edit-btn">Edit</button>
-                    <button class="delete-btn" id="${item.barcode}">Delete</button>
+                    <button class="delete-btn" id="${
+                      item.barcode
+                    }">Delete</button>
                 </td>
             </tr>
         `;
-    });
+  });
 };
 
 const itemDeleteBtn = () => {
-    let deleteBtn = document.querySelectorAll(".delete-btn")
-    deleteBtn.forEach((btn, index)=>{
-        btn.addEventListener("click",(e)=>{
-            items = items.filter((item)=> e.target.id != item.barcode)
-            localStorage.setItem("items", JSON.stringify(items));
-            location.reload();        
-        })
-    })    
-}
+  let deleteBtn = document.querySelectorAll(".delete-btn");
+  deleteBtn.forEach((btn, index) => {
+    btn.addEventListener("click", (e) => {
+      items = items.filter((item) => e.target.id != item.barcode);
+      localStorage.setItem("items", JSON.stringify(items));
+      showLoader();
+      setTimeout(() => {
+        hideLoader();
+        location.reload();
+      }, 1000);
+    });
+  });
+};
 if (document.title === "Items") {
-    itemListScreen();
-    addItemScreen();
-    itemDeleteBtn();
+  itemListScreen();
+  addItemScreen();
+  itemDeleteBtn();
 }
-
-
 
 categoryContainer.forEach((cat) => {
-    cat.addEventListener("click", () => {
-        clickedCategory = cat.dataset.categoryid
-        showTheseItems(clickedCategory);
-    });
-
+  cat.addEventListener("click", () => {
+    clickedCategory = cat.dataset.categoryid;
+    showTheseItems(clickedCategory);
+  });
 });
 
 const showTheseItems = (categoryCode) => {
-    itemContainer.innerHTML = "";
-    items.forEach((item) => {
-        if (item.categoryId === categoryCode) {
-            itemContainer.innerHTML +=
-                `   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
+  itemContainer.innerHTML = "";
+  items.forEach((item) => {
+    if (item.categoryId === categoryCode) {
+      itemContainer.innerHTML += `   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
                         <h2 class="items-name">${item.name}</h2>
                         <h3 class="items-price">${item.price} Pkr</h3>
                         <div class="items-select-color"></div>
                         </div>
-                        `
-            // <div id="qtycontainer">
-            // <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-            // <div class="items-qty">0</div>
-            // <div id="plusbutton"><i class="ri-add-line"></i></div>
-            // </div>
-            // addItemInCart(item.name , item.price)            
-        }
-
-    })
+                        `;
+      // <div id="qtycontainer">
+      // <div id="minusbutton"><i class="ri-subtract-line"></i></div>
+      // <div class="items-qty">0</div>
+      // <div id="plusbutton"><i class="ri-add-line"></i></div>
+      // </div>
+      // addItemInCart(item.name , item.price)
+    }
+  });
 };
 
-let selectedItems = [] // GLOBAL
+let selectedItems = []; // GLOBAL
 
 if (document.title === "POS") {
-    itemContainer.addEventListener("click", (event) => {
-        const clickedElement = event.target;
-        const item = clickedElement.closest(".items");
+  itemContainer.addEventListener("click", (event) => {
+    const clickedElement = event.target;
+    const item = clickedElement.closest(".items");
+    if (item) {
+      //change item Color on click
+      item.classList.add("clicked");
+      item.style.color = "black";
 
-        if (item) {
-            //change item Color on click
-            item.classList.add("clicked");
-            item.style.color = "black";
+      let addItemInCart = () => {
+        const itemId = item.id;
+        const itemName = item.querySelector(".items-name");
+        const itemPrice = item.querySelector(".items-price");
+        const ClubItemOnCart = localStorage.getItem("ClubItemOnCart");
+        const booleanValue = ClubItemOnCart
+          ? ClubItemOnCart === "true"
+          : false;
+        let clubItemOnSale = booleanValue;
 
-            let addItemInCart = () => {
-                const itemId = item.id;
-                const itemName = item.querySelector(".items-name");
-                const itemPrice = item.querySelector(".items-price");
-                const clubItemOnSaleval = localStorage.getItem("ClubItemOnCart")
-                const booleanValue = clubItemOnSaleval ? clubItemOnSaleval === 'true' : false;
-                let clubItemOnSale = booleanValue
+        // Create the main container div for cart item
+        const cartItem = document.createElement("div");
+        cartItem.classList.add("cart-items");
+        cartItem.id = itemId;
 
-                // Create the main container div for cart item
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-items');
-                cartItem.id = itemId;
+        // Check if the item is already added or not
+        const clubItemId = selectedItems.find((id) => id.id === itemId);
 
-                // Check if the item is already added or not
-                const clubItemId = selectedItems.find((id) => id.id === itemId);
+        if (clubItemOnSale === false || clubItemId === undefined) {
+          // Create the left section of the cart item
+          let cartItemsLeft = document.createElement("div");
+          cartItemsLeft.classList.add("cart-items-left");
 
-                if (clubItemOnSale === false || clubItemId === undefined) {
+          // Create and append the quantity element
+          const cartItemsQty = document.createElement("h4");
+          cartItemsQty.classList.add("cart-items-qty");
+          cartItemsQty.textContent = 1; // Set text content
+          qtyToInt = parseInt(cartItemsQty.textContent);
+          cartItemsLeft.appendChild(cartItemsQty);
 
-                    // Create the left section of the cart item
-                    let cartItemsLeft = document.createElement('div');
-                    cartItemsLeft.classList.add('cart-items-left');
+          // Create and append the item name element
+          const cartItemsName = document.createElement("h3");
+          cartItemsName.classList.add("cart-items-name");
+          cartItemsName.textContent = itemName.innerText; // Use text from itemName
+          cartItemsLeft.appendChild(cartItemsName);
 
-                    // Create and append the quantity element
-                    const cartItemsQty = document.createElement('h4');
-                    cartItemsQty.classList.add('cart-items-qty');
-                    cartItemsQty.textContent = 1; // Set text content
-                    qtyToInt = parseInt(cartItemsQty.textContent)
-                    cartItemsLeft.appendChild(cartItemsQty);
+          // Append the left section to the main cart item container
+          cartItem.appendChild(cartItemsLeft);
 
-                    // Create and append the item name element
-                    const cartItemsName = document.createElement('h3');
-                    cartItemsName.classList.add('cart-items-name');
-                    cartItemsName.textContent = itemName.innerText; // Use text from itemName
-                    cartItemsLeft.appendChild(cartItemsName);
+          // Create and append the price element
+          const cartItemsPrice = document.createElement("h4");
+          cartItemsPrice.classList.add("cart-items-price");
+          cartItemsPrice.textContent = parseInt(itemPrice.innerText); // Use text from itemPrice
+          cartItem.appendChild(cartItemsPrice);
 
-                    // Append the left section to the main cart item container
-                    cartItem.appendChild(cartItemsLeft);
+          // Append the entire cart item to the cart container
+          cartContainer.appendChild(cartItem);
+        
+        } else if (clubItemOnSale === true || clubItemId === !undefined) {
+          // Club Quantity
+          const CartItems = document.querySelectorAll(".cart-items");
+          const itemsWithId = Array.from(CartItems).find(
+            (el) => el.id === itemId
+          );
+          const qtyDiv = itemsWithId.querySelector(`.cart-items-qty`);
+          qtyToInt = parseInt(qtyDiv.innerText++);
 
-                    // Create and append the price element
-                    const cartItemsPrice = document.createElement('h4');
-                    cartItemsPrice.classList.add('cart-items-price');
-                    cartItemsPrice.textContent = parseInt(itemPrice.innerText); // Use text from itemPrice                     
-                    cartItem.appendChild(cartItemsPrice);
+          // Club Rates
+          const cartItemsPrice = itemsWithId.querySelector(".cart-items-price");
+          cartItemsPrice.textContent =
+            parseInt(itemPrice.innerText) * parseInt(qtyDiv.innerText);
+          }
+          
+        };
+        
+        addItemInCart();
+        selectedItems.push(item); // make an array of selected item id's
+        
+        // Cart array making
+        let cart =  document.querySelectorAll(".cart-items")
+        
+        cartItems = []; // Clear the cartItems array before populating it
+        cart.forEach(item => {
+          let quantity = item.children[0].children[0].innerText;
+          let name = item.children[0].children[1].innerText;
+          let price = item.children[1].innerText;
 
-                    // Append the entire cart item to the cart container
-                    cartContainer.appendChild(cartItem);
-                }
-                else if (clubItemOnSale === true || clubItemId === !undefined) {
-                    // Club Quantity
-                    const CartItems = document.querySelectorAll(".cart-items")
-                    const itemsWithId = Array.from(CartItems).find(el => el.id === itemId);
-                    const qtyDiv = itemsWithId.querySelector(`.cart-items-qty`)
-                    qtyToInt = parseInt(qtyDiv.innerText++)
+          cartItems.push({name: name, price: price, qty: quantity})
+        });
 
-                    // Club Rates
-                    const cartItemsPrice = itemsWithId.querySelector('.cart-items-price');
-                    cartItemsPrice.textContent = parseInt(itemPrice.innerText) * parseInt(qtyDiv.innerText)
-                }
-            };
-
-            addItemInCart();
-
-            selectedItems.push(item) // make an array of selected item id's
-
-            const calulateInvoice = () => {
-                let subtotal = null;
-
-                let ItemAmountArray = [];
-                const ItemAmount = document.querySelectorAll(".cart-items-price");
-                ItemAmount.forEach((item) => {
-                    ItemAmountArray.push(item.innerText)
-
-                })
-                for (let index = 0; index < ItemAmountArray.length; index++) {
-                    subtotal += parseInt(ItemAmountArray[index]);
-                }
-
-                document.querySelector("#subtotal-values").innerHTML = `PKR ${subtotal}`
-                document.querySelector("#total-values").innerHTML = `PKR ${subtotal}`
-            }
-            calulateInvoice()
-
+      const calulateInvoice = () => {
+        subtotal = 0;
+        let ItemAmountArray = [];
+        const ItemAmount = document.querySelectorAll(".cart-items-price");
+        ItemAmount.forEach((item) => {
+          ItemAmountArray.push(item.innerText);
+        });
+        for (let index = 0; index < ItemAmountArray.length; index++) {
+          subtotal += parseInt(ItemAmountArray[index]);
         }
 
+        document.querySelector(
+          "#subtotal-values"
+        ).innerHTML = `PKR ${subtotal}`;
+        document.querySelector("#total-values").innerHTML = `PKR ${subtotal}`;
+      };
+      calulateInvoice();
+    }
+  });
 
+// payment method selection effect
+  const paymentBtn = document.querySelectorAll(".payment-methods-icons");
+  paymentBtn.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      paymentBtn.forEach((remove) => {
+        remove.style.backgroundColor = "";
+        remove.style.color = "";
+      });
+      btn.style.backgroundColor = "white";
+      btn.style.color = "black";
     });
-
-    const paymentBtn = document.querySelectorAll(".payment-methods-icons")
-    paymentBtn.forEach((btn)=>{
-        btn.addEventListener("click" ,(e) => {
-            paymentBtn.forEach((remove)=>{
-                remove.style.backgroundColor = ""  
-                remove.style.color = ""      
-            })
-            btn.style.backgroundColor = "white"  
-            btn.style.color = "black"         
-  
-        })
-    })
+  });
 }
+
 
 
 
 // Update and save parameter in Setup
 const setupChange = () => {
-    let ClubItemOnCart = document.getElementById("ClubItemOnCart")
+  let ClubItemOnCart = document.getElementById("ClubItemOnCart");
 
-    if (ClubItemOnCart.checked === true) {
-        localStorage.setItem("ClubItemOnCart", "true")
-        console.log("Saved: ClubItemOnCart -> true");
-    }
-    else {
-        localStorage.setItem("ClubItemOnCart", "false")
-        console.log("Saved: ClubItemOnCart -> false");
-    }
+  if (ClubItemOnCart.checked === true) {
+    localStorage.setItem("ClubItemOnCart", "true");
+    console.log("Saved: ClubItemOnCart -> true");
+  } else {
+    localStorage.setItem("ClubItemOnCart", "false");
+    console.log("Saved: ClubItemOnCart -> false");
+  }
 };
 
 if (document.title === "Setup") {
-    const updateButton = document.querySelector(".update-btn")
-    let ClubItemOnCart = document.getElementById("ClubItemOnCart")
+  const updateButton = document.querySelector(".update-btn");
+  let ClubItemOnCart = document.getElementById("ClubItemOnCart");
 
-    if (localStorage.getItem("ClubItemOnCart") === "true") {
-        ClubItemOnCart.checked = true
-    }
-    else if (localStorage.getItem("ClubItemOnCart") === "false") {
-        ClubItemOnCart.checked = false
-
-    }
-    updateButton.addEventListener("click", (e) => {
-        setupChange()
-    })
+  if (localStorage.getItem("ClubItemOnCart") === "true") {
+    ClubItemOnCart.checked = true;
+  } else if (localStorage.getItem("ClubItemOnCart") === "false") {
+    ClubItemOnCart.checked = false;
+  }
+  updateButton.addEventListener("click", (e) => {
+    setupChange();
+  });
 }
+
+
+
+
+
+//When click on Pay Button
+payButton.addEventListener("click", () => {
+  let receiptContainer = document.getElementById("receiptContainer");
+  receiptContainer.innerHTML = `
+<div id="receiptbody">
+     <div class="receipt">
+        <div class="header">
+            <img src="./img/logo.jpg" alt="PayPal Logo">
+            <div>
+                <p style="margin: 0; font-size: 12px; color: #666;">${currentDate}</p>
+                <p style="margin: 0; font-size: 12px; color: #666;">0f-113</p>
+            </div>
+        </div>
+        <p style="margin: 0 0 10px;">Vladyslav, Hi</p>
+        <p style="margin: 0 0 20px; font-size: 12px; color: #666;">you've purchased three (3) items in our store:</p>
+
+        <div class="cart">
+        </div>
+        
+        <div class="total">
+        <span>TOTAL</span>
+        <span>$${subtotal}</span>
+        </div>
+        
+        <div class="barcode">
+        <img src="./img/invoice barcode.png" alt="Barcode">
+        </div>
+
+        <a href="#" class="print-button" onclick="window.print(); return false;">Print Receipt</a>
+        </div>
+        </div>
+        `;
+        const cart = document.querySelector(".cart");        
+        cartItems.forEach((item) => {
+          cart.innerHTML += `
+          <div class="cart-item">
+          <span>${item.qty} ${item.name}</span>
+          <span>${item.price}</span>
+          </div>
+          `;
+        });  
+});
