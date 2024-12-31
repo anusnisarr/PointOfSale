@@ -7,11 +7,12 @@ const categoryContainer = document.querySelectorAll(".category");
 let items = JSON.parse(localStorage.getItem("items")) || [];
 const payButton = document.querySelector("#placeorder-btn-name");
 const currentDate = new Date().toDateString();
+let SelectedPaymentMethod = null;
 let subtotal = null; // Global variable to store subtotal
-let cartItems = []  //  Array to store cart item
+let cartItems = []; //  Array to store cart item
 console.log(cartItems);
 
-
+let receiptNote = localStorage.getItem("note");
 
 let CategoryArray = Array.from(categoryContainer);
 
@@ -36,6 +37,19 @@ leftSideOption.forEach((li) => {
     clicked.classList.add("active");
   });
 });
+
+const navContainer = document.querySelector('.nav-container');
+
+document.addEventListener('mousemove', (e) => {
+  if (e.clientY < 10) {
+    // Mouse is near the top of the viewport
+    navContainer.style.top = '10px';
+  } else if (e.clientY > 63) {
+    // Mouse is away from the top
+    navContainer.style.top = '-50px';
+  }
+});
+
 
 const categories = [
   { id: "cat01", name: "Pizza" },
@@ -257,9 +271,7 @@ if (document.title === "POS") {
         const itemName = item.querySelector(".items-name");
         const itemPrice = item.querySelector(".items-price");
         const ClubItemOnCart = localStorage.getItem("ClubItemOnCart");
-        const booleanValue = ClubItemOnCart
-          ? ClubItemOnCart === "true"
-          : false;
+        const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
         let clubItemOnSale = booleanValue;
 
         // Create the main container div for cart item
@@ -299,7 +311,6 @@ if (document.title === "POS") {
 
           // Append the entire cart item to the cart container
           cartContainer.appendChild(cartItem);
-        
         } else if (clubItemOnSale === true || clubItemId === !undefined) {
           // Club Quantity
           const CartItems = document.querySelectorAll(".cart-items");
@@ -313,24 +324,23 @@ if (document.title === "POS") {
           const cartItemsPrice = itemsWithId.querySelector(".cart-items-price");
           cartItemsPrice.textContent =
             parseInt(itemPrice.innerText) * parseInt(qtyDiv.innerText);
-          }
-          
-        };
-        
-        addItemInCart();
-        selectedItems.push(item); // make an array of selected item id's
-        
-        // Cart array making
-        let cart =  document.querySelectorAll(".cart-items")
-        
-        cartItems = []; // Clear the cartItems array before populating it
-        cart.forEach(item => {
-          let quantity = item.children[0].children[0].innerText;
-          let name = item.children[0].children[1].innerText;
-          let price = item.children[1].innerText;
+        }
+      };
 
-          cartItems.push({name: name, price: price, qty: quantity})
-        });
+      addItemInCart();
+      selectedItems.push(item); // make an array of selected item id's
+
+      // Cart array making
+      let cart = document.querySelectorAll(".cart-items");
+
+      cartItems = []; // Clear the cartItems array before populating it
+      cart.forEach((item) => {
+        let quantity = item.children[0].children[0].innerText;
+        let name = item.children[0].children[1].innerText;
+        let price = item.children[1].innerText;
+
+        cartItems.push({ name: name, price: price, qty: quantity });
+      });
 
       const calulateInvoice = () => {
         subtotal = 0;
@@ -352,8 +362,9 @@ if (document.title === "POS") {
     }
   });
 
-// payment method selection effect
+  // payment method selection effect
   const paymentBtn = document.querySelectorAll(".payment-methods-icons");
+
   paymentBtn.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       paymentBtn.forEach((remove) => {
@@ -362,83 +373,124 @@ if (document.title === "POS") {
       });
       btn.style.backgroundColor = "white";
       btn.style.color = "black";
+      SelectedPaymentMethod = e.target.id;
     });
   });
 }
 
-
-
-
 // Update and save parameter in Setup
 const setupChange = () => {
-  let ClubItemOnCart = document.getElementById("ClubItemOnCart");
+  const ClubItemOnCart = document.getElementById("ClubItemOnCart");
+  localStorage.setItem("ClubItemOnCart", ClubItemOnCart.checked ? "true" : "false");
 
-  if (ClubItemOnCart.checked === true) {
-    localStorage.setItem("ClubItemOnCart", "true");
-    console.log("Saved: ClubItemOnCart -> true");
-  } else {
-    localStorage.setItem("ClubItemOnCart", "false");
-    console.log("Saved: ClubItemOnCart -> false");
-  }
+  const receiptAddress = document.getElementById("address");
+  localStorage.setItem("address", receiptAddress.value);
+
+  const receiptNumber = document.getElementById("receipt-number");
+  localStorage.setItem("receiptNumber", receiptNumber.value);
+
+  const receiptNote = document.getElementById("note");
+  localStorage.setItem("note", receiptNote.value);
+
 };
 
 if (document.title === "Setup") {
   const updateButton = document.querySelector(".update-btn");
-  let ClubItemOnCart = document.getElementById("ClubItemOnCart");
+  const ClubItemOnCart = document.getElementById("ClubItemOnCart");
+  const receiptAddress = document.getElementById("address");
+  const receiptNumber = document.getElementById("receipt-number");
+  const receiptNote = document.getElementById("note");
 
-  if (localStorage.getItem("ClubItemOnCart") === "true") {
-    ClubItemOnCart.checked = true;
-  } else if (localStorage.getItem("ClubItemOnCart") === "false") {
-    ClubItemOnCart.checked = false;
-  }
-  updateButton.addEventListener("click", (e) => {
+  // Set the value of the checkbox based on the local storage
+  localStorage.getItem("ClubItemOnCart") === "true" ? (ClubItemOnCart.checked = true) : (ClubItemOnCart.checked = false);
+  localStorage.getItem("address") ? (receiptAddress.value = localStorage.getItem("address")) : (receiptAddress.value = "");
+  localStorage.getItem("receiptNumber") ? (receiptNumber.value = localStorage.getItem("receiptNumber")) : (receiptNumber.value = "");
+  localStorage.getItem("note") ? (receiptNote.value = localStorage.getItem("note")) : (receiptNote.value = "");
+  updateButton.addEventListener("click", () => {
     setupChange();
   });
 }
 
-
-
-
-
 //When click on Pay Button
 payButton.addEventListener("click", () => {
   let receiptContainer = document.getElementById("receiptContainer");
+
+  // If subtotal is null, show an alert and return
+  if (subtotal === null) {
+    alert("Please select an item to proceed");
+    return;
+  }
+  else if (SelectedPaymentMethod === null) {
+    alert("Please select a payment method to proceed");
+    return;
+  }
+  // If esc key is pressed, close the receipt
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      receiptContainer.innerHTML = "";
+    }
+  });
   receiptContainer.innerHTML = `
 <div id="receiptbody">
-     <div class="receipt">
+    <div class="receipt">
         <div class="header">
-            <img src="./img/logo.jpg" alt="PayPal Logo">
-            <div>
-                <p style="margin: 0; font-size: 12px; color: #666;">${currentDate}</p>
-                <p style="margin: 0; font-size: 12px; color: #666;">0f-113</p>
+            <img src="./img/logo.jpg" alt="Logo">
+            <div class="contact-details">
+                <p><strong>Address:</strong> ${localStorage.getItem("address")}</p>
+                <p><strong>Phone:</strong> ${localStorage.getItem("receiptNumber")}</p>
             </div>
         </div>
-        <p style="margin: 0 0 10px;">Vladyslav, Hi</p>
-        <p style="margin: 0 0 20px; font-size: 12px; color: #666;">you've purchased three (3) items in our store:</p>
 
+        <!-- Bill Details Section -->
+        <div class="bill-details">
+            <p><strong>Bill No:</strong> 00123</p>
+            <p><strong>Bill Date:</strong> 25 April 2016</p>
+            <p><strong>Customer Name:</strong> Vladyslav</p>
+            <p><strong>Payment Method:</strong> ${SelectedPaymentMethod}</p>
+        </div>
+
+
+        <!-- Cart Header -->
+        <div class="cart-header">
+            <span>Item</span>
+            <span>Qty</span>
+            <span>Rate</span>
+            <span>Amount</span>
+        </div>
+
+        <!-- Cart Items -->
         <div class="cart">
-        </div>
-        
-        <div class="total">
-        <span>TOTAL</span>
-        <span>$${subtotal}</span>
-        </div>
-        
-        <div class="barcode">
-        <img src="./img/invoice barcode.png" alt="Barcode">
+  
         </div>
 
+        <!-- Total Section -->
+        <div class="total">
+            <span>TOTAL</span>
+            <span>${subtotal}</span>
+        </div>
+
+        <!-- Barcode -->
+        <div class="barcode">
+            <img src="./img/invoice barcode.png" alt="Barcode">
+        </div>
+
+        <!-- Print Button -->
         <a href="#" class="print-button" onclick="window.print(); return false;">Print Receipt</a>
-        </div>
-        </div>
+    </div>
+</div>
+
         `;
-        const cart = document.querySelector(".cart");        
-        cartItems.forEach((item) => {
-          cart.innerHTML += `
+  const cart = document.querySelector(".cart");
+  cartItems.forEach((item) => {
+    cart.innerHTML += `
+
           <div class="cart-item">
-          <span>${item.qty} ${item.name}</span>
+          <span>${item.name}</span>
+          <span>${item.qty}</span>
+          <span>${item.price / item.qty}</span>
           <span>${item.price}</span>
+
           </div>
           `;
-        });  
+  });
 });

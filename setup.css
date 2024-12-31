@@ -153,9 +153,24 @@ body {
     transform: scale(1.05);
 }
 
-/* Form Styling */
+/* Receipt Form Styling */
+
+
+.receipt-form-container {
+    display: flex;
+    border-radius: 10px;
+    width: 100%;
+}
+
+
+span > h1 {
+    font-size: 20px;
+    color: #a29bfe;
+}
+
 .form-group {
-    margin-bottom: 20px;
+    width: 100%;
+    padding: 20px;
 }
 
 .form-group label {
@@ -165,53 +180,27 @@ body {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,textarea {
+    margin-top: 5px;
+    padding: 10px;
+    font-size: 0.8em;
     width: 100%;
-    padding: 12px;
-    background-color: #2e2e3a;
+    height: 41px;
+    background-color: #202020;
     color: #f1f1f1;
-    border: 1px solid #444;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 5px;
-    font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,textarea:focus {
     outline: none;
     border-color: #6c63ff;
     box-shadow: 0 0 5px rgba(108, 99, 255, 0.6);
 }
 
-button.btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #6c63ff; /* Accent color */
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-button.btn:hover {
-    background-color: #574bff;
-    transform: scale(1.05);
-}
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .leftSidePanel {
-        width: 200px;
-    }
 
-    .setup-container {
-        padding: 20px;
-    }
-
-    .form-group {
-        flex: 1 1 100%;
-    }
-}
