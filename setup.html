@@ -1,66 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Setup</title>
-    <link rel="stylesheet" href="setup.css">
-</head>
-
-<body>
-        <!-- Sidebar -->
-        <div class="leftSidePanel">
-            <h1 class="logo">ANePOS</h1>
-            <ul class="menu">
-                <li>Dashboard</li>
-                <li>Reservation</li>
-                <li><a href="item.html">Items</a></li>
-                <li><a href="index.html">Sell</a></li>
-                <li><a href="setup.html">Setup</a></li>
-                <li>Reports</li>
-            </ul>
-        </div>
+    <link rel="stylesheet" href="setup.css"/>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="nav-container">
+      <ul class="nav-bar">
+        <li>Dashboard</li>
+        <li>Reservation</li>
+        <li><a href="item.html">Items</a></li>
+        <li><a href="index.html">Sell</a></li>
+        <li><a href="setup.html">Setup</a></li>
+        <li>Reports</li>
+      </ul>
+    </div>
     <div class="setup-container">
+      <h1 class="setup-title">Setup</h1>
 
-        <h1 class="setup-title">Setup</h1>
+      <!-- receipt form -->
+      <span><h1>Receipt Form</h1></span>
+      <div class="receipt-form-container">
+        <div class="form-group">
+          <label for="logo">Logo:</label>
+          <input type="file" id="logo" name="logo" accept="image/*" />
+        </div>
+        <div class="form-group">
+          <label for="receipt-number">Receipt Number:</label>
+          <input
+            type="text"
+            id="receipt-number"
+            name="receipt-number"
+            placeholder="Enter receipt number"
+          />
+        </div>
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <textarea
+            id="address"
+            name="address"
+            rows="4"
+            placeholder="Enter address"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="note">Note:</label>
+          <textarea
+            id="note"
+            name="note"
+            rows="4"
+            placeholder="Enter note"
+          ></textarea>
+        </div>
+      </div>
 
-     <!-- receipt form -->
-     <span><h1>Receipt Form</h1></span>
-     <div class="receipt-form-container">
-              <div class="form-group">
-                <label for="logo">Logo:</label>
-                <input type="file" id="logo" name="logo" accept="image/*">
-              </div>
-              <div class="form-group">
-                <label for="receipt-number">Receipt Number:</label>
-                <input type="text" id="receipt-number" name="receipt-number" placeholder="Enter receipt number">
-              </div>
-              <div class="form-group">
-                <label for="address">Address:</label>
-                <textarea id="address" name="address" rows="4" placeholder="Enter address"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="note">Note:</label>
-                <textarea id="note" name="note" rows="4" placeholder="Enter note"></textarea>
-              </div>
-          </div>
+      <!-- Toggle Section -->
+      <div class="toggle-section">
+        <span id="clubItemOnCart">
+          <label for="club-toggle" class="toggle-label"
+            >Club Item on Cart</label
+          >
+          <label class="switch">
+            <input type="checkbox" id="ClubItemOnCart" unchecked />
+            <span class="slider round"></span>
+          </label>
+        </span>
+      </div>
 
-        <!-- Toggle Section -->
-        <div class="toggle-section">
-            <span id="clubItemOnCart">
-                <label for="club-toggle" class="toggle-label">Club Item on Cart</label>
-                <label class="switch">
-                    <input type="checkbox" id="ClubItemOnCart" unchecked>
-                    <span class="slider round"></span>
-                </label>
-            </span>
+      <!-- Update Button -->
+      <button class="update-btn">UPDATE</button>
     </div>
-
-    <!-- Update Button -->
-    <button class="update-btn">UPDATE</button>
-    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="Sell.js"></script>
-</body>
-
+  </body>
 </html>

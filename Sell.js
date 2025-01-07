@@ -1,55 +1,43 @@
 // Select the container and button
-const sellScreenElements = document.querySelector("#selectedContainers");
-const leftSideOption = document.querySelectorAll(".menu li");
-const cartContainer = document.querySelector(".cart-items-container");
-let itemContainer = document.querySelector(".itemcontainer");
-const categoryContainer = document.querySelectorAll(".category");
+const sellScreenElements = $("#selectedContainers");
+const leftSideOption = $(".menu li");
+const cartContainer = $(".cart-items-container");
+let itemContainer = $(".itemcontainer");
+const categoryContainer = $(".category");
 let items = JSON.parse(localStorage.getItem("items")) || [];
-const payButton = document.querySelector("#placeorder-btn-name");
-const currentDate = new Date().toDateString();
+const payButton = $("#placeorder-btn-name");
+const currentDate = new Date().toLocaleString("en-US");
 let SelectedPaymentMethod = null;
 let subtotal = null; // Global variable to store subtotal
-let cartItems = []; //  Array to store cart item
-console.log(cartItems);
-
 let receiptNote = localStorage.getItem("note");
 
 let CategoryArray = Array.from(categoryContainer);
+const allBarcode = items.map((item) => item.barcode); // Extract all barcodes
 
 // Iterate over each category and count items
 CategoryArray.forEach((category) => {
-  let itemCount = category.querySelector(".items-count");
-  let categoryId = category.dataset.categoryid; // Get the category ID from dataset
+  let itemCount = $(category).find(".items-count");
+  let categoryId = $(category).data("categoryid"); // Get the category ID from dataset
 
   // Filter items belonging to this category
   let itemsInCategory = items.filter((item) => item.categoryId === categoryId);
 
-  itemCount.innerText = `${itemsInCategory.length} Items`;
-  // console.log(`Category ID: ${categoryId}, Count: ${itemsInCategory.length}`);
+  itemCount.text(`${itemsInCategory.length} Items`);
 });
 
-leftSideOption.forEach((li) => {
-  li.addEventListener("click", (li) => {
-    let clicked = li.target;
-    // Remove 'active' class from all list items
-    leftSideOption.forEach((item) => item.classList.remove("active"));
-    // Add 'active' class to the clicked item
-    clicked.classList.add("active");
-  });
-});
+let selectedItems = []; // Array to store selected items
 
-const navContainer = document.querySelector('.nav-container');
+const navContainer = $(".nav-container");
 
-document.addEventListener('mousemove', (e) => {
+$(document).on("mousemove", (e) => {
   if (e.clientY < 10) {
     // Mouse is near the top of the viewport
-    navContainer.style.top = '10px';
+    navContainer.css("top", "10px");
   } else if (e.clientY > 63) {
     // Mouse is away from the top
-    navContainer.style.top = '-50px';
+    navContainer.css("top", "-50px");
   }
 });
-
 
 const categories = [
   { id: "cat01", name: "Pizza" },
@@ -61,47 +49,24 @@ const categories = [
   { id: "cat07", name: "Deals" },
 ];
 
-// let items = [
-//     { id: "item01", barcode: 1001, categoryId: "cat01", name: "Margherita Pizza", price: 800, IsActive: true },
-//     { id: "item02", barcode: 1002, categoryId: "cat01", name: "Pepperoni Pizza", price: 900, IsActive: true },
-//     { id: "item03", barcode: 1003, categoryId: "cat02", name: "Cheese burger", price: 500, IsActive: true },
-//     { id: "item04", barcode: 1004, categoryId: "cat02", name: "Chicken Burger", price: 550, IsActive: true },
-//     { id: "item05", barcode: 1005, categoryId: "cat03", name: "Spaghetti Bolognese", price: 700, IsActive: true },
-//     { id: "item06", barcode: 1006, categoryId: "cat03", name: "Penne Alfredo", price: 750, IsActive: true },
-//     { id: "item07", barcode: 1007, categoryId: "cat04", name: "Grilled Cheese Sandwich", price: 300, IsActive: true },
-//     { id: "item08", barcode: 1008, categoryId: "cat04", name: "Club Sandwich", price: 400, IsActive: true },
-//     { id: "item09", barcode: 1009, categoryId: "cat05", name: "French Fries", price: 200, IsActive: true },
-//     { id: "item10", barcode: 1010, categoryId: "cat05", name: "Mozzarella Sticks", price: 250, IsActive: true },
-//     { id: "item11", barcode: 1011, categoryId: "cat06", name: "Cola", price: 150, IsActive: true },
-//     { id: "item12", barcode: 1012, categoryId: "cat06", name: "Orange Juice", price: 200, IsActive: true },
-//     { id: "item13", barcode: 1013, categoryId: "cat07", name: "Pizza & Drink Combo", price: 1000, IsActive: true },
-//     { id: "item14", barcode: 1014, categoryId: "cat07", name: "Burger & Fries Combo", price: 800, IsActive: true },
-//     { id: "item15", barcode: 1015, categoryId: "cat08", name: "Extra Cheese", price: 50, IsActive: true },
-//     { id: "item16", barcode: 1016, categoryId: "cat08", name: "Dipping Sauce", price: 30, IsActive: true },
-//     { id: "item17", barcode: 1017, categoryId: "cat08", name: "Mayo Sauce", price: 50, IsActive: true }
-
-// ];
-
-const allBarcode = items.map((item) => item.barcode); // Extract all barcodes
-
-const showLoader = () => {
-  const content = document.querySelector(".content");
-  content.innerHTML = `<span class="loader"></span>`;
-  document.querySelector(".loader").style.display = "block";
+const showLoader = (mainDiv) => {
+  const content = $(`.${mainDiv ? mainDiv : "content"}`);
+  content.html(`<span class="loader"></span>`);
+  $(".loader").show();
 };
 
 const hideLoader = () => {
-  const content = document.querySelector(".content");
-  content.innerHTML = `<span class="loader"></span>`;
-  document.querySelector(".loader").style.display = "none";
+  const content = $(".content");
+  content.html(`<span class="loader"></span>`);
+  $(".loader").hide();
 };
 
 const addItemScreen = () => {
   let CategoryCode = null;
 
-  const addItemButton = document.querySelector(".add-item-btn");
-  addItemButton.addEventListener("click", () => {
-    document.querySelector(".content").innerHTML = `
+  const addItemButton = $(".add-item-btn");
+  addItemButton.on("click", () => {
+    $(".content").html(`
             <div class="content">
                 <h2>Create New Item</h2>
                 <form class="item-form">
@@ -130,30 +95,29 @@ const addItemScreen = () => {
                     <button type="submit" class="btn">Save Item</button>
                 </form>
             </div>
-        `;
+        `);
 
-    const categoryDropDown = document.querySelector("#itemCategory");
+    const categoryDropDown = $("#itemCategory");
     categories.forEach((cat) => {
-      categoryDropDown.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+      categoryDropDown.append(`<option value="${cat.id}">${cat.name}</option>`);
     });
 
-    const categorySelection = document.querySelector("#itemCategory");
-    categorySelection.addEventListener("change", () => {
-      CategoryCode = categorySelection.value;
-      console.log(CategoryCode);
+    const categorySelection = $("#itemCategory");
+    categorySelection.on("change", () => {
+      CategoryCode = categorySelection.val();
     });
 
     setupAddItemHandler();
   });
 
   const setupAddItemHandler = () => {
-    const saveButton = document.querySelector(".btn");
-    saveButton.addEventListener("click", (e) => {
+    const saveButton = $(".btn");
+    saveButton.on("click", (e) => {
       e.preventDefault();
 
-      const itemName = document.querySelector("#itemName").value;
-      const itemCode = Number(document.querySelector("#itemCode").value);
-      const itemPrice = Number(document.querySelector("#itemPrice").value);
+      const itemName = $("#itemName").val();
+      const itemCode = Number($("#itemCode").val());
+      const itemPrice = Number($("#itemPrice").val());
 
       let barocdeCheck = allBarcode.find((barcode) => barcode === itemCode);
 
@@ -185,9 +149,9 @@ const addItemScreen = () => {
 };
 
 const itemListScreen = () => {
-  const itemRow = document.querySelector(".item-table tbody");
+  const itemRow = $(".item-table tbody");
   items.forEach((item, index) => {
-    itemRow.innerHTML += `
+    itemRow.append(`
             <tr>
                 <td>${index + 1}</td>
                 <td>${item.name}</td>
@@ -204,14 +168,14 @@ const itemListScreen = () => {
                     }">Delete</button>
                 </td>
             </tr>
-        `;
+        `);
   });
 };
 
 const itemDeleteBtn = () => {
-  let deleteBtn = document.querySelectorAll(".delete-btn");
-  deleteBtn.forEach((btn, index) => {
-    btn.addEventListener("click", (e) => {
+  let deleteBtn = $(".delete-btn");
+  deleteBtn.each((index, btn) => {
+    $(btn).on("click", (e) => {
       items = items.filter((item) => e.target.id != item.barcode);
       localStorage.setItem("items", JSON.stringify(items));
       showLoader();
@@ -228,269 +192,339 @@ if (document.title === "Items") {
   itemDeleteBtn();
 }
 
-categoryContainer.forEach((cat) => {
-  cat.addEventListener("click", () => {
-    clickedCategory = cat.dataset.categoryid;
+categoryContainer.each((index, cat) => {
+  $(cat).on("click", () => {
+    clickedCategory = $(cat).data("categoryid");
     showTheseItems(clickedCategory);
   });
 });
 
 const showTheseItems = (categoryCode) => {
-  itemContainer.innerHTML = "";
+  itemContainer.html("");
   items.forEach((item) => {
     if (item.categoryId === categoryCode) {
-      itemContainer.innerHTML += `   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
+      itemContainer.append(`   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
                         <h2 class="items-name">${item.name}</h2>
                         <h3 class="items-price">${item.price} Pkr</h3>
                         <div class="items-select-color"></div>
                         </div>
-                        `;
-      // <div id="qtycontainer">
-      // <div id="minusbutton"><i class="ri-subtract-line"></i></div>
-      // <div class="items-qty">0</div>
-      // <div id="plusbutton"><i class="ri-add-line"></i></div>
-      // </div>
-      // addItemInCart(item.name , item.price)
+                        `);
     }
   });
 };
 
-let selectedItems = []; // GLOBAL
-
 if (document.title === "POS") {
-  itemContainer.addEventListener("click", (event) => {
-    const clickedElement = event.target;
+  itemContainer.on("click", (event) => {
+    const clickedElement = $(event.target);
     const item = clickedElement.closest(".items");
-    if (item) {
+    if (item.length) {
       //change item Color on click
-      item.classList.add("clicked");
-      item.style.color = "black";
+      item.addClass("clicked");
+      item.css("color", "black");
 
       let addItemInCart = () => {
-        const itemId = item.id;
-        const itemName = item.querySelector(".items-name");
-        const itemPrice = item.querySelector(".items-price");
+        const itemId = item.attr("id");
+        const itemName = item.find(".items-name");
+        const itemPrice = item.find(".items-price");
+        const itemQty = { innerText: 1 }; // Default quantity to 1
         const ClubItemOnCart = localStorage.getItem("ClubItemOnCart");
         const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
         let clubItemOnSale = booleanValue;
 
-        // Create the main container div for cart item
-        const cartItem = document.createElement("div");
-        cartItem.classList.add("cart-items");
-        cartItem.id = itemId;
+        let CartArrayMaker = () => {
+          let cart = $(".cart-items");
+          cart.each((index, item) => {
+            let quantity = $(item).children().eq(0).text();
+            let name = $(item).children().eq(1).children().eq(0).text();
+            let price = $(item).children().eq(1).children().eq(1).text();
+            let id = $(item).attr("id");
+
+            selectedItems.push({
+              id: id,
+              name: name,
+              price: price,
+              qty: quantity,
+            });
+          });
+        };
+        CartArrayMaker();
 
         // Check if the item is already added or not
         const clubItemId = selectedItems.find((id) => id.id === itemId);
 
-        if (clubItemOnSale === false || clubItemId === undefined) {
-          // Create the left section of the cart item
-          let cartItemsLeft = document.createElement("div");
-          cartItemsLeft.classList.add("cart-items-left");
+        // Create the main container div for cart item
+        const cartItem = $("<div>").addClass("cart-items").attr("id", itemId);
 
+        if (!clubItemOnSale || !clubItemId) {
           // Create and append the quantity element
-          const cartItemsQty = document.createElement("h4");
-          cartItemsQty.classList.add("cart-items-qty");
-          cartItemsQty.textContent = 1; // Set text content
-          qtyToInt = parseInt(cartItemsQty.textContent);
-          cartItemsLeft.appendChild(cartItemsQty);
+          const cartItemsQty = $("<h4>").addClass("cart-items-qty").text(1);
+          cartItem.append(cartItemsQty);
+
+          // Create and append the center section of the cart item
+          const nameAndPrice = $("<div>").addClass("cart-price-name-container");
 
           // Create and append the item name element
-          const cartItemsName = document.createElement("h3");
-          cartItemsName.classList.add("cart-items-name");
-          cartItemsName.textContent = itemName.innerText; // Use text from itemName
-          cartItemsLeft.appendChild(cartItemsName);
-
-          // Append the left section to the main cart item container
-          cartItem.appendChild(cartItemsLeft);
+          const cartItemsName = $("<h3>")
+            .addClass("cart-items-name")
+            .text(itemName.text());
+          nameAndPrice.append(cartItemsName);
 
           // Create and append the price element
-          const cartItemsPrice = document.createElement("h4");
-          cartItemsPrice.classList.add("cart-items-price");
-          cartItemsPrice.textContent = parseInt(itemPrice.innerText); // Use text from itemPrice
-          cartItem.appendChild(cartItemsPrice);
+          const cartItemsPrice = $("<h4>")
+            .addClass("cart-items-price")
+            .text(parseInt(itemPrice.text()) * parseInt(itemQty.innerText));
+          nameAndPrice.append(cartItemsPrice);
+
+          // Append the name and price to the cart item
+          cartItem.append(nameAndPrice);
+
+          // Create and append the remove element
+          const cartItemsRemove = $("<i>").addClass("ri-delete-back-2-fill");
+          cartItem.append(cartItemsRemove);
 
           // Append the entire cart item to the cart container
-          cartContainer.appendChild(cartItem);
-        } else if (clubItemOnSale === true || clubItemId === !undefined) {
+          cartContainer.append(cartItem);
+        } else if (clubItemOnSale === true || clubItemId !== undefined) {
           // Club Quantity
-          const CartItems = document.querySelectorAll(".cart-items");
-          const itemsWithId = Array.from(CartItems).find(
-            (el) => el.id === itemId
-          );
-          const qtyDiv = itemsWithId.querySelector(`.cart-items-qty`);
-          qtyToInt = parseInt(qtyDiv.innerText++);
+          const CartItems = $(".cart-items");
+
+          const itemsWithId = CartItems.filter(function () {
+            return $(this).attr("id") === itemId;
+          });
+
+          const qtyDiv = itemsWithId.find(`.cart-items-qty`);
+
+          let qtyToInt = parseInt(qtyDiv.text());
+
+          qtyDiv.text(++qtyToInt);
 
           // Club Rates
-          const cartItemsPrice = itemsWithId.querySelector(".cart-items-price");
-          cartItemsPrice.textContent =
-            parseInt(itemPrice.innerText) * parseInt(qtyDiv.innerText);
+          const cartItemsPrice = itemsWithId.find(".cart-items-price");
+          cartItemsPrice.text(parseInt(itemPrice.text()) * qtyToInt);
         }
       };
-
       addItemInCart();
-      selectedItems.push(item); // make an array of selected item id's
 
-      // Cart array making
-      let cart = document.querySelectorAll(".cart-items");
+      // Make item quantity editable
+      let cartItemsQty = $(".cart-items-qty");
+      cartItemsQty.each((index, qty) => {
+        $(qty).on("click", () => {
+          $(qty).attr("contentEditable", true).focus();
+        });
+        const updateQty = () => {
+          $(qty).attr("contentEditable", false);
+          const editedQty = parseInt($(qty).text());
+          const cartItem = $(qty).closest(".cart-items");
+          const itemPrice = items.find(
+            (item) => item.id === parseInt(cartItem.attr("id"))
+          ).price;
+          const cartItemsPrice = cartItem.find(".cart-items-price");
+          cartItemsPrice.text(itemPrice * editedQty);
+          calulateInvoice();
+        };
 
-      cartItems = []; // Clear the cartItems array before populating it
-      cart.forEach((item) => {
-        let quantity = item.children[0].children[0].innerText;
-        let name = item.children[0].children[1].innerText;
-        let price = item.children[1].innerText;
+        $(qty).on("keydown", (e) => {
+          if (e.key === "Enter") {
+            updateQty();
+          }
+        });
+        $(document).on("click", (e) => {
+          if (!$(qty).is(e.target)) {
+            updateQty();
+          }
+        });
+      });
 
-        cartItems.push({ name: name, price: price, qty: quantity });
+      $(".ri-delete-back-2-fill").each((index, item) => {
+        $(item).on("click", (e) => {
+          const cartItem = $(e.target).closest(".cart-items");
+          const itemId = cartItem.attr("id");
+          cartItem.remove();
+
+          // Remove item from selectedItems array
+          selectedItems = selectedItems.filter(
+            (selectedItem) => selectedItem.attr("id") !== itemId
+          );
+
+          // Update cartItems array
+          cartItems = cartItems.filter((cartItem) => cartItem.id !== itemId);
+
+          // Recalculate subtotal
+          calulateInvoice();
+        });
       });
 
       const calulateInvoice = () => {
         subtotal = 0;
         let ItemAmountArray = [];
-        const ItemAmount = document.querySelectorAll(".cart-items-price");
-        ItemAmount.forEach((item) => {
-          ItemAmountArray.push(item.innerText);
+        const ItemAmount = $(".cart-items-price");
+        ItemAmount.each((index, item) => {
+          ItemAmountArray.push($(item).text());
         });
+
+        //making subtotal value
         for (let index = 0; index < ItemAmountArray.length; index++) {
           subtotal += parseInt(ItemAmountArray[index]);
         }
 
-        document.querySelector(
-          "#subtotal-values"
-        ).innerHTML = `PKR ${subtotal}`;
-        document.querySelector("#total-values").innerHTML = `PKR ${subtotal}`;
+        $("#subtotal-values").html(`PKR ${subtotal}`);
+        $("#total-values").html(`PKR ${subtotal}`);
       };
       calulateInvoice();
     }
   });
 
   // payment method selection effect
-  const paymentBtn = document.querySelectorAll(".payment-methods-icons");
+  const paymentBtn = $(".payment-methods-icons");
 
-  paymentBtn.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      paymentBtn.forEach((remove) => {
-        remove.style.backgroundColor = "";
-        remove.style.color = "";
+  paymentBtn.each((index, btn) => {
+    $(btn).on("click", (e) => {
+      paymentBtn.each((index, remove) => {
+        $(remove).css("backgroundColor", "");
+        $(remove).css("color", "");
       });
-      btn.style.backgroundColor = "white";
-      btn.style.color = "black";
-      SelectedPaymentMethod = e.target.id;
+      $(btn).css("backgroundColor", "white");
+      $(btn).css("color", "black");
+      SelectedPaymentMethod = $(e.target).attr("id");
     });
   });
 }
 
 // Update and save parameter in Setup
 const setupChange = () => {
-  const ClubItemOnCart = document.getElementById("ClubItemOnCart");
-  localStorage.setItem("ClubItemOnCart", ClubItemOnCart.checked ? "true" : "false");
+  const ClubItemOnCart = $("#ClubItemOnCart");
+  localStorage.setItem(
+    "ClubItemOnCart",
+    ClubItemOnCart.is(":checked") ? "true" : "false"
+  );
 
-  const receiptAddress = document.getElementById("address");
-  localStorage.setItem("address", receiptAddress.value);
+  const receiptAddress = $("#address");
+  localStorage.setItem("address", receiptAddress.val());
 
-  const receiptNumber = document.getElementById("receipt-number");
-  localStorage.setItem("receiptNumber", receiptNumber.value);
+  const receiptNumber = $("#receipt-number");
+  localStorage.setItem("receiptNumber", receiptNumber.val());
 
-  const receiptNote = document.getElementById("note");
-  localStorage.setItem("note", receiptNote.value);
-
+  const receiptNote = $("#note");
+  localStorage.setItem("note", receiptNote.val());
 };
 
 if (document.title === "Setup") {
-  const updateButton = document.querySelector(".update-btn");
-  const ClubItemOnCart = document.getElementById("ClubItemOnCart");
-  const receiptAddress = document.getElementById("address");
-  const receiptNumber = document.getElementById("receipt-number");
-  const receiptNote = document.getElementById("note");
+  const updateButton = $(".update-btn");
+  const ClubItemOnCart = $("#ClubItemOnCart");
+  const receiptAddress = $("#address");
+  const receiptNumber = $("#receipt-number");
+  const receiptNote = $("#note");
 
   // Set the value of the checkbox based on the local storage
-  localStorage.getItem("ClubItemOnCart") === "true" ? (ClubItemOnCart.checked = true) : (ClubItemOnCart.checked = false);
-  localStorage.getItem("address") ? (receiptAddress.value = localStorage.getItem("address")) : (receiptAddress.value = "");
-  localStorage.getItem("receiptNumber") ? (receiptNumber.value = localStorage.getItem("receiptNumber")) : (receiptNumber.value = "");
-  localStorage.getItem("note") ? (receiptNote.value = localStorage.getItem("note")) : (receiptNote.value = "");
-  updateButton.addEventListener("click", () => {
+  localStorage.getItem("ClubItemOnCart") === "true"
+    ? ClubItemOnCart.prop("checked", true)
+    : ClubItemOnCart.prop("checked", false);
+  localStorage.getItem("address")
+    ? receiptAddress.val(localStorage.getItem("address"))
+    : receiptAddress.val("");
+  localStorage.getItem("receiptNumber")
+    ? receiptNumber.val(localStorage.getItem("receiptNumber"))
+    : receiptNumber.val("");
+  localStorage.getItem("note")
+    ? receiptNote.val(localStorage.getItem("note"))
+    : receiptNote.val("");
+  updateButton.on("click", () => {
     setupChange();
+    showLoader("setup-container");
+    setTimeout(() => {
+      hideLoader();
+      location.reload();
+    }, 1000);
   });
 }
 
-//When click on Pay Button
-payButton.addEventListener("click", () => {
-  let receiptContainer = document.getElementById("receiptContainer");
 
-  // If subtotal is null, show an alert and return
+//When click on Pay Button
+payButton.on("click", () => {
   if (subtotal === null) {
     alert("Please select an item to proceed");
     return;
-  }
-  else if (SelectedPaymentMethod === null) {
+  } else if (SelectedPaymentMethod === null) {
     alert("Please select a payment method to proceed");
     return;
   }
-  // If esc key is pressed, close the receipt
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      receiptContainer.innerHTML = "";
-    }
-  });
-  receiptContainer.innerHTML = `
-<div id="receiptbody">
-    <div class="receipt">
+
+  const receiptContainer = $("#receiptContainer");
+  const address = localStorage.getItem("address");
+  const receiptNumber = localStorage.getItem("receiptNumber");
+
+  receiptContainer.html(`
+    <div id="receiptbody">
+      <div class="receipt">
+        <div class="closeBtn"><i class="ri-close-line"></i></div>
         <div class="header">
-            <img src="./img/logo.jpg" alt="Logo">
-            <div class="contact-details">
-                <p><strong>Address:</strong> ${localStorage.getItem("address")}</p>
-                <p><strong>Phone:</strong> ${localStorage.getItem("receiptNumber")}</p>
-            </div>
-        </div>
-
-        <!-- Bill Details Section -->
-        <div class="bill-details">
-            <p><strong>Bill No:</strong> 00123</p>
-            <p><strong>Bill Date:</strong> 25 April 2016</p>
-            <p><strong>Customer Name:</strong> Vladyslav</p>
-            <p><strong>Payment Method:</strong> ${SelectedPaymentMethod}</p>
-        </div>
-
-
-        <!-- Cart Header -->
-        <div class="cart-header">
-            <span>Item</span>
-            <span>Qty</span>
-            <span>Rate</span>
-            <span>Amount</span>
-        </div>
-
-        <!-- Cart Items -->
-        <div class="cart">
-  
-        </div>
-
-        <!-- Total Section -->
-        <div class="total">
-            <span>TOTAL</span>
-            <span>${subtotal}</span>
-        </div>
-
-        <!-- Barcode -->
-        <div class="barcode">
-            <img src="./img/invoice barcode.png" alt="Barcode">
-        </div>
-
-        <!-- Print Button -->
-        <a href="#" class="print-button" onclick="window.print(); return false;">Print Receipt</a>
-    </div>
-</div>
-
-        `;
-  const cart = document.querySelector(".cart");
-  cartItems.forEach((item) => {
-    cart.innerHTML += `
-
-          <div class="cart-item">
-          <span>${item.name}</span>
-          <span>${item.qty}</span>
-          <span>${item.price / item.qty}</span>
-          <span>${item.price}</span>
-
+          <img src="./img/logo.jpg" alt="Logo">
+          <div class="contact-details">
+            <p><strong>Address:</strong> ${address}</p>
+            <p><strong>Phone:</strong> ${receiptNumber}</p>
           </div>
-          `;
+        </div>
+        <div class="bill-details">
+          <p><strong>Bill No: </strong> 00123</p>
+          <p><strong>Bill Date: </strong>${currentDate}</p>
+          <p><strong>Customer Name: </strong></p>
+          <p><strong>Payment Method: </strong> ${SelectedPaymentMethod}</p>
+        </div>
+        <div class="cart-header">
+          <span>Item</span>
+          <span>Qty</span>
+          <span>Rate</span>
+          <span>Amount</span>
+        </div>
+        <div class="cart"></div>
+        <div class="total">
+          <span>TOTAL</span>
+          <span>${subtotal}</span>
+        </div>
+        <div class="barcode">
+          <img src="./img/invoice barcode.png" alt="Barcode">
+        </div>
+        <a href="#" class="print-button" onclick="window.print(); return false;">Print Receipt</a>
+      </div>
+    </div>
+  `);
+
+  const cart = $(".cart");
+  $(".cart-items").each((index, item) => {
+    const itemName = $(item).find(".cart-items-name").text();
+    const itemQty = $(item).find(".cart-items-qty").text();
+    const itemPrice = $(item).find(".cart-items-price").text() / itemQty;
+    const itemAmount = $(item).find(".cart-items-price").text();
+
+    cart.append(`
+      <div class="cart-item">
+        <span>${itemName}</span>
+        <span>${itemQty}</span>
+        <span>${itemPrice}</span>
+        <span>${itemAmount}</span>
+      </div>
+    `);
   });
+
+  const closeReceipt = () => {
+    receiptContainer.html("");
+    location.reload();
+    $(window).off("keyup", handleEscKey);
+  };
+
+  const handleEscKey = (event) => {
+    if (event.key === "Escape") {
+      closeReceipt();
+    }
+  };
+
+  $(".closeBtn").on("click", closeReceipt);
+  $(window).on("keyup", handleEscKey);
 });
+
+let SaleHistory = [
+  {
+    BillNo: "1",
+    BillDate: undefined,
+  },
+];
