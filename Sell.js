@@ -482,7 +482,7 @@ payButton.on("click", () => {
           <span>${subtotal}</span>
         </div>
         <div class="barcode">
-          <img src="./img/invoice barcode.png" alt="Barcode">
+          <img src="./img/invoicebarcode.png" alt="Barcode">
         </div>
         <a href="#" class="print-button" onclick="window.print(); return false;">Print Receipt</a>
       </div>
