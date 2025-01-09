@@ -3,15 +3,19 @@ const sellScreenElements = $("#selectedContainers");
 const leftSideOption = $(".menu li");
 const cartContainer = $(".cart-items-container");
 let itemContainer = $(".itemcontainer");
+const navContainer = $(".nav-container");
 const categoryContainer = $(".category");
+let CategoryArray = Array.from(categoryContainer);
 let items = JSON.parse(localStorage.getItem("items")) || [];
 const payButton = $("#placeorder-btn-name");
 const currentDate = new Date().toLocaleString("en-US");
+let selectedItems = []; // Array to store selected items
 let SelectedPaymentMethod = null;
 let subtotal = null; // Global variable to store subtotal
+let lastBillNo = localStorage.getItem("lastBillNo") || 0;
 let receiptNote = localStorage.getItem("note");
+let saleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
-let CategoryArray = Array.from(categoryContainer);
 const allBarcode = items.map((item) => item.barcode); // Extract all barcodes
 
 // Iterate over each category and count items
@@ -24,10 +28,6 @@ CategoryArray.forEach((category) => {
 
   itemCount.text(`${itemsInCategory.length} Items`);
 });
-
-let selectedItems = []; // Array to store selected items
-
-const navContainer = $(".nav-container");
 
 $(document).on("mousemove", (e) => {
   if (e.clientY < 10) {
@@ -127,7 +127,8 @@ const addItemScreen = () => {
       } else if (barocdeCheck) {
         alert("Barcode Already Exist");
       } else {
-        const newItemId = items.length > 0 ? Math.max(...items.map(item => item.id)) + 1 : 1;
+        const newItemId =
+          items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
         items.push({
           id: newItemId,
           barcode: itemCode,
@@ -213,7 +214,7 @@ const showTheseItems = (categoryCode) => {
   itemContainer.html("");
   items.forEach((item) => {
     console.log(item);
-    
+
     if (item.categoryId === categoryCode) {
       itemContainer.append(`   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
                         <h2 class="items-name">${item.name}</h2>
@@ -234,7 +235,7 @@ const showTheseItems = (categoryCode) => {
     }
   });
 };
- 
+
 if (document.title === "POS") {
   itemContainer.on("click", (event) => {
     const clickedElement = $(event.target);
@@ -415,6 +416,46 @@ if (document.title === "POS") {
   });
 }
 
+const SaleHistoryList = () => {
+  const salehistoryRow = $(".history-table tbody");
+  saleHistory.forEach((sale, index) => {
+    salehistoryRow.append(`
+            <tr>
+                <td>${sale.BillNo}</td>
+                <td>${sale.BillDate}</td>
+                <td>${sale.TotalAmount}</td>
+                <td>${sale.PaymentMethod}</td>
+                  <td>
+                    <button class="receipt-btn" id="${sale.BillNo}">Show</button>
+                </td>
+                <td>
+                    <button class="delete-btn" id="${sale.BillNo}">Delete</button>
+                </td>
+            </tr>
+        `);
+  });
+};
+
+const SaleHistoryDeleteBtn = () => {
+  let deleteBtn = $(".delete-btn");
+  deleteBtn.each((index, btn) => {
+    $(btn).on("click", (e) => {
+      saleHistory = saleHistory.filter((sale) => e.target.id != sale.BillNo);
+      localStorage.setItem("SaleHistory", JSON.stringify(saleHistory));
+      showLoader();
+      setTimeout(() => {
+        hideLoader();
+        location.reload();
+      }, 1000);
+    });
+  });
+};
+
+if (document.title === "sale History") {
+  SaleHistoryList();
+  SaleHistoryDeleteBtn();
+}
+
 // Update and save parameter in Setup
 const setupChange = () => {
   const ClubItemOnCart = $("#ClubItemOnCart");
@@ -465,17 +506,26 @@ if (document.title === "Setup") {
 
 //When click on Pay Button
 payButton.on("click", () => {
-  if (subtotal === null || subtotal === 0) {
+  if (!subtotal) {
     alert("Please select an item to proceed");
     return;
-  } else if (SelectedPaymentMethod === null) {
+  } else if (!SelectedPaymentMethod) {
     alert("Please select a payment method to proceed");
+    return;
+  } else if (
+    $(".cart-items-qty").filter((index, item) => $(item).text() === "0")
+      .length > 0
+  ) {
+    alert("Please add quantity to the item to proceed");
     return;
   }
 
   const receiptContainer = $("#receiptContainer");
   const address = localStorage.getItem("address");
   const receiptNumber = localStorage.getItem("receiptNumber");
+  lastBillNo = Number(lastBillNo) + 1;
+  localStorage.setItem("lastBillNo", lastBillNo);
+  console.log(localStorage.getItem("lastBillNo"));
 
   receiptContainer.html(`
     <div id="receiptbody">
@@ -489,7 +539,7 @@ payButton.on("click", () => {
           </div>
         </div>
         <div class="bill-details">
-          <p><strong>Bill No: </strong> 00123</p>
+          <p><strong>Bill No: </strong> ${lastBillNo}</p>
           <p><strong>Bill Date: </strong>${currentDate}</p>
           <p><strong>Customer Name: </strong></p>
           <p><strong>Payment Method: </strong> ${SelectedPaymentMethod}</p>
@@ -544,11 +594,37 @@ payButton.on("click", () => {
 
   $(".closeBtn").on("click", closeReceipt);
   $(window).on("keyup", handleEscKey);
+
+  addSaleHistory(); // Add this line to run the function on pay
+  
 });
 
-let SaleHistory = [
-  {
-    BillNo: "1",
-    BillDate: undefined,
-  },
-];
+const addSaleHistory = () => {
+  let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
+
+  let items = [];
+
+  $(".cart-items").each((index, item) => {
+    let itemName = $(item).find(".cart-items-name").text();
+    let itemQty = $(item).find(".cart-items-qty").text();
+    let itemPrice = $(item).find(".cart-items-price").text() / itemQty;
+    let itemAmount = $(item).find(".cart-items-price").text();
+
+    items.push({
+      ItemName: itemName,
+      Qty: itemQty,
+      Rate: itemPrice,
+      Amount: itemAmount,
+    });
+  });
+
+  SaleHistory.push({
+    BillNo: lastBillNo,
+    BillDate: currentDate,
+    PaymentMethod: SelectedPaymentMethod,
+    TotalAmount: subtotal,
+    Items: items,
+  });
+
+  localStorage.setItem("SaleHistory", JSON.stringify(SaleHistory));
+};

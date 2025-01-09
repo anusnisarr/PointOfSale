@@ -220,9 +220,11 @@ outline: none; /* Removes focus outline */
     flex-direction: column;
     border-radius: 11px;
     cursor: pointer;
-    /* opacity: 0; Initially hidden */
+    overflow: hidden;
+    /* opacity: 0; Initially hidden */  
     /* transform: translateY(-30px); Start slightly below */
-    transition: all 0.8s cubic-bezier(0.8, 0, 0.1, 1);
+    transition: color 0.8s cubic-bezier(0.8, 0, 0.7, 1);
+
 
 }
 .items::before {
