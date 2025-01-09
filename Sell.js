@@ -127,8 +127,9 @@ const addItemScreen = () => {
       } else if (barocdeCheck) {
         alert("Barcode Already Exist");
       } else {
+        const newItemId = items.length > 0 ? Math.max(...items.map(item => item.id)) + 1 : 1;
         items.push({
-          id: items.length + 1,
+          id: newItemId,
           barcode: itemCode,
           categoryId: CategoryCode,
           name: itemName,
@@ -194,14 +195,25 @@ if (document.title === "Items") {
 
 categoryContainer.each((index, cat) => {
   $(cat).on("click", () => {
-    clickedCategory = $(cat).data("categoryid");
-    showTheseItems(clickedCategory);
+    const itemCountText = $(cat).children().last().text();
+    const itemContainer = $("#itemcontainerId");
+
+    if (itemCountText === "0 Items") {
+      itemContainer.html("<h3>No Items Available</h3>");
+      itemContainer.addClass("centerText").removeClass("itemcontainer");
+    } else {
+      itemContainer.removeClass("centerText").addClass("itemcontainer");
+      const categoryCode = $(cat).data("categoryid");
+      showTheseItems(categoryCode);
+    }
   });
 });
 
 const showTheseItems = (categoryCode) => {
   itemContainer.html("");
   items.forEach((item) => {
+    console.log(item);
+    
     if (item.categoryId === categoryCode) {
       itemContainer.append(`   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
                         <h2 class="items-name">${item.name}</h2>
@@ -211,12 +223,23 @@ const showTheseItems = (categoryCode) => {
                         `);
     }
   });
-};
 
+  const cartItems = $(".cart-items");
+  cartItems.each((index, cartItem) => {
+    const itemId = $(cartItem).attr("id");
+    const itemElement = $(`.items#${itemId}`);
+    if (itemElement.length) {
+      itemElement.addClass("clicked");
+      itemElement.css("color", "black");
+    }
+  });
+};
+ 
 if (document.title === "POS") {
   itemContainer.on("click", (event) => {
     const clickedElement = $(event.target);
     const item = clickedElement.closest(".items");
+
     if (item.length) {
       //change item Color on click
       item.addClass("clicked");
@@ -340,14 +363,16 @@ if (document.title === "POS") {
           const cartItem = $(e.target).closest(".cart-items");
           const itemId = cartItem.attr("id");
           cartItem.remove();
+          const clickedItem = $(".items").filter(function () {
+            return $(this).attr("id") === itemId;
+          });
+
+          // Remove clicked class and color
+          clickedItem.removeClass("clicked");
+          clickedItem.css("color", "white");
 
           // Remove item from selectedItems array
-          selectedItems = selectedItems.filter(
-            (selectedItem) => selectedItem.attr("id") !== itemId
-          );
-
-          // Update cartItems array
-          cartItems = cartItems.filter((cartItem) => cartItem.id !== itemId);
+          selectedItems = selectedItems.filter((item) => item.id !== itemId);
 
           // Recalculate subtotal
           calulateInvoice();
@@ -438,10 +463,9 @@ if (document.title === "Setup") {
   });
 }
 
-
 //When click on Pay Button
 payButton.on("click", () => {
-  if (subtotal === null) {
+  if (subtotal === null || subtotal === 0) {
     alert("Please select an item to proceed");
     return;
   } else if (SelectedPaymentMethod === null) {
