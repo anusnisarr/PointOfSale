@@ -187,13 +187,17 @@ const itemImport = () => {
 
 itemImport().then((output) => {
   console.log(output);
-
+  let DuplicateExist;
+  console.log(DuplicateExist);
+  
   output.forEach((item) => {
-    let barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
-
+    barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
+    console.log(`${barocdeCheck} this barcode already exist`);
     if (barocdeCheck) {
+      DuplicateExist = true
       alert(`Barcode ${item.barcode} Already Exist`);
     } else {
+      DuplicateExist = false
       const newItemId =
         items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
       items.push({
@@ -204,10 +208,18 @@ itemImport().then((output) => {
         price: Number(item.price),
         IsActive: true,
       });
-      localStorage.setItem("items", JSON.stringify(items));
-      itemListScreen(output);
+      showLoader();
+      setTimeout(() => {
+        hideLoader();
+        location.reload();
+      }, 1000);
     }
+    
   });
+  if (!DuplicateExist) {
+    itemListScreen(output);
+    localStorage.setItem("items", JSON.stringify(items));
+  } 
 
 })
 .catch((error) => {
