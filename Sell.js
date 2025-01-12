@@ -14,6 +14,7 @@ let CategoryArray = Array.from(categoryContainer);
 let items = JSON.parse(localStorage.getItem("items")) || [];
 
 // Select the pay button and get the current date
+const paymentBtn = $(".payment-methods-icons");
 const payButton = $("#placeorder-btn-name");
 const currentDate = new Date().toLocaleString("en-US");
 
@@ -196,9 +197,6 @@ const itemImport = () => {
   });
 };
 
-
-
-
 const itemListScreen = (itemData) => {
   const itemRow = $(".item-table tbody");
   itemData.forEach((item, index) => {
@@ -207,19 +205,21 @@ const itemListScreen = (itemData) => {
                 <td>${index + 1}</td>
                 <td>${item.name}</td>
                 <td>${item.barcode}</td>
-                <td>${categories.find((cat) => cat.id === item.categoryId).name}</td>
+                <td>${
+                  categories.find((cat) => cat.id === item.categoryId).name
+                }</td>
                 <td>${item.price}</td>
                 <td>${item.IsActive ? "Active" : "Inactive"}</td>
                 <td>
                     <button class="edit-btn">Edit</button>
-                    <button class="delete-btn" id="${item.barcode}">Delete</button>
+                    <button class="delete-btn" id="${
+                      item.barcode
+                    }">Delete</button>
                 </td>
             </tr>
         `);
   });
 };
-
-
 
 const itemDeleteBtn = () => {
   let deleteBtn = $(".delete-btn");
@@ -236,45 +236,47 @@ const itemDeleteBtn = () => {
   });
 };
 if (document.title === "Items") {
-  itemImport().then((output) => {
-    let DuplicateExist;  
-  
-    output.forEach((item) => {
-      barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
-      console.log(`${barocdeCheck} this barcode already exist`);
-      if (barocdeCheck) {
-        DuplicateExist = true
-        alert(`Barcode ${item.barcode} Already Exist`);
-      } else {
-        DuplicateExist = false
-        const newItemId =
-          items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
-        items.push({
-          id: newItemId,
-          barcode: item.barcode,
-          categoryId: item.categoryId,
-          name: item.name,
-          price: Number(item.price),
-          IsActive: true,
-        });
-        showLoader();
-        setTimeout(() => {
-          hideLoader();
-          location.reload();
-        }, 1000);
+  itemImport()
+    .then((output) => {
+      let DuplicateExist;
+
+      output.forEach((item) => {
+        barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
+        console.log(`${barocdeCheck} this barcode already exist`);
+        if (barocdeCheck) {
+          DuplicateExist = true;
+          alert(`Barcode ${item.barcode} Already Exist`);
+        } else {
+          DuplicateExist = false;
+          const newItemId =
+            items.length > 0
+              ? Math.max(...items.map((item) => item.id)) + 1
+              : 1;
+          items.push({
+            id: newItemId,
+            barcode: item.barcode,
+            categoryId: item.categoryId,
+            name: item.name,
+            price: Number(item.price),
+            IsActive: true,
+          });
+          showLoader();
+          setTimeout(() => {
+            hideLoader();
+            location.reload();
+          }, 1000);
+        }
+      });
+
+      if (!DuplicateExist) {
+        itemListScreen(output);
+        localStorage.setItem("items", JSON.stringify(items));
       }
-      
+    })
+    .catch((error) => {
+      console.error(error);
     });
-  
-    if (!DuplicateExist) {
-      itemListScreen(output);
-      localStorage.setItem("items", JSON.stringify(items));
-    } 
-  
-  }).catch((error) => {
-    console.error(error);
-  });
-  
+
   itemListScreen(items);
   addItemScreen();
   itemDeleteBtn();
@@ -312,19 +314,17 @@ const showTheseItems = (categoryId) => {
 };
 
 const keepItemSelected = () => {
-
-    const cartItems = $(".cart-items");
-    cartItems.each((index, cartItem) => {
+  const cartItems = $(".cart-items");
+  cartItems.each((index, cartItem) => {
     const itemId = $(cartItem).attr("id");
     console.log(itemId);
     const itemElement = $(`.items#${itemId}`);
     if (itemElement.length) {
       itemElement.addClass("clicked");
       itemElement.css("color", "black");
-      }
-    });
-  
-}
+    }
+  });
+};
 
 const itemSearchHandler = (searchBox, callback) => {
   searchBox.on("input", function () {
@@ -341,13 +341,13 @@ const itemSearchHandler = (searchBox, callback) => {
 // Usable item search handler to give searbox and take searched result array
 itemSearchHandler(searchBox, (searchResult) => {
   showItemsOnSearch(searchResult);
-  keepItemSelected()
+  keepItemSelected();
 });
 
 const showItemsOnSearch = (searchResult) => {
-  if (itemContainer.hasClass("centerText")) {    
-    itemContainer.removeClass("centerText")
-    itemContainer.addClass("itemcontainer")
+  if (itemContainer.hasClass("centerText")) {
+    itemContainer.removeClass("centerText");
+    itemContainer.addClass("itemcontainer");
   }
   itemContainer.empty(); // Clear previous search results
   searchResult.forEach((item) => {
@@ -362,7 +362,7 @@ const showItemsOnSearch = (searchResult) => {
 };
 
 //this line to keep showing all items at first when no category clicked
-showItemsOnSearch(items.filter((item) => item.name.toLowerCase().includes("")))
+showItemsOnSearch(items.filter((item) => item.name.toLowerCase().includes("")));
 
 if (document.title === "POS") {
   itemContainer.on("click", (event) => {
@@ -495,17 +495,16 @@ if (document.title === "POS") {
           const clickedItem = $(".items").filter(function () {
             return $(this).attr("id") === itemId;
           });
-         
-          
-            // Remove clicked class and color if no item in cart matches the clicked item
-            let alreadyInCart = $(".cart-items").filter(function() {
-            return $(this).attr("id") === clickedItem.attr("id");
-            });
 
-            if (alreadyInCart.length === 0) {
+          // Remove clicked class and color if no item in cart matches the clicked item
+          let alreadyInCart = $(".cart-items").filter(function () {
+            return $(this).attr("id") === clickedItem.attr("id");
+          });
+
+          if (alreadyInCart.length === 0) {
             clickedItem.removeClass("clicked");
             clickedItem.css("color", "white");
-            }
+          }
 
           // Remove item from selectedItems array
           selectedItems = selectedItems.filter((item) => item.id !== itemId);
@@ -534,9 +533,6 @@ if (document.title === "POS") {
       calulateInvoice();
     }
   });
-
-  // Payment method selection effect
-  const paymentBtn = $(".payment-methods-icons");
 
   paymentBtn.on("click", function (e) {
     // Reset styles for all buttons
@@ -668,40 +664,51 @@ payButton.on("click", () => {
   console.log(localStorage.getItem("lastBillNo"));
 
   receiptContainer.html(`
-    <div id="receiptbody">
-      <div class="receipt">
-        <div class="closeBtn"><i class="ri-close-line"></i></div>
-        <div class="header">
-          <img src="./img/logo.jpg" alt="Logo">
-          <div class="contact-details">
-            <p><strong>Address:</strong> ${address}</p>
-            <p><strong>Phone:</strong> ${receiptNumber}</p>
+    <div class="closeBtn"><i class="ri-close-line"></i></div>
+
+      <div id="receiptbody">
+        <div class="receipt">
+          <div class="header">
+            <img src="./img/logo.jpg" alt="Logo">
+            <div class="contact-details">
+              <p><strong>Address:</strong> ${address}</p>
+              <p><strong>Phone:</strong> ${receiptNumber}</p>
+            </div>
+          </div>
+          <div class="bill-details">
+            <p><strong>Bill No: </strong> ${lastBillNo}</p>
+            <p><strong>Bill Date: </strong>${currentDate}</p>
+            <p><strong>Customer Name: </strong></p>
+            <p><strong>Payment Method: </strong> ${SelectedPaymentMethod}</p>
+          </div>
+          <div class="item-header">
+            <span>Item</span>
+            <span>Qty</span>
+            <span>Rate</span>
+            <span>Amount</span>
+          </div>
+          <div class="cart-item-container"></div>
+          <div class="total">
+            <span>TOTAL</span>
+            <span>${subtotal}</span>
+          </div>
+          <div class="barcode">
+            <img src="./img/invoicebarcode.png" alt="Barcode">
           </div>
         </div>
-        <div class="bill-details">
-          <p><strong>Bill No: </strong> ${lastBillNo}</p>
-          <p><strong>Bill Date: </strong>${currentDate}</p>
-          <p><strong>Customer Name: </strong></p>
-          <p><strong>Payment Method: </strong> ${SelectedPaymentMethod}</p>
-        </div>
-        <div class="item-header">
-          <span>Item</span>
-          <span>Qty</span>
-          <span>Rate</span>
-          <span>Amount</span>
-        </div>
-        <div class="cart-item-container"></div>
-        <div class="total">
-          <span>TOTAL</span>
-          <span>${subtotal}</span>
-        </div>
-        <div class="barcode">
-          <img src="./img/invoicebarcode.png" alt="Barcode">
-        </div>
-        <a href="#" class="print-button" onclick="window.print(); return false;">Print Receipt</a>
       </div>
-    </div>
+        <a href="#" class="print-button">Print Receipt</a>
   `);
+
+  $(".print-button").on("click", function () {
+    let originalBody = $("body").html();
+    let receiptBody = $("#receiptbody").clone();
+    $("body").empty().append(receiptBody);
+    window.print();
+    receiptContainer.html("");
+    location.reload();
+    $("body").empty().append(originalBody);
+  });
 
   $(".cart-items").each((index, item) => {
     const itemName = $(item).find(".cart-items-name").text();

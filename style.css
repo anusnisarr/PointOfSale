@@ -483,7 +483,7 @@ outline: none; /* Removes focus outline */
 
 
 /* Recipt Styling */
-#receiptbody {
+#receiptContainer {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -491,15 +491,25 @@ outline: none; /* Removes focus outline */
     position: absolute;
     top: 50%;
     left: 50%;
+    color: black;
+    background-color: #ffffff;
     transform: translate(-50% , -50%);
 }
+#receiptbody{
+    color: black;
+    font-family: Arial, sans-serif;
+
+}
+
 /* Receipt Container */
 #receiptbody .receipt {
+    margin: 0;
+    padding: 0;
     width: 80mm;
     background-color: #ffffff;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
 /* Header Section */
@@ -624,5 +634,6 @@ outline: none; /* Removes focus outline */
 .closeBtn {
     display: flex;
     justify-content:flex-end;
+    padding: 6px 7px;
     cursor: pointer;
 }
