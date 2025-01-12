@@ -1,4 +1,4 @@
-// Select the container and button
+// Select the container and button elements
 const sellScreenElements = $("#selectedContainers");
 const leftSideOption = $(".menu li");
 const cartContainer = $(".cart-items-container");
@@ -6,18 +6,29 @@ let itemContainer = $(".itemcontainer");
 const searchBox = $("#itemsearchbox");
 const navContainer = $(".nav-container");
 const categoryContainer = $(".category");
+
+// Convert categoryContainer to an array
 let CategoryArray = Array.from(categoryContainer);
+
+// Retrieve items from localStorage or initialize an empty array
 let items = JSON.parse(localStorage.getItem("items")) || [];
+
+// Select the pay button and get the current date
 const payButton = $("#placeorder-btn-name");
 const currentDate = new Date().toLocaleString("en-US");
+
+// Initialize variables for selected items, payment method, subtotal, and last bill number
 let selectedItems = []; // Array to store selected items
 let SelectedPaymentMethod = "Cash";
 let subtotal = null; // Global variable to store subtotal
 let lastBillNo = localStorage.getItem("lastBillNo") || 0;
+
+// Retrieve receipt note and sale history from localStorage
 let receiptNote = localStorage.getItem("note");
 let saleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
-const allBarcode = items.map((item) => item.barcode); // Extract all barcodes
+// Extract all barcodes from items
+const allBarcode = items.map((item) => item.barcode);
 
 // Iterate over each category and count items
 CategoryArray.forEach((category) => {
@@ -185,46 +196,7 @@ const itemImport = () => {
   });
 };
 
-itemImport().then((output) => {
-  console.log(output);
-  let DuplicateExist;
-  console.log(DuplicateExist);
-  
-  output.forEach((item) => {
-    barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
-    console.log(`${barocdeCheck} this barcode already exist`);
-    if (barocdeCheck) {
-      DuplicateExist = true
-      alert(`Barcode ${item.barcode} Already Exist`);
-    } else {
-      DuplicateExist = false
-      const newItemId =
-        items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
-      items.push({
-        id: newItemId,
-        barcode: item.barcode,
-        categoryId: item.categoryId,
-        name: item.name,
-        price: Number(item.price),
-        IsActive: true,
-      });
-      showLoader();
-      setTimeout(() => {
-        hideLoader();
-        location.reload();
-      }, 1000);
-    }
-    
-  });
-  if (!DuplicateExist) {
-    itemListScreen(output);
-    localStorage.setItem("items", JSON.stringify(items));
-  } 
 
-})
-.catch((error) => {
-  console.error(error);
-});
 
 
 const itemListScreen = (itemData) => {
@@ -264,6 +236,45 @@ const itemDeleteBtn = () => {
   });
 };
 if (document.title === "Items") {
+  itemImport().then((output) => {
+    let DuplicateExist;  
+  
+    output.forEach((item) => {
+      barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
+      console.log(`${barocdeCheck} this barcode already exist`);
+      if (barocdeCheck) {
+        DuplicateExist = true
+        alert(`Barcode ${item.barcode} Already Exist`);
+      } else {
+        DuplicateExist = false
+        const newItemId =
+          items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
+        items.push({
+          id: newItemId,
+          barcode: item.barcode,
+          categoryId: item.categoryId,
+          name: item.name,
+          price: Number(item.price),
+          IsActive: true,
+        });
+        showLoader();
+        setTimeout(() => {
+          hideLoader();
+          location.reload();
+        }, 1000);
+      }
+      
+    });
+  
+    if (!DuplicateExist) {
+      itemListScreen(output);
+      localStorage.setItem("items", JSON.stringify(items));
+    } 
+  
+  }).catch((error) => {
+    console.error(error);
+  });
+  
   itemListScreen(items);
   addItemScreen();
   itemDeleteBtn();
@@ -279,17 +290,17 @@ categoryContainer.each((index, cat) => {
       itemContainer.addClass("centerText").removeClass("itemcontainer");
     } else {
       itemContainer.removeClass("centerText").addClass("itemcontainer");
-      const categoryCode = $(cat).data("categoryid");
-      showTheseItems(categoryCode);
+      const categoryId = $(cat).data("categoryid");
+      showTheseItems(categoryId);
+      keepItemSelected();
     }
   });
 });
 
-const showTheseItems = (categoryCode) => {
+const showTheseItems = (categoryId) => {
   itemContainer.html("");
   items.forEach((item) => {
-    console.log(item);
-    if (item.categoryId === categoryCode) {
+    if (item.categoryId === categoryId) {
       itemContainer.append(`   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
                         <h2 class="items-name">${item.name}</h2>
                         <h3 class="items-price">${item.price} Pkr</h3>
@@ -298,17 +309,22 @@ const showTheseItems = (categoryCode) => {
                         `);
     }
   });
+};
 
-  const cartItems = $(".cart-items");
-  cartItems.each((index, cartItem) => {
+const keepItemSelected = () => {
+
+    const cartItems = $(".cart-items");
+    cartItems.each((index, cartItem) => {
     const itemId = $(cartItem).attr("id");
+    console.log(itemId);
     const itemElement = $(`.items#${itemId}`);
     if (itemElement.length) {
       itemElement.addClass("clicked");
       itemElement.css("color", "black");
-    }
-  });
-};
+      }
+    });
+  
+}
 
 const itemSearchHandler = (searchBox, callback) => {
   searchBox.on("input", function () {
@@ -323,13 +339,18 @@ const itemSearchHandler = (searchBox, callback) => {
 };
 
 // Usable item search handler to give searbox and take searched result array
-itemSearchHandler(searchBox, (results) => {
-  showItemsOnSearch(results);
+itemSearchHandler(searchBox, (searchResult) => {
+  showItemsOnSearch(searchResult);
+  keepItemSelected()
 });
 
-const showItemsOnSearch = (searchItems) => {
+const showItemsOnSearch = (searchResult) => {
+  if (itemContainer.hasClass("centerText")) {    
+    itemContainer.removeClass("centerText")
+    itemContainer.addClass("itemcontainer")
+  }
   itemContainer.empty(); // Clear previous search results
-  searchItems.forEach((item) => {
+  searchResult.forEach((item) => {
     itemContainer.append(`
       <div class="items" id="${item.id}" data-categoryid="${item.categoryId}">
         <h2 class="items-name">${item.name}</h2>
@@ -474,10 +495,17 @@ if (document.title === "POS") {
           const clickedItem = $(".items").filter(function () {
             return $(this).attr("id") === itemId;
           });
+         
+          
+            // Remove clicked class and color if no item in cart matches the clicked item
+            let alreadyInCart = $(".cart-items").filter(function() {
+            return $(this).attr("id") === clickedItem.attr("id");
+            });
 
-          // Remove clicked class and color
-          clickedItem.removeClass("clicked");
-          clickedItem.css("color", "white");
+            if (alreadyInCart.length === 0) {
+            clickedItem.removeClass("clicked");
+            clickedItem.css("color", "white");
+            }
 
           // Remove item from selectedItems array
           selectedItems = selectedItems.filter((item) => item.id !== itemId);
