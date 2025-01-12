@@ -3,94 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drag Left to Show Remove Button</title>
+  <title>Custom File Input</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: rgb(58, 57, 57);
+    /* Hide the default file input */
+    input[type="file"] {
+      display: none;
     }
-    .item-container {
-      position: relative;
-      width: 300px;
-      height: 50px;
-      margin: 10px;
-      background-color: #f0f0f0;
-      display: flex;
-      align-items: center;
-      padding-left: 10px;
-      cursor: grab;
-    }
-    .remove-button {
-      position: absolute;
-      top: 0;
-      right: 0px;
-      width: 50px;
-      height: 100%;
-      background-color: red;
+
+    /* Custom button styling */
+    .custom-file-button {
+      display: inline-block;
+      background-color: #007bff;
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: right 0.3s;
-      z-index: -1;
+      text-align: center;
+      border: none;
+      font-size: 16px;
     }
-    .item-container.dragging .remove-button {
-      right: -60px;;
+
+    .custom-file-button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
+  <h1>Custom File Input Example</h1>
 
-<div class="item-container" draggable="false">
-  <span>Drag Me</span>
-  <button class="remove-button">Remove</button>
-</div>
+  <!-- Label as a custom button -->
+  <label for="fileInput" class="custom-file-button">Choose File</label>
+  <input type="file" id="fileInput" />
 
-<script>
-  const container = document.querySelector('.item-container');
-  const removeButton = container.querySelector('.remove-button');
+  <script>
+    const fileInput = document.getElementById("fileInput");
 
-  let isDragging = false;
-  let startX = 0;
-
-  container.addEventListener('mousedown', (e) => {
-    if (e.button !== 0) return; // Only track left mouse button
-    isDragging = true;
-    startX = e.clientX;
-    container.classList.remove('dragging');
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-
-    const distanceDragged = e.clientX - startX;
-    
-
-    if (distanceDragged < -50) { // Dragged left by at least 50px
-      container.classList.add('dragging');
-    } else {
-      container.classList.remove('dragging');
-    }
-  });
-
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-    }
-  });
-
-  removeButton.addEventListener('click', () => {
-    container.remove();
-  });
-</script>
-
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        alert(`Selected file: ${file.name}`);
+      }
+    });
+  </script>
 </body>
 </html>

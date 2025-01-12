@@ -22,7 +22,11 @@
     <div class="content">
       <div class="header-bar">
         <h2>Item List</h2>
+        <div class="buttonDiv">
         <button class="add-item-btn">+ Add Item</button>
+        <label for="fileimport" id="fileInput">Import File</label>
+        <input type="file" id="fileimport" />
+      </div>
       </div>
       <div class="table-wrapper">
         <table class="item-table">
@@ -41,6 +45,7 @@
         </table>
       </div>
     </div>
+    <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="Sell.js"></script>
   </body>

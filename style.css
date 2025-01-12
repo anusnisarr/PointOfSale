@@ -102,7 +102,7 @@ color: #E5E5E6ff;
 #searchbox::placeholder {
     padding-left: 12px;
 }
-#searchbox{
+#itemsearchbox{
 color: white;
 border: none;
 background-color: #34344a;
@@ -434,6 +434,11 @@ outline: none; /* Removes focus outline */
     border: #454647 solid 2px;
     border-radius: 8px;
 }
+
+#Cash{
+    background-color: white;
+    color: black;
+}
 .payment-methods-btns{ 
     display: flex;
     flex-direction: column;
@@ -540,8 +545,8 @@ outline: none; /* Removes focus outline */
     margin-bottom: 20px;
 }
 
-/* Cart Header */
-.cart-header {
+/* Cart item Header */
+.item-header {
     display: flex;
     justify-content: space-between;
     font-weight: bold;
@@ -550,7 +555,7 @@ outline: none; /* Removes focus outline */
     /* margin-bottom: 10px; */
 }
 
-.cart-header span {
+.item-header span {
     flex: 1;
     text-align: center;
     font-size: 12px;

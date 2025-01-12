@@ -3,6 +3,7 @@ const sellScreenElements = $("#selectedContainers");
 const leftSideOption = $(".menu li");
 const cartContainer = $(".cart-items-container");
 let itemContainer = $(".itemcontainer");
+const searchBox = $("#itemsearchbox");
 const navContainer = $(".nav-container");
 const categoryContainer = $(".category");
 let CategoryArray = Array.from(categoryContainer);
@@ -10,7 +11,7 @@ let items = JSON.parse(localStorage.getItem("items")) || [];
 const payButton = $("#placeorder-btn-name");
 const currentDate = new Date().toLocaleString("en-US");
 let selectedItems = []; // Array to store selected items
-let SelectedPaymentMethod = null;
+let SelectedPaymentMethod = "Cash";
 let subtotal = null; // Global variable to store subtotal
 let lastBillNo = localStorage.getItem("lastBillNo") || 0;
 let receiptNote = localStorage.getItem("note");
@@ -63,8 +64,8 @@ const hideLoader = () => {
 
 const addItemScreen = () => {
   let CategoryCode = null;
-
   const addItemButton = $(".add-item-btn");
+
   addItemButton.on("click", () => {
     $(".content").html(`
             <div class="content">
@@ -150,29 +151,91 @@ const addItemScreen = () => {
   };
 };
 
-const itemListScreen = () => {
+const itemImport = () => {
+  return new Promise((resolve, reject) => {
+    const fileInput = document.getElementById("fileimport");
+
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Get the first sheet name
+        const sheetName = workbook.SheetNames[0];
+
+        // Get the sheet data
+        const worksheet = workbook.Sheets[sheetName];
+
+        // Convert the sheet to JSON
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        resolve(jsonData);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+  });
+};
+
+itemImport().then((output) => {
+  console.log(output);
+
+  output.forEach((item) => {
+    let barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
+
+    if (barocdeCheck) {
+      alert(`Barcode ${item.barcode} Already Exist`);
+    } else {
+      const newItemId =
+        items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
+      items.push({
+        id: newItemId,
+        barcode: item.barcode,
+        categoryId: item.categoryId,
+        name: item.name,
+        price: Number(item.price),
+        IsActive: true,
+      });
+      localStorage.setItem("items", JSON.stringify(items));
+      itemListScreen(output);
+    }
+  });
+
+})
+.catch((error) => {
+  console.error(error);
+});
+
+
+const itemListScreen = (itemData) => {
   const itemRow = $(".item-table tbody");
-  items.forEach((item, index) => {
+  itemData.forEach((item, index) => {
     itemRow.append(`
             <tr>
                 <td>${index + 1}</td>
                 <td>${item.name}</td>
                 <td>${item.barcode}</td>
-                <td>${
-                  categories.find((cat) => cat.id === item.categoryId).name
-                }</td>
+                <td>${categories.find((cat) => cat.id === item.categoryId).name}</td>
                 <td>${item.price}</td>
                 <td>${item.IsActive ? "Active" : "Inactive"}</td>
                 <td>
                     <button class="edit-btn">Edit</button>
-                    <button class="delete-btn" id="${
-                      item.barcode
-                    }">Delete</button>
+                    <button class="delete-btn" id="${item.barcode}">Delete</button>
                 </td>
             </tr>
         `);
   });
 };
+
+
 
 const itemDeleteBtn = () => {
   let deleteBtn = $(".delete-btn");
@@ -189,7 +252,7 @@ const itemDeleteBtn = () => {
   });
 };
 if (document.title === "Items") {
-  itemListScreen();
+  itemListScreen(items);
   addItemScreen();
   itemDeleteBtn();
 }
@@ -214,7 +277,6 @@ const showTheseItems = (categoryCode) => {
   itemContainer.html("");
   items.forEach((item) => {
     console.log(item);
-
     if (item.categoryId === categoryCode) {
       itemContainer.append(`   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
                         <h2 class="items-name">${item.name}</h2>
@@ -235,6 +297,39 @@ const showTheseItems = (categoryCode) => {
     }
   });
 };
+
+const itemSearchHandler = (searchBox, callback) => {
+  searchBox.on("input", function () {
+    const searchValue = $(this).val().toLowerCase();
+    const searchResult = items.filter((item) =>
+      item.name.toLowerCase().includes(searchValue)
+    );
+
+    console.log(searchResult); // Log results
+    callback(searchResult); // Pass results to callback
+  });
+};
+
+// Usable item search handler to give searbox and take searched result array
+itemSearchHandler(searchBox, (results) => {
+  showItemsOnSearch(results);
+});
+
+const showItemsOnSearch = (searchItems) => {
+  itemContainer.empty(); // Clear previous search results
+  searchItems.forEach((item) => {
+    itemContainer.append(`
+      <div class="items" id="${item.id}" data-categoryid="${item.categoryId}">
+        <h2 class="items-name">${item.name}</h2>
+        <h3 class="items-price">${item.price} Pkr</h3>
+        <div class="items-select-color"></div>
+      </div>
+    `);
+  });
+};
+
+//this line to keep showing all items at first when no category clicked
+showItemsOnSearch(items.filter((item) => item.name.toLowerCase().includes("")))
 
 if (document.title === "POS") {
   itemContainer.on("click", (event) => {
@@ -400,19 +495,24 @@ if (document.title === "POS") {
     }
   });
 
-  // payment method selection effect
+  // Payment method selection effect
   const paymentBtn = $(".payment-methods-icons");
 
-  paymentBtn.each((index, btn) => {
-    $(btn).on("click", (e) => {
-      paymentBtn.each((index, remove) => {
-        $(remove).css("backgroundColor", "");
-        $(remove).css("color", "");
-      });
-      $(btn).css("backgroundColor", "white");
-      $(btn).css("color", "black");
-      SelectedPaymentMethod = $(e.target).attr("id");
+  paymentBtn.on("click", function (e) {
+    // Reset styles for all buttons
+    paymentBtn.css({
+      backgroundColor: "initial", // Use "initial" to reset to the default or inherited value
+      color: "white",
     });
+
+    // Apply selected styles to the clicked button
+    $(this).css({
+      backgroundColor: "white",
+      color: "black",
+    });
+
+    // Get the selected payment method ID
+    SelectedPaymentMethod = $(this).attr("id");
   });
 }
 
@@ -544,13 +644,13 @@ payButton.on("click", () => {
           <p><strong>Customer Name: </strong></p>
           <p><strong>Payment Method: </strong> ${SelectedPaymentMethod}</p>
         </div>
-        <div class="cart-header">
+        <div class="item-header">
           <span>Item</span>
           <span>Qty</span>
           <span>Rate</span>
           <span>Amount</span>
         </div>
-        <div class="cart"></div>
+        <div class="cart-item-container"></div>
         <div class="total">
           <span>TOTAL</span>
           <span>${subtotal}</span>
@@ -563,13 +663,13 @@ payButton.on("click", () => {
     </div>
   `);
 
-  const cart = $(".cart");
   $(".cart-items").each((index, item) => {
     const itemName = $(item).find(".cart-items-name").text();
     const itemQty = $(item).find(".cart-items-qty").text();
     const itemPrice = $(item).find(".cart-items-price").text() / itemQty;
     const itemAmount = $(item).find(".cart-items-price").text();
 
+    const cart = $(".cart-item-container");
     cart.append(`
       <div class="cart-item">
         <span>${itemName}</span>
@@ -596,7 +696,6 @@ payButton.on("click", () => {
   $(window).on("keyup", handleEscKey);
 
   addSaleHistory(); // Add this line to run the function on pay
-  
 });
 
 const addSaleHistory = () => {

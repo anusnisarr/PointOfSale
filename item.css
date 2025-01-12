@@ -91,6 +91,28 @@ body {
 }
 
 
+input[type="file"] {
+    display: none;
+  }
+
+#fileInput {
+    display: inline-block;
+    background-color: #ff8763;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#fileInput:hover {
+    background-color: #fd6739;
+}
+
+
 /* Table Styling */
 .table-wrapper {
     overflow-x: auto;
