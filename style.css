@@ -114,46 +114,6 @@ outline: none; /* Removes focus outline */
 
 }
 
-/* Sidebar */
-.nav-container {
-    font-family: "Inter", sans-serif;
-    position: fixed;
-    top: -50px; /*Hidden by default*/
-    left: 50%;
-    background-color: rgba(108, 99, 255, 1);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-    overflow: hidden;
-    border-radius: 20px; /* Rounded corners */
-    transform: translate(-50%, 0); /* Center horizontally */
-    transition: top 0.5s ease; /* Smooth slide-in effect */
-  }
-  
-  .nav-bar {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-  }
-
-  .nav-bar li {
-    font-size: 0.9rem;
-    padding: 0px 15px 0px 15px;
-    list-style-type: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  a {
-    text-decoration: none; /* Removes underline */
-    color: inherit; /* Inherits text color from parent */
-    outline: none; /* Removes focus outline */
-}
-
-  .nav-bar li :hover{
-    color: white;
-  }
-
-
-
 .cat-items-container{
     display: flex;
     flex-direction: column;

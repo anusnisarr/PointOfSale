@@ -4,7 +4,8 @@ const leftSideOption = $(".menu li");
 const cartContainer = $(".cart-items-container");
 let itemContainer = $(".itemcontainer");
 const searchBox = $("#itemsearchbox");
-const navContainer = $(".nav-container");
+const saleHistorySearchBox = $("#salesearchbox")
+// const navContainer = $(".nav-container");
 const categoryContainer = $(".category");
 
 // Convert categoryContainer to an array
@@ -31,6 +32,29 @@ let saleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 // Extract all barcodes from items
 const allBarcode = items.map((item) => item.barcode);
 
+// Select the receipt container and retrieve address and receipt number from localStorage
+const receiptContainer = $("#receiptContainer");
+const address = localStorage.getItem("address");
+const receiptNumber = localStorage.getItem("receiptNumber");
+
+// Increment the last bill number and update it in localStorage
+lastBillNo = Number(lastBillNo) + 1;
+localStorage.setItem("lastBillNo", lastBillNo);
+
+// Show loader animation
+const showLoader = (mainDiv) => {
+  const content = $(`.${mainDiv ? mainDiv : "content"}`);
+  content.html(`<span class="loader"></span>`);
+  $(".loader").show();
+};
+
+// Hide loader animation
+const hideLoader = () => {
+  const content = $(".content");
+  content.html(`<span class="loader"></span>`);
+  $(".loader").hide();
+};
+
 // Iterate over each category and count items
 CategoryArray.forEach((category) => {
   let itemCount = $(category).find(".items-count");
@@ -42,16 +66,7 @@ CategoryArray.forEach((category) => {
   itemCount.text(`${itemsInCategory.length} Items`);
 });
 
-$(document).on("mousemove", (e) => {
-  if (e.clientY < 10) {
-    // Mouse is near the top of the viewport
-    navContainer.css("top", "10px");
-  } else if (e.clientY > 63) {
-    // Mouse is away from the top
-    navContainer.css("top", "-50px");
-  }
-});
-
+// Define categories
 const categories = [
   { id: "cat01", name: "Pizza" },
   { id: "cat02", name: "Burger" },
@@ -62,226 +77,7 @@ const categories = [
   { id: "cat07", name: "Deals" },
 ];
 
-const showLoader = (mainDiv) => {
-  const content = $(`.${mainDiv ? mainDiv : "content"}`);
-  content.html(`<span class="loader"></span>`);
-  $(".loader").show();
-};
-
-const hideLoader = () => {
-  const content = $(".content");
-  content.html(`<span class="loader"></span>`);
-  $(".loader").hide();
-};
-
-const addItemScreen = () => {
-  let CategoryCode = null;
-  const addItemButton = $(".add-item-btn");
-
-  addItemButton.on("click", () => {
-    $(".content").html(`
-            <div class="content">
-                <h2>Create New Item</h2>
-                <form class="item-form">
-                    <div class="form-group">
-                        <label for="itemName">Item Name</label>
-                        <input type="text" id="itemName" placeholder="Enter item name">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="itemCode">Item Code</label>
-                        <input type="text" id="itemCode" placeholder="Enter item code">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="itemPrice">Price</label>
-                        <input type="number" id="itemPrice" placeholder="Enter price">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="itemCategory">Category</label>
-                        <select id="itemCategory">
-                            <option value="default">Select Category</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn">Save Item</button>
-                </form>
-            </div>
-        `);
-
-    const categoryDropDown = $("#itemCategory");
-    categories.forEach((cat) => {
-      categoryDropDown.append(`<option value="${cat.id}">${cat.name}</option>`);
-    });
-
-    const categorySelection = $("#itemCategory");
-    categorySelection.on("change", () => {
-      CategoryCode = categorySelection.val();
-    });
-
-    setupAddItemHandler();
-  });
-
-  const setupAddItemHandler = () => {
-    const saveButton = $(".btn");
-    saveButton.on("click", (e) => {
-      e.preventDefault();
-
-      const itemName = $("#itemName").val();
-      const itemCode = Number($("#itemCode").val());
-      const itemPrice = Number($("#itemPrice").val());
-
-      let barocdeCheck = allBarcode.find((barcode) => barcode === itemCode);
-
-      if (!itemName || !itemCode || !itemPrice || CategoryCode === null) {
-        alert("Please fill out all fields correctly.");
-        return;
-      } else if (barocdeCheck) {
-        alert("Barcode Already Exist");
-      } else {
-        const newItemId =
-          items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
-        items.push({
-          id: newItemId,
-          barcode: itemCode,
-          categoryId: CategoryCode,
-          name: itemName,
-          price: Number(itemPrice),
-          IsActive: true,
-        });
-
-        showLoader();
-        setTimeout(() => {
-          hideLoader();
-          location.reload();
-        }, 1000);
-
-        localStorage.setItem("items", JSON.stringify(items));
-      }
-    });
-  };
-};
-
-const itemImport = () => {
-  return new Promise((resolve, reject) => {
-    const fileInput = document.getElementById("fileimport");
-
-    fileInput.addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-
-        // Get the first sheet name
-        const sheetName = workbook.SheetNames[0];
-
-        // Get the sheet data
-        const worksheet = workbook.Sheets[sheetName];
-
-        // Convert the sheet to JSON
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        resolve(jsonData);
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
-  });
-};
-
-const itemListScreen = (itemData) => {
-  const itemRow = $(".item-table tbody");
-  itemData.forEach((item, index) => {
-    itemRow.append(`
-            <tr>
-                <td>${index + 1}</td>
-                <td>${item.name}</td>
-                <td>${item.barcode}</td>
-                <td>${
-                  categories.find((cat) => cat.id === item.categoryId).name
-                }</td>
-                <td>${item.price}</td>
-                <td>${item.IsActive ? "Active" : "Inactive"}</td>
-                <td>
-                    <button class="edit-btn">Edit</button>
-                    <button class="delete-btn" id="${
-                      item.barcode
-                    }">Delete</button>
-                </td>
-            </tr>
-        `);
-  });
-};
-
-const itemDeleteBtn = () => {
-  let deleteBtn = $(".delete-btn");
-  deleteBtn.each((index, btn) => {
-    $(btn).on("click", (e) => {
-      items = items.filter((item) => e.target.id != item.barcode);
-      localStorage.setItem("items", JSON.stringify(items));
-      showLoader();
-      setTimeout(() => {
-        hideLoader();
-        location.reload();
-      }, 1000);
-    });
-  });
-};
-if (document.title === "Items") {
-  itemImport()
-    .then((output) => {
-      let DuplicateExist;
-
-      output.forEach((item) => {
-        barocdeCheck = allBarcode.find((barcode) => barcode === item.barcode);
-        console.log(`${barocdeCheck} this barcode already exist`);
-        if (barocdeCheck) {
-          DuplicateExist = true;
-          alert(`Barcode ${item.barcode} Already Exist`);
-        } else {
-          DuplicateExist = false;
-          const newItemId =
-            items.length > 0
-              ? Math.max(...items.map((item) => item.id)) + 1
-              : 1;
-          items.push({
-            id: newItemId,
-            barcode: item.barcode,
-            categoryId: item.categoryId,
-            name: item.name,
-            price: Number(item.price),
-            IsActive: true,
-          });
-          showLoader();
-          setTimeout(() => {
-            hideLoader();
-            location.reload();
-          }, 1000);
-        }
-      });
-
-      if (!DuplicateExist) {
-        itemListScreen(output);
-        localStorage.setItem("items", JSON.stringify(items));
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
-  itemListScreen(items);
-  addItemScreen();
-  itemDeleteBtn();
-}
-
+// Handle category click events
 categoryContainer.each((index, cat) => {
   $(cat).on("click", () => {
     const itemCountText = $(cat).children().last().text();
@@ -299,6 +95,7 @@ categoryContainer.each((index, cat) => {
   });
 });
 
+// Show items based on category
 const showTheseItems = (categoryId) => {
   itemContainer.html("");
   items.forEach((item) => {
@@ -313,11 +110,11 @@ const showTheseItems = (categoryId) => {
   });
 };
 
+// Keep selected items highlighted
 const keepItemSelected = () => {
   const cartItems = $(".cart-items");
   cartItems.each((index, cartItem) => {
     const itemId = $(cartItem).attr("id");
-    console.log(itemId);
     const itemElement = $(`.items#${itemId}`);
     if (itemElement.length) {
       itemElement.addClass("clicked");
@@ -326,31 +123,32 @@ const keepItemSelected = () => {
   });
 };
 
-const itemSearchHandler = (searchBox, callback) => {
+// Handle item search
+const itemSearchHandler = (searchBox, searchIn, callback ) => {
   searchBox.on("input", function () {
     const searchValue = $(this).val().toLowerCase();
-    const searchResult = items.filter((item) =>
+    const searchResult = searchIn.filter((item) =>
       item.name.toLowerCase().includes(searchValue)
     );
-
-    console.log(searchResult); // Log results
-    callback(searchResult); // Pass results to callback
+    callback(searchResult);
   });
 };
 
-// Usable item search handler to give searbox and take searched result array
-itemSearchHandler(searchBox, (searchResult) => {
+// Usable item search handler to give search box and take searched result array
+itemSearchHandler(searchBox, items , (searchResult) => {
   showItemsOnSearch(searchResult);
   keepItemSelected();
 });
 
+// Show items based on search result
 const showItemsOnSearch = (searchResult) => {
   if (itemContainer.hasClass("centerText")) {
     itemContainer.removeClass("centerText");
     itemContainer.addClass("itemcontainer");
   }
+  
   itemContainer.empty(); // Clear previous search results
-  searchResult.forEach((item) => {
+  searchResult.forEach((item) => {    
     itemContainer.append(`
       <div class="items" id="${item.id}" data-categoryid="${item.categoryId}">
         <h2 class="items-name">${item.name}</h2>
@@ -361,286 +159,200 @@ const showItemsOnSearch = (searchResult) => {
   });
 };
 
-//this line to keep showing all items at first when no category clicked
+// Show all items initially
 showItemsOnSearch(items.filter((item) => item.name.toLowerCase().includes("")));
 
-if (document.title === "POS") {
-  itemContainer.on("click", (event) => {
-    const clickedElement = $(event.target);
-    const item = clickedElement.closest(".items");
+// Handle item click events
+itemContainer.on("click", (event) => {
+  const clickedElement = $(event.target);
+  const item = clickedElement.closest(".items");
 
-    if (item.length) {
-      //change item Color on click
-      item.addClass("clicked");
-      item.css("color", "black");
+  if (item.length) {
+    // Change item color on click
+    item.addClass("clicked");
+    item.css("color", "black");
 
-      let addItemInCart = () => {
-        const itemId = item.attr("id");
-        const itemName = item.find(".items-name");
-        const itemPrice = item.find(".items-price");
-        const itemQty = { innerText: 1 }; // Default quantity to 1
-        const ClubItemOnCart = localStorage.getItem("ClubItemOnCart");
-        const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
-        let clubItemOnSale = booleanValue;
+    let addItemInCart = () => {
+      const itemId = item.attr("id");
+      const itemName = item.find(".items-name");
+      const itemPrice = item.find(".items-price");
+      const itemQty = { innerText: 1 }; // Default quantity to 1
+      const ClubItemOnCart = localStorage.getItem("ClubItemOnCart");
+      const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
+      let clubItemOnSale = booleanValue;
 
-        let CartArrayMaker = () => {
-          let cart = $(".cart-items");
-          cart.each((index, item) => {
-            let quantity = $(item).children().eq(0).text();
-            let name = $(item).children().eq(1).children().eq(0).text();
-            let price = $(item).children().eq(1).children().eq(1).text();
-            let id = $(item).attr("id");
+      let CartArrayMaker = () => {
+        let cart = $(".cart-items");
+        cart.each((index, item) => {
+          let quantity = $(item).children().eq(0).text();
+          let name = $(item).children().eq(1).children().eq(0).text();
+          let price = $(item).children().eq(1).children().eq(1).text();
+          let id = $(item).attr("id");
 
-            selectedItems.push({
-              id: id,
-              name: name,
-              price: price,
-              qty: quantity,
-            });
+          selectedItems.push({
+            id: id,
+            name: name,
+            price: price,
+            qty: quantity,
           });
-        };
-        CartArrayMaker();
-
-        // Check if the item is already added or not
-        const clubItemId = selectedItems.find((id) => id.id === itemId);
-
-        // Create the main container div for cart item
-        const cartItem = $("<div>").addClass("cart-items").attr("id", itemId);
-
-        if (!clubItemOnSale || !clubItemId) {
-          // Create and append the quantity element
-          const cartItemsQty = $("<h4>").addClass("cart-items-qty").text(1);
-          cartItem.append(cartItemsQty);
-
-          // Create and append the center section of the cart item
-          const nameAndPrice = $("<div>").addClass("cart-price-name-container");
-
-          // Create and append the item name element
-          const cartItemsName = $("<h3>")
-            .addClass("cart-items-name")
-            .text(itemName.text());
-          nameAndPrice.append(cartItemsName);
-
-          // Create and append the price element
-          const cartItemsPrice = $("<h4>")
-            .addClass("cart-items-price")
-            .text(parseInt(itemPrice.text()) * parseInt(itemQty.innerText));
-          nameAndPrice.append(cartItemsPrice);
-
-          // Append the name and price to the cart item
-          cartItem.append(nameAndPrice);
-
-          // Create and append the remove element
-          const cartItemsRemove = $("<i>").addClass("ri-delete-back-2-fill");
-          cartItem.append(cartItemsRemove);
-
-          // Append the entire cart item to the cart container
-          cartContainer.append(cartItem);
-        } else if (clubItemOnSale === true || clubItemId !== undefined) {
-          // Club Quantity
-          const CartItems = $(".cart-items");
-
-          const itemsWithId = CartItems.filter(function () {
-            return $(this).attr("id") === itemId;
-          });
-
-          const qtyDiv = itemsWithId.find(`.cart-items-qty`);
-
-          let qtyToInt = parseInt(qtyDiv.text());
-
-          qtyDiv.text(++qtyToInt);
-
-          // Club Rates
-          const cartItemsPrice = itemsWithId.find(".cart-items-price");
-          cartItemsPrice.text(parseInt(itemPrice.text()) * qtyToInt);
-        }
+        });
       };
-      addItemInCart();
+      CartArrayMaker();
 
-      // Make item quantity editable
-      let cartItemsQty = $(".cart-items-qty");
-      cartItemsQty.each((index, qty) => {
-        $(qty).on("click", () => {
-          $(qty).attr("contentEditable", true).focus();
-        });
-        const updateQty = () => {
-          $(qty).attr("contentEditable", false);
-          const editedQty = parseInt($(qty).text());
-          const cartItem = $(qty).closest(".cart-items");
-          const itemPrice = items.find(
-            (item) => item.id === parseInt(cartItem.attr("id"))
-          ).price;
-          const cartItemsPrice = cartItem.find(".cart-items-price");
-          cartItemsPrice.text(itemPrice * editedQty);
-          calulateInvoice();
-        };
+      // Check if the item is already added or not
+      const clubItemId = selectedItems.find((id) => id.id === itemId);
 
-        $(qty).on("keydown", (e) => {
-          if (e.key === "Enter") {
-            updateQty();
-          }
+      // Create the main container div for cart item
+      const cartItem = $("<div>").addClass("cart-items").attr("id", itemId);
+
+      if (!clubItemOnSale || !clubItemId) {
+        // Create and append the quantity element
+        const cartItemsQty = $("<h4>").addClass("cart-items-qty").text(1);
+        cartItem.append(cartItemsQty);
+
+        // Create and append the center section of the cart item
+        const nameAndPrice = $("<div>").addClass("cart-price-name-container");
+
+        // Create and append the item name element
+        const cartItemsName = $("<h3>")
+          .addClass("cart-items-name")
+          .text(itemName.text());
+        nameAndPrice.append(cartItemsName);
+
+        // Create and append the price element
+        const cartItemsPrice = $("<h4>")
+          .addClass("cart-items-price")
+          .text(parseInt(itemPrice.text()) * parseInt(itemQty.innerText));
+        nameAndPrice.append(cartItemsPrice);
+
+        // Append the name and price to the cart item
+        cartItem.append(nameAndPrice);
+
+        // Create and append the remove element
+        const cartItemsRemove = $("<i>").addClass("ri-delete-back-2-fill");
+        cartItem.append(cartItemsRemove);
+
+        // Append the entire cart item to the cart container
+        cartContainer.append(cartItem);
+      } else if (clubItemOnSale === true || clubItemId !== undefined) {
+        // Club Quantity
+        const CartItems = $(".cart-items");
+
+        const itemsWithId = CartItems.filter(function () {
+          return $(this).attr("id") === itemId;
         });
-        $(document).on("click", (e) => {
-          if (!$(qty).is(e.target)) {
-            updateQty();
-          }
-        });
+
+        const qtyDiv = itemsWithId.find(`.cart-items-qty`);
+
+        let qtyToInt = parseInt(qtyDiv.text());
+
+        qtyDiv.text(++qtyToInt);
+
+        // Club Rates
+        const cartItemsPrice = itemsWithId.find(".cart-items-price");
+        cartItemsPrice.text(parseInt(itemPrice.text()) * qtyToInt);
+      }
+    };
+    addItemInCart();
+
+    // Make item quantity editable
+    let cartItemsQty = $(".cart-items-qty");
+    cartItemsQty.each((index, qty) => {
+      $(qty).on("click", () => {
+        $(qty).attr("contentEditable", true).focus();
       });
+      const updateQty = () => {
+        $(qty).attr("contentEditable", false);
+        const editedQty = parseInt($(qty).text());
+        const cartItem = $(qty).closest(".cart-items");
+        const itemPrice = items.find(
+          (item) => item.id === parseInt(cartItem.attr("id"))
+        ).price;
+        const cartItemsPrice = cartItem.find(".cart-items-price");
+        cartItemsPrice.text(itemPrice * editedQty);
+        calulateInvoice();
+      };
 
-      $(".ri-delete-back-2-fill").each((index, item) => {
-        $(item).on("click", (e) => {
-          const cartItem = $(e.target).closest(".cart-items");
-          const itemId = cartItem.attr("id");
-          cartItem.remove();
-          const clickedItem = $(".items").filter(function () {
-            return $(this).attr("id") === itemId;
-          });
-
-          // Remove clicked class and color if no item in cart matches the clicked item
-          let alreadyInCart = $(".cart-items").filter(function () {
-            return $(this).attr("id") === clickedItem.attr("id");
-          });
-
-          if (alreadyInCart.length === 0) {
-            clickedItem.removeClass("clicked");
-            clickedItem.css("color", "white");
-          }
-
-          // Remove item from selectedItems array
-          selectedItems = selectedItems.filter((item) => item.id !== itemId);
-
-          // Recalculate subtotal
-          calulateInvoice();
-        });
+      $(qty).on("keydown", (e) => {
+        if (e.key === "Enter") {
+          updateQty();
+        }
       });
+      $(document).on("click", (e) => {
+        if (!$(qty).is(e.target)) {
+          updateQty();
+        }
+      });
+    });
 
-      const calulateInvoice = () => {
-        subtotal = 0;
-        let ItemAmountArray = [];
-        const ItemAmount = $(".cart-items-price");
-        ItemAmount.each((index, item) => {
-          ItemAmountArray.push($(item).text());
+    // Handle item removal from cart
+    $(".ri-delete-back-2-fill").each((index, item) => {
+      $(item).on("click", (e) => {
+        const cartItem = $(e.target).closest(".cart-items");
+        const itemId = cartItem.attr("id");
+        cartItem.remove();
+        const clickedItem = $(".items").filter(function () {
+          return $(this).attr("id") === itemId;
         });
 
-        //making subtotal value
-        for (let index = 0; index < ItemAmountArray.length; index++) {
-          subtotal += parseInt(ItemAmountArray[index]);
+        // Remove clicked class and color if no item in cart matches the clicked item
+        let alreadyInCart = $(".cart-items").filter(function () {
+          return $(this).attr("id") === clickedItem.attr("id");
+        });
+
+        if (alreadyInCart.length === 0) {
+          clickedItem.removeClass("clicked");
+          clickedItem.css("color", "white");
         }
 
-        $("#subtotal-values").html(`PKR ${subtotal}`);
-        $("#total-values").html(`PKR ${subtotal}`);
-      };
-      calulateInvoice();
-    }
-  });
+        // Remove item from selectedItems array
+        selectedItems = selectedItems.filter((item) => item.id !== itemId);
 
-  paymentBtn.on("click", function (e) {
-    // Reset styles for all buttons
-    paymentBtn.css({
-      backgroundColor: "initial", // Use "initial" to reset to the default or inherited value
-      color: "white",
+        // Recalculate subtotal
+        calulateInvoice();
+      });
     });
 
-    // Apply selected styles to the clicked button
-    $(this).css({
-      backgroundColor: "white",
-      color: "black",
-    });
+    // Calculate invoice subtotal
+    const calulateInvoice = () => {
+      subtotal = 0;
+      let ItemAmountArray = [];
+      const ItemAmount = $(".cart-items-price");
+      ItemAmount.each((index, item) => {
+        ItemAmountArray.push($(item).text());
+      });
 
-    // Get the selected payment method ID
-    SelectedPaymentMethod = $(this).attr("id");
+      // Making subtotal value
+      for (let index = 0; index < ItemAmountArray.length; index++) {
+        subtotal += parseInt(ItemAmountArray[index]);
+      }
+
+      $("#subtotal-values").html(`PKR ${subtotal}`);
+      $("#total-values").html(`PKR ${subtotal}`);
+    };
+    calulateInvoice();
+  }
+});
+
+// Handle payment method selection
+paymentBtn.on("click", function (e) {
+  // Reset styles for all buttons
+  paymentBtn.css({
+    backgroundColor: "initial", // Use "initial" to reset to the default or inherited value
+    color: "white",
   });
-}
 
-const SaleHistoryList = () => {
-  const salehistoryRow = $(".history-table tbody");
-  saleHistory.forEach((sale, index) => {
-    salehistoryRow.append(`
-            <tr>
-                <td>${sale.BillNo}</td>
-                <td>${sale.BillDate}</td>
-                <td>${sale.TotalAmount}</td>
-                <td>${sale.PaymentMethod}</td>
-                  <td>
-                    <button class="receipt-btn" id="${sale.BillNo}">Show</button>
-                </td>
-                <td>
-                    <button class="delete-btn" id="${sale.BillNo}">Delete</button>
-                </td>
-            </tr>
-        `);
+  // Apply selected styles to the clicked button
+  $(this).css({
+    backgroundColor: "white",
+    color: "black",
   });
-};
 
-const SaleHistoryDeleteBtn = () => {
-  let deleteBtn = $(".delete-btn");
-  deleteBtn.each((index, btn) => {
-    $(btn).on("click", (e) => {
-      saleHistory = saleHistory.filter((sale) => e.target.id != sale.BillNo);
-      localStorage.setItem("SaleHistory", JSON.stringify(saleHistory));
-      showLoader();
-      setTimeout(() => {
-        hideLoader();
-        location.reload();
-      }, 1000);
-    });
-  });
-};
+  // Get the selected payment method ID
+  SelectedPaymentMethod = $(this).attr("id");
+});
 
-if (document.title === "sale History") {
-  SaleHistoryList();
-  SaleHistoryDeleteBtn();
-}
-
-// Update and save parameter in Setup
-const setupChange = () => {
-  const ClubItemOnCart = $("#ClubItemOnCart");
-  localStorage.setItem(
-    "ClubItemOnCart",
-    ClubItemOnCart.is(":checked") ? "true" : "false"
-  );
-
-  const receiptAddress = $("#address");
-  localStorage.setItem("address", receiptAddress.val());
-
-  const receiptNumber = $("#receipt-number");
-  localStorage.setItem("receiptNumber", receiptNumber.val());
-
-  const receiptNote = $("#note");
-  localStorage.setItem("note", receiptNote.val());
-};
-
-if (document.title === "Setup") {
-  const updateButton = $(".update-btn");
-  const ClubItemOnCart = $("#ClubItemOnCart");
-  const receiptAddress = $("#address");
-  const receiptNumber = $("#receipt-number");
-  const receiptNote = $("#note");
-
-  // Set the value of the checkbox based on the local storage
-  localStorage.getItem("ClubItemOnCart") === "true"
-    ? ClubItemOnCart.prop("checked", true)
-    : ClubItemOnCart.prop("checked", false);
-  localStorage.getItem("address")
-    ? receiptAddress.val(localStorage.getItem("address"))
-    : receiptAddress.val("");
-  localStorage.getItem("receiptNumber")
-    ? receiptNumber.val(localStorage.getItem("receiptNumber"))
-    : receiptNumber.val("");
-  localStorage.getItem("note")
-    ? receiptNote.val(localStorage.getItem("note"))
-    : receiptNote.val("");
-  updateButton.on("click", () => {
-    setupChange();
-    showLoader("setup-container");
-    setTimeout(() => {
-      hideLoader();
-      location.reload();
-    }, 1000);
-  });
-}
-
-//When click on Pay Button
+// When click on Pay Button
 payButton.on("click", () => {
   if (!subtotal) {
     alert("Please select an item to proceed");
@@ -656,13 +368,7 @@ payButton.on("click", () => {
     return;
   }
 
-  const receiptContainer = $("#receiptContainer");
-  const address = localStorage.getItem("address");
-  const receiptNumber = localStorage.getItem("receiptNumber");
-  lastBillNo = Number(lastBillNo) + 1;
-  localStorage.setItem("lastBillNo", lastBillNo);
-  console.log(localStorage.getItem("lastBillNo"));
-
+  // Generate receipt
   receiptContainer.html(`
     <div class="closeBtn"><i class="ri-close-line"></i></div>
 
@@ -700,16 +406,7 @@ payButton.on("click", () => {
         <a href="#" class="print-button">Print Receipt</a>
   `);
 
-  $(".print-button").on("click", function () {
-    let originalBody = $("body").html();
-    let receiptBody = $("#receiptbody").clone();
-    $("body").empty().append(receiptBody);
-    window.print();
-    receiptContainer.html("");
-    location.reload();
-    $("body").empty().append(originalBody);
-  });
-
+  // Add items to receipt
   $(".cart-items").each((index, item) => {
     const itemName = $(item).find(".cart-items-name").text();
     const itemQty = $(item).find(".cart-items-qty").text();
@@ -727,50 +424,32 @@ payButton.on("click", () => {
     `);
   });
 
-  const closeReceipt = () => {
+  // Handle print button click
+  $(".print-button").on("click", function () {
+    let originalBody = $("body").html();
+    let receiptBody = $("#receiptbody").clone();
+    $("body").empty().append(receiptBody);
+    window.print();
     receiptContainer.html("");
     location.reload();
-    $(window).off("keyup", handleEscKey);
-  };
+    $("body").empty().append(originalBody);
+  });
 
-  const handleEscKey = (event) => {
-    if (event.key === "Escape") {
-      closeReceipt();
+  // Handle receipt close
+  const closeReceipt = (event) => {
+    if (event.type === "click") {
+      receiptContainer.html("");
+      location.reload();
     }
+    else if (event.key === "Escape") {
+      receiptContainer.html("");
+      location.reload();
+    }
+    $(window).off("keyup", closeReceipt);
   };
 
   $(".closeBtn").on("click", closeReceipt);
-  $(window).on("keyup", handleEscKey);
+  $(window).on("keyup", closeReceipt);
 
   addSaleHistory(); // Add this line to run the function on pay
 });
-
-const addSaleHistory = () => {
-  let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
-
-  let items = [];
-
-  $(".cart-items").each((index, item) => {
-    let itemName = $(item).find(".cart-items-name").text();
-    let itemQty = $(item).find(".cart-items-qty").text();
-    let itemPrice = $(item).find(".cart-items-price").text() / itemQty;
-    let itemAmount = $(item).find(".cart-items-price").text();
-
-    items.push({
-      ItemName: itemName,
-      Qty: itemQty,
-      Rate: itemPrice,
-      Amount: itemAmount,
-    });
-  });
-
-  SaleHistory.push({
-    BillNo: lastBillNo,
-    BillDate: currentDate,
-    PaymentMethod: SelectedPaymentMethod,
-    TotalAmount: subtotal,
-    Items: items,
-  });
-
-  localStorage.setItem("SaleHistory", JSON.stringify(SaleHistory));
-};

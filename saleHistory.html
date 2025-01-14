@@ -5,23 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>sale History</title>
     <link rel="stylesheet" href="saleHistory.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
   </head>
   <body>
-    <!-- Sidebar -->
-    <div class="nav-container">
-      <ul class="nav-bar">
-        <li>Dashboard</li>
-        <li>Reservation</li>
-        <li><a href="item.html">Items</a></li>
-        <li><a href="index.html">Sell</a></li>
-        <li><a href="setup.html">Setup</a></li>
-        <li>Reports</li>
-      </ul>
-    </div>
-
+    <!-- For Nav Content -->
+    <div class="nav-container"></div>
+    
     <div class="content">
       <div class="header-bar">
         <h2>Sale History</h2>
+        <div id="search-item">
+          <i class="ri-search-line"></i>
+          <input type="search" name="Search" id="salesearchbox" placeholder="Search" value=""/>
+        </div>
       </div>
       <div class="table-wrapper">
         <table class="history-table">
@@ -39,7 +35,9 @@
         </table>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="Sell.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="crossorigin="anonymous"></script>
+    <script src="Sell.js"></script> 
+    <script src="saleHistory.js"></script>
+    <script src="nav.js"></script>
   </body>
 </html>
