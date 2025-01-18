@@ -1,10 +1,4 @@
-const navContainer = $(".nav-container");
-
-$(document).ready(function () {
-    $.get("nav.html", function (data) {
-        $(".nav-container").html(data);
-    });
-});
+const navContainer = $(".nav-container").hide()
 
 // Show/hide navigation container based on mouse position
 $(document).on("mousemove", (e) => {
@@ -16,4 +10,10 @@ $(document).on("mousemove", (e) => {
       navContainer.css("top", "-50px");
     }
   });
+// Prevent the navigation container from flashing on load
+$(document).ready(function () {
+  $.get("nav.html", function (data) {
+    $(".nav-container").html(data).show();
+  });
+});
   

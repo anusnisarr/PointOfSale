@@ -27,7 +27,7 @@ let lastBillNo = localStorage.getItem("lastBillNo") || 0;
 
 // Retrieve receipt note and sale history from localStorage
 let receiptNote = localStorage.getItem("note");
-let saleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
+let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
 // Extract all barcodes from items
 const allBarcode = items.map((item) => item.barcode);
@@ -406,7 +406,8 @@ payButton.on("click", () => {
         <a href="#" class="print-button">Print Receipt</a>
   `);
 
-  // Add items to receipt
+  // Add items to receipt and in localStorage
+  let items = [];
   $(".cart-items").each((index, item) => {
     const itemName = $(item).find(".cart-items-name").text();
     const itemQty = $(item).find(".cart-items-qty").text();
@@ -414,6 +415,7 @@ payButton.on("click", () => {
     const itemAmount = $(item).find(".cart-items-price").text();
 
     const cart = $(".cart-item-container");
+
     cart.append(`
       <div class="cart-item">
         <span>${itemName}</span>
@@ -422,7 +424,26 @@ payButton.on("click", () => {
         <span>${itemAmount}</span>
       </div>
     `);
+
+    items.push({
+      ItemName: itemName,
+      Qty: itemQty,
+      Rate: itemPrice,
+      Amount: itemAmount,
+    });
+
   });
+
+// Add in localStorage SaleHistory
+  SaleHistory.push({
+    BillNo: lastBillNo,
+    BillDate: currentDate,
+    PaymentMethod: SelectedPaymentMethod,
+    TotalAmount: subtotal,
+    Items: items,
+  });
+
+  localStorage.setItem("SaleHistory", JSON.stringify(SaleHistory));
 
   // Handle print button click
   $(".print-button").on("click", function () {
@@ -434,7 +455,8 @@ payButton.on("click", () => {
     location.reload();
     $("body").empty().append(originalBody);
   });
-
+  
+  
   // Handle receipt close
   const closeReceipt = (event) => {
     if (event.type === "click") {
@@ -448,8 +470,8 @@ payButton.on("click", () => {
     $(window).off("keyup", closeReceipt);
   };
 
+
   $(".closeBtn").on("click", closeReceipt);
   $(window).on("keyup", closeReceipt);
 
-  addSaleHistory(); // Add this line to run the function on pay
 });

@@ -1,37 +1,7 @@
-const addSaleHistory = () => {
-    let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
-  
-    let items = [];
-  
-    $(".cart-items").each((index, item) => {
-      let itemName = $(item).find(".cart-items-name").text();
-      let itemQty = $(item).find(".cart-items-qty").text();
-      let itemPrice = $(item).find(".cart-items-price").text() / itemQty;
-      let itemAmount = $(item).find(".cart-items-price").text();
-  
-      items.push({
-        ItemName: itemName,
-        Qty: itemQty,
-        Rate: itemPrice,
-        Amount: itemAmount,
-      });
-    });
-  
-    SaleHistory.push({
-      BillNo: lastBillNo,
-      BillDate: currentDate,
-      PaymentMethod: SelectedPaymentMethod,
-      TotalAmount: subtotal,
-      Items: items,
-    });
-  
-    localStorage.setItem("SaleHistory", JSON.stringify(SaleHistory));
-  };
-
-  const SaleHistoryList = () => {
-    const salehistoryRow = $(".history-table tbody");
-    saleHistory.forEach((sale, index) => {
-      salehistoryRow.append(`
+const SaleHistoryList = () => {
+  const salehistoryRow = $(".history-table tbody");
+  SaleHistory.forEach((sale, index) => {
+    salehistoryRow.append(`
               <tr>
                   <td>${sale.BillNo}</td>
                   <td>${sale.BillDate}</td>
@@ -45,26 +15,114 @@ const addSaleHistory = () => {
                   </td>
               </tr>
           `);
+  });
+};
+//run
+SaleHistoryList();
+
+const SaleHistoryDeleteBtn = () => {
+  let deleteBtn = $(".delete-btn");
+  deleteBtn.each((index, btn) => {
+    $(btn).on("click", (e) => {
+      saleHistory = saleHistory.filter((sale) => e.target.id != sale.BillNo);
+      localStorage.setItem("SaleHistory", JSON.stringify(saleHistory));
+      showLoader();
+      setTimeout(() => {
+        hideLoader();
+        location.reload();
+      }, 1000);
     });
-  };
-  //run
-  SaleHistoryList();
-  
-  const SaleHistoryDeleteBtn = () => {
-    let deleteBtn = $(".delete-btn");
-    deleteBtn.each((index, btn) => {
-      $(btn).on("click", (e) => {
-        saleHistory = saleHistory.filter((sale) => e.target.id != sale.BillNo);
-        localStorage.setItem("SaleHistory", JSON.stringify(saleHistory));
-        showLoader();
-        setTimeout(() => {
-          hideLoader();
-          location.reload();
-        }, 1000);
+  });
+};
+//run
+SaleHistoryDeleteBtn();
+
+const SaleHistoryViewBtn = () => {
+
+  let viewBtn = $(".receipt-btn");
+  viewBtn.each((index, btn) => {
+
+    $(btn).on("click", (e) => {
+      let Bill = SaleHistory.find((bill) => e.target.id == bill.BillNo);
+      let receiptContainer = $("#receiptcontainer");
+      const billNo = Bill.BillNo;
+      const billDate = Bill.BillDate;
+      const billPaymentMethod = Bill.PaymentMethod;
+      const billTotal = Bill.TotalAmount;
+      console.log(Bill.Items);
+
+      receiptContainer.html(`
+        <div class="closeBtn"><i class="ri-close-line"></i></div>
+      
+          <div id="receiptbody">
+            <div class="receipt">
+              <div class="header">
+                <img src="./img/logo.jpg" alt="Logo">
+                <div class="contact-details">
+                  <p><strong>Address:</strong> ${address}</p>
+                  <p><strong>Phone:</strong> ${receiptNumber}</p>
+                </div>
+              </div>
+              <div class="bill-details">
+                <p><strong>Bill No: </strong> ${billNo}</p>
+                <p><strong>Bill Date: </strong>${billDate}</p>
+                <p><strong>Customer Name: </strong></p>
+                <p><strong>Payment Method: </strong> ${billPaymentMethod}</p>
+              </div>
+              <div class="item-header">
+                <span>Item</span>
+                <span>Qty</span>
+                <span>Rate</span>
+                <span>Amount</span>
+              </div>
+              <div class="cart-item-container"></div>
+              <div class="total">
+                <span>TOTAL</span>
+                <span>${billTotal}</span>
+              </div>
+              <div class="barcode">
+                <img src="./img/invoicebarcode.png" alt="Barcode">
+              </div>
+            </div>
+          </div>
+            <a href="#" class="print-button">Print Receipt</a>
+      `);
+      // Add items to receipt
+      Bill.Items.forEach((item) => {
+        const itemName = item.ItemName;
+        const itemQty = item.Qty;
+        const itemPrice = item.Rate;
+        const itemAmount = item.Amount;
+
+        const cart = $(".cart-item-container");
+
+        cart.append(`
+      <div class="cart-item">
+        <span>${itemName}</span>
+        <span>${itemQty}</span>
+        <span>${itemPrice}</span>
+        <span>${itemAmount}</span>
+      </div>
+    `);
       });
     });
-  };
-  //run
-SaleHistoryDeleteBtn();
-  
-  
+  });
+
+  $("#receiptcontainer").append(receiptContainer);
+};
+
+// Handle receipt close
+const closeReceipt = (event) => {  
+  if (event.type === "click") {
+    $("#receiptcontainer").html("");
+    location.reload();
+  } else if (event.key === "Escape") {
+    $("#receiptcontainer").html("");
+    location.reload();
+  }
+  $(window).off("keyup", closeReceipt);
+};
+$("#receiptcontainer").on("click", ".closeBtn", closeReceipt);
+$(window).on("keyup", closeReceipt);
+
+SaleHistoryViewBtn();
