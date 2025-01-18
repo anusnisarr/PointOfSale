@@ -382,6 +382,8 @@ button.btn:hover {
     transform: translate(-50%, -50%); /* Adjust for perfect centering */
     background-color: #ffffff;
     z-index: 1000; /* Ensure it stays on top of other content */
+    max-height: 100vh;
+    overflow-y: auto;
 }
 #receiptbody{
     color: black;

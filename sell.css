@@ -8,7 +8,22 @@
     display: none;
 }
 
-.centerText{
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: black;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #34344a;
+}
+
+.centerText {
     display: flex;
     height: 100%;
     justify-content: center;
@@ -454,6 +469,8 @@ outline: none; /* Removes focus outline */
     color: black;
     background-color: #ffffff;
     transform: translate(-50% , -50%);
+    max-height: 100vh;
+    overflow-y: auto;
 }
 #receiptbody{
     color: black;
