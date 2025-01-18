@@ -24,8 +24,8 @@ const SaleHistoryDeleteBtn = () => {
   let deleteBtn = $(".delete-btn");
   deleteBtn.each((index, btn) => {
     $(btn).on("click", (e) => {
-      saleHistory = saleHistory.filter((sale) => e.target.id != sale.BillNo);
-      localStorage.setItem("SaleHistory", JSON.stringify(saleHistory));
+      SaleHistory = SaleHistory.filter((sale) => e.target.id != sale.BillNo);
+      localStorage.setItem("SaleHistory", JSON.stringify(SaleHistory));
       showLoader();
       setTimeout(() => {
         hideLoader();
