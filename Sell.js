@@ -337,20 +337,26 @@ itemContainer.on("click", (event) => {
 // Handle payment method selection
 paymentBtn.on("click", function (e) {
   // Reset styles for all buttons
-  paymentBtn.css({
-    backgroundColor: "initial", // Use "initial" to reset to the default or inherited value
-    color: "white",
-  });
+  paymentBtn.removeClass("payment-methods-select")
 
   // Apply selected styles to the clicked button
-  $(this).css({
-    backgroundColor: "white",
-    color: "black",
-  });
+  $(this).addClass("payment-methods-select");
 
   // Get the selected payment method ID
   SelectedPaymentMethod = $(this).attr("id");
+  console.log(this.id);
+  
+
+  if (this.id !== "Cash") {
+    $("#receiveAmt").css("display", "none")
+  }
+
+  else{
+    $("#receiveAmt").css("display", "flex")
+  }
+
 });
+
 
 // When click on Pay Button
 payButton.on("click", () => {

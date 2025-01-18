@@ -23,6 +23,12 @@
     border: 2px solid #34344a;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .centerText {
     display: flex;
     height: 100%;
@@ -328,7 +334,7 @@ outline: none; /* Removes focus outline */
     display: flex;
     align-items: center; 
     justify-content: center; 
-    font-size: 10px; 
+    font-size: 13px; 
     font-weight: bold; 
     line-height: 1; 
     margin-right: 8px;
@@ -343,12 +349,12 @@ outline: none; /* Removes focus outline */
 
 .cart-items-name{
     font-weight: 300;
-    font-size: 12px;
+    font-size: 13px;
     padding-left: 10px;
 }
 
 .cart-items-price {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold; 
     line-height: 1; 
     padding-right: 20px;
@@ -414,10 +420,16 @@ outline: none; /* Removes focus outline */
     border-radius: 8px;
 }
 
-#Cash{
+.payment-methods-select{
     background-color: white;
     color: black;
 }
+
+.payment-methods-icons:hover{
+    background-color: white;
+    color: black;
+}
+
 .payment-methods-btns{ 
     display: flex;
     flex-direction: column;
@@ -451,11 +463,39 @@ outline: none; /* Removes focus outline */
     cursor: pointer;
 }
 
-.payment-methods-icons:hover{
-    background-color: white;
-    color: black;
+
+
+#receiveAmt {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+}
+#receiveAmt h4 {
+    font-size: 1.1em;
+    width: 96px;
+    margin-left: 10px;
 }
 
+#enterReceiveAmt {
+    background-color: #34344a;
+    width: 26%;
+    color: white;
+    border: 3px solid #494949;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: bolder;
+    transition: border-color 0.3s ease;
+}
+
+#enterReceiveAmt:focus {
+    outline: none;
+    border-color: #c8c8e7;
+}
 
 /* Recipt Styling */
 #receiptContainer {
