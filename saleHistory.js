@@ -8,7 +8,7 @@ const SaleHistoryList = () => {
                   <td>${sale.TotalAmount}</td>
                   <td>${sale.PaymentMethod}</td>
                     <td>
-                      <button class="receipt-btn" id="${sale.BillNo}">Show</button>
+                      <button class="receipt-btn" id="${sale.BillNo}">View</button>
                   </td>
                   <td>
                       <button class="delete-btn" id="${sale.BillNo}">Delete</button>
@@ -122,6 +122,8 @@ const SaleHistoryViewBtn = () => {
 
   $("#receiptcontainer").append(receiptContainer);
 };
+//run
+SaleHistoryViewBtn();
 
 // Handle receipt close
 const closeReceipt = (event) => {  
@@ -136,5 +138,3 @@ const closeReceipt = (event) => {
 };
 $("#receiptcontainer").on("click", ".closeBtn", closeReceipt);
 $(window).on("keyup", closeReceipt);
-
-SaleHistoryViewBtn();

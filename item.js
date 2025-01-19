@@ -36,12 +36,12 @@ const addItemScreen = () => {
   
       const categoryDropDown = $("#itemCategory");
       categories.forEach((cat) => {
-        categoryDropDown.append(`<option value="${cat.id}">${cat.name}</option>`);
+        categoryDropDown.append(`<option value="${cat.CategoryCode}">${cat.CategoryName}</option>`);
       });
   
       const categorySelection = $("#itemCategory");
       categorySelection.on("change", () => {
-        CategoryCode = categorySelection.val();
+        CategoryCode = parseInt(categorySelection.val());
       });
   
       setupAddItemHandler();
@@ -65,13 +65,13 @@ const addItemScreen = () => {
           alert("Barcode Already Exist");
         } else {
           const newItemId =
-            items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
+            items.length > 0 ? Math.max(...items.map((item) => item.ItemId)) + 1 : 1;
           items.push({
-            id: newItemId,
-            barcode: itemCode,
-            categoryId: CategoryCode,
-            name: itemName,
-            price: Number(itemPrice),
+            ItemId: newItemId,
+            Barcode: itemCode,
+            CategoryCode: CategoryCode,
+            ItemName: itemName,
+            SaleRate: Number(itemPrice),
             IsActive: true,
           });
   
@@ -127,17 +127,17 @@ const addItemScreen = () => {
       itemRow.append(`
               <tr>
                   <td>${index + 1}</td>
-                  <td>${item.name}</td>
-                  <td>${item.barcode}</td>
+                  <td>${item.ItemName}</td>
+                  <td>${item.Barcode}</td>
                   <td>${
-                    categories.find((cat) => cat.id === item.categoryId).name
+                    categories.find((cat) => cat.CategoryCode === item.CategoryCode).CategoryName
                   }</td>
-                  <td>${item.price}</td>
+                  <td>${item.SaleRate}</td>
                   <td>${item.IsActive ? "Active" : "Inactive"}</td>
                   <td>
                       <button class="edit-btn">Edit</button>
                       <button class="delete-btn" id="${
-                        item.barcode
+                        item.Barcode
                       }">Delete</button>
                   </td>
               </tr>

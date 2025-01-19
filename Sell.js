@@ -5,14 +5,10 @@ const cartContainer = $(".cart-items-container");
 let itemContainer = $(".itemcontainer");
 const searchBox = $("#itemsearchbox");
 const saleHistorySearchBox = $("#salesearchbox")
-// const navContainer = $(".nav-container");
-const categoryContainer = $(".category");
 
-// Convert categoryContainer to an array
-let CategoryArray = Array.from(categoryContainer);
-
-// Retrieve items from localStorage or initialize an empty array
+// Retrieve items /categories from localStorage or initialize an empty array
 let items = JSON.parse(localStorage.getItem("items")) || [];
+let categories = JSON.parse(localStorage.getItem("Categories")) || [];
 
 // Select the pay button and get the current date
 const paymentBtn = $(".payment-methods-icons");
@@ -30,7 +26,8 @@ let receiptNote = localStorage.getItem("note");
 let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
 // Extract all barcodes from items
-const allBarcode = items.map((item) => item.barcode);
+const allBarcode = items.map((item) => item.Barcode);
+const allCategoryCode = categories.map(category => category.CategoryCode);
 
 // Select the receipt container and retrieve address and receipt number from localStorage
 const receiptContainer = $("#receiptContainer");
@@ -60,30 +57,33 @@ const hideLoader = () => {
   $(".loader").hide();
 };
 
+
+//show categories on sell screen
+categories.forEach((category)=>{
+  $(".categorycontainer").append(`
+    <div class="category" data-categorycode="${category.CategoryCode}" data-categoryname="${category.CategoryName}">
+        <h2 class="category-name">${category.CategoryName}</h2>
+        <h3 class="items-count">0 Items</h3>
+    </div> 
+    `)
+})
+const allCategories = $(".category");
+
 // Iterate over each category and count items
-CategoryArray.forEach((category) => {
+allCategories.each((index , category) => {
+  
   let itemCount = $(category).find(".items-count");
-  let categoryId = $(category).data("categoryid"); // Get the category ID from dataset
+  
+  const CategoryCode = $(category).data("categorycode"); // Get the category ID from dataset
 
   // Filter items belonging to this category
-  let itemsInCategory = items.filter((item) => item.categoryId === categoryId);
+  let itemsInCategory = items.filter((item) => item.CategoryCode === CategoryCode);
 
   itemCount.text(`${itemsInCategory.length} Items`);
 });
 
-// Define categories
-const categories = [
-  { id: "cat01", name: "Pizza" },
-  { id: "cat02", name: "Burger" },
-  { id: "cat03", name: "Pasta" },
-  { id: "cat04", name: "Sandwitch" },
-  { id: "cat05", name: "Appetizer" },
-  { id: "cat06", name: "Drinks" },
-  { id: "cat07", name: "Deals" },
-];
-
 // Handle category click events
-categoryContainer.each((index, cat) => {
+allCategories.each((index, cat) => {
   $(cat).on("click", () => {
     const itemCountText = $(cat).children().last().text();
     const itemContainer = $("#itemcontainerId");
@@ -93,21 +93,22 @@ categoryContainer.each((index, cat) => {
       itemContainer.addClass("centerText").removeClass("itemcontainer");
     } else {
       itemContainer.removeClass("centerText").addClass("itemcontainer");
-      const categoryId = $(cat).data("categoryid");
-      showTheseItems(categoryId);
+      const CategoryCode = $(cat).data("categorycode");
+      
+      showTheseItems(CategoryCode);
       keepItemSelected();
     }
   });
 });
 
 // Show items based on category
-const showTheseItems = (categoryId) => {
+const showTheseItems = (CategoryCode) => {
   itemContainer.html("");
   items.forEach((item) => {
-    if (item.categoryId === categoryId) {
-      itemContainer.append(`   <div class="items" id="${item.id}" data-categoryId="${item.categoryId}">
-                        <h2 class="items-name">${item.name}</h2>
-                        <h3 class="items-price">${item.price} Pkr</h3>
+    if (item.CategoryCode === CategoryCode) {
+      itemContainer.append(`   <div class="items" id="${item.ItemId}" data-categoryId="${item.CategoryCode}">
+                        <h2 class="items-name">${item.ItemName}</h2>
+                        <h3 class="items-price">${item.SaleRate} Pkr</h3>
                         <div class="items-select-color"></div>
                         </div>
                         `);
@@ -133,7 +134,7 @@ const itemSearchHandler = (searchBox, searchIn, callback ) => {
   searchBox.on("input", function () {
     const searchValue = $(this).val().toLowerCase();
     const searchResult = searchIn.filter((item) =>
-      item.name.toLowerCase().includes(searchValue)
+      item.ItemName.toLowerCase().includes(searchValue)
     );
     callback(searchResult);
   });
@@ -150,14 +151,15 @@ const showItemsOnSearch = (searchResult) => {
   if (itemContainer.hasClass("centerText")) {
     itemContainer.removeClass("centerText");
     itemContainer.addClass("itemcontainer");
+    
   }
   
   itemContainer.empty(); // Clear previous search results
   searchResult.forEach((item) => {    
     itemContainer.append(`
-      <div class="items" id="${item.id}" data-categoryid="${item.categoryId}">
-        <h2 class="items-name">${item.name}</h2>
-        <h3 class="items-price">${item.price} Pkr</h3>
+      <div class="items" id="${item.ItemId}" data-categoryCode="${item.CategoryCode}">
+        <h2 class="items-name">${item.ItemName}</h2>
+        <h3 class="items-price">${item.SaleRate} Pkr</h3>
         <div class="items-select-color"></div>
       </div>
     `);
@@ -165,7 +167,7 @@ const showItemsOnSearch = (searchResult) => {
 };
 
 // Show all items initially
-showItemsOnSearch(items.filter((item) => item.name.toLowerCase().includes("")));
+showItemsOnSearch(items.filter((item) => item.ItemName.toLowerCase().includes("")));
 
 // Handle item click events
 itemContainer.on("click", (event) => {
@@ -270,9 +272,7 @@ itemContainer.on("click", (event) => {
         $(qty).attr("contentEditable", false);
         const editedQty = parseInt($(qty).text());
         const cartItem = $(qty).closest(".cart-items");
-        const itemPrice = items.find(
-          (item) => item.id === parseInt(cartItem.attr("id"))
-        ).price;
+        const itemPrice = items.find((item) => item.ItemId === parseInt(cartItem.attr("id"))).SaleRate;
         const cartItemsPrice = cartItem.find(".cart-items-price");
         cartItemsPrice.text(itemPrice * editedQty);
         calulateInvoice();
@@ -349,9 +349,7 @@ paymentBtn.on("click", function (e) {
 
   // Get the selected payment method ID
   SelectedPaymentMethod = $(this).attr("id");
-  console.log(this.id);
   
-
   if (this.id !== "Cash") {
     $("#receiveAmtDiv").css("display", "none");
     $("#returnAmtDiv").css("display", "none");

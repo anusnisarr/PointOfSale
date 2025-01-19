@@ -38,7 +38,7 @@ input[type="number"]::-webkit-outer-spin-button {
     opacity: 60%;
 }
 
-#pizza {
+[data-categoryname="Pizza"] {
     background-color: #CFDDDBff;
     background-image: url("./img/image-removebg-preview1.png");
     background-size: cover; /* Makes the image cover the div */
@@ -47,11 +47,11 @@ input[type="number"]::-webkit-outer-spin-button {
     background-size: 145px;
 }
 
-#deals {
+[data-categoryname="Deals"] {
     background-color: #E4CDEDff;
 }
 
-#burger {
+[data-categoryname="Burger"] {
     background-color: #C2DBE9ff;
     background-image: url("./img/image-removebg-preview.png");
     background-size: cover; /* Makes the image cover the div */
@@ -60,7 +60,7 @@ input[type="number"]::-webkit-outer-spin-button {
     background-size: 145px;
 }
 
-#pasta {
+[data-categoryname="Pasta"] {
     background-color: #C9CAEFff;
     background-image: url("./img/image-removebg-preview (1).png");
     background-size: cover; /* Makes the image cover the div */
@@ -69,20 +69,26 @@ input[type="number"]::-webkit-outer-spin-button {
     background-size: 145px;
 }
 
-#extras {
+[data-categoryname="Extras"] {
     background-color: #FAC1D9ff;
 }
 
-#drinks {
+[data-categoryname="Drinks"] {
     background-color: #e5dade;
 }
 
-#sandwitch {
+[data-categoryname="Sandwitches"] {
     background-color: #e5dade;
 }
-#appetizer {
+
+[data-categoryname="Appetizer"] {
     background-color: #C9CAEFff;
 }
+
+.category {
+    background-color: #e5dade;
+}
+
 #color-7 {
     background-color: #2D2D2Dff;
 }
@@ -645,6 +651,7 @@ outline: none; /* Removes focus outline */
     align-items: center;
     padding-top: 8px;
     font-size: 14px;
+    font-weight: bold;
     gap: 136.18px;
     border-top: 2px solid #fdd835;
 }
@@ -664,6 +671,7 @@ outline: none; /* Removes focus outline */
     justify-content: space-between;
     align-items: center;
     padding-top: 8px;
+    font-weight: bold;
     gap: 136.18px;
 }
 
