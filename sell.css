@@ -464,14 +464,19 @@ outline: none; /* Removes focus outline */
 
 #paymentFurtherOptions{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 5px 20px;
     margin-top: 10px;
 }
 
 
-#receiveAmtDiv , #returnAmtDiv {
+#receiveAmtDiv {
+    display: flex;
+    align-items: center;
+
+}
+#returnAmtDiv {
     display: flex;
     align-items: center;
 

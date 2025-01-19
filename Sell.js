@@ -355,11 +355,13 @@ paymentBtn.on("click", function (e) {
   if (this.id !== "Cash") {
     $("#receiveAmtDiv").css("display", "none");
     $("#returnAmtDiv").css("display", "none");
+
   }
 
   else{
     $("#receiveAmtDiv").css("display", "flex");
     $("#returnAmtDiv").css("display", "flex");
+
   }
 
 });
@@ -370,9 +372,11 @@ receivedAmountInput.on('input', () => {
 
   if (receivedAmount > subtotal && subtotal !== null && receivedAmount > 0) {
     const returnCash = receivedAmount - subtotal;
+
     returnAmountDisplay.text(returnCash);
 
     } else {
+    // $("#returnAmtDiv").css("display", "none");
 
     returnAmountDisplay.text("");
     receiptBalanceTitle.addClass("nodisplay");
