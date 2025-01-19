@@ -5,45 +5,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom File Input</title>
   <style>
-    /* Hide the default file input */
-    input[type="file"] {
-      display: none;
-    }
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
 
-    /* Custom button styling */
-    .custom-file-button {
-      display: inline-block;
-      background-color: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      text-align: center;
-      border: none;
-      font-size: 16px;
-    }
+.container {
+    position: relative;
+    width: 400px;
+    padding: 20px;
+    background: #2c2c54;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    z-index: 2;
+}
 
-    .custom-file-button:hover {
-      background-color: #0056b3;
-    }
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0;
+    border: 2px solid #4b4b75;
+    border-radius: 5px;
+    background: #1a1a2e;
+    color: white;
+    font-size: 16px;
+}
+
+/* Cash Drawer */
+.cash-drawer {
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 150%); /* Hidden behind */
+    background: linear-gradient(to bottom, #4b4b75, #2c2c54);
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+    opacity: 0; /* Initially hidden */
+    z-index: 1;
+    transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+}
+
+/* Visible state for cash drawer */
+.cash-drawer.active {
+    transform: translate(-50%, 0); /* Slide into view */
+    opacity: 1;
+}
+
+.return-amount-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin: 20px 0;
+}
+
+
+  
   </style>
 </head>
 <body>
-  <h1>Custom File Input Example</h1>
+  <div class="container">
+    <h2>Enter Amount</h2>
+    <input type="number" id="receivedAmount" placeholder="Enter received amount" />
+    <p>Total: <strong id="totalAmount">500</strong></p>
+    <div class="cash-drawer">
+        <p class="return-amount-text">Return Cash: <span id="returnAmount">0</span></p>
+    </div>
+</div>
 
-  <!-- Label as a custom button -->
-  <label for="fileInput" class="custom-file-button">Choose File</label>
-  <input type="file" id="fileInput" />
 
   <script>
-    const fileInput = document.getElementById("fileInput");
+// Grab elements
+const receivedAmountInput = document.getElementById('receivedAmount');
+const totalAmountDisplay = document.getElementById('totalAmount');
+const returnAmountDisplay = document.getElementById('returnAmount');
+const cashDrawer = document.querySelector('.cash-drawer');
 
-    fileInput.addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        alert(`Selected file: ${file.name}`);
-      }
-    });
+// Define total amount (can be dynamic)
+const totalAmount = 500;
+totalAmountDisplay.textContent = totalAmount;
+
+// Event listener to handle input
+receivedAmountInput.addEventListener('input', () => {
+    const receivedAmount = parseFloat(receivedAmountInput.value);
+
+    if (receivedAmount >= totalAmount) {
+        const returnCash = receivedAmount - totalAmount;
+        returnAmountDisplay.textContent = returnCash;
+
+        // Show the drawer with animation
+        cashDrawer.classList.add('active');
+
+        // Optional: Auto-hide the drawer after 5 seconds
+        setTimeout(() => {
+            cashDrawer.classList.remove('active');
+        }, 5000);
+    } else {
+        // Hide the drawer if amount is insufficient
+        cashDrawer.classList.remove('active');
+        returnAmountDisplay.textContent = 0;
+    }
+});
+
+
   </script>
 </body>
 </html>

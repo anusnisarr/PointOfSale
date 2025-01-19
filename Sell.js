@@ -41,6 +41,11 @@ const receiptNumber = localStorage.getItem("receiptNumber");
 lastBillNo = Number(lastBillNo) + 1;
 localStorage.setItem("lastBillNo", lastBillNo);
 
+// Select the received amount input and return amount display elements
+let receivedAmountInput = $("#receiveAmt");
+let returnAmountDisplay = $("#returnAmt");
+let receiptBalanceTitle = $(".cashOptions");
+
 // Show loader animation
 const showLoader = (mainDiv) => {
   const content = $(`.${mainDiv ? mainDiv : "content"}`);
@@ -348,15 +353,32 @@ paymentBtn.on("click", function (e) {
   
 
   if (this.id !== "Cash") {
-    $("#receiveAmt").css("display", "none")
+    $("#receiveAmtDiv").css("display", "none");
+    $("#returnAmtDiv").css("display", "none");
   }
 
   else{
-    $("#receiveAmt").css("display", "flex")
+    $("#receiveAmtDiv").css("display", "flex");
+    $("#returnAmtDiv").css("display", "flex");
   }
 
 });
 
+// Event listener to handle input for cash received amount and return
+receivedAmountInput.on('input', () => {
+  const receivedAmount = parseFloat(receivedAmountInput.val());
+
+  if (receivedAmount > subtotal && subtotal !== null && receivedAmount > 0) {
+    const returnCash = receivedAmount - subtotal;
+    returnAmountDisplay.text(returnCash);
+
+    } else {
+
+    returnAmountDisplay.text("");
+    receiptBalanceTitle.addClass("nodisplay");
+
+    } 
+  });
 
 // When click on Pay Button
 payButton.on("click", () => {
@@ -401,8 +423,16 @@ payButton.on("click", () => {
           </div>
           <div class="cart-item-container"></div>
           <div class="total">
-            <span>TOTAL</span>
+            <span>Total:</span>
             <span>${subtotal}</span>
+          </div>
+          <div class="cashOptions" style="display: ${receivedAmountInput.val() ? 'flex' : 'none'};">
+            <span>Cash Received:</span>
+            <span>${receivedAmountInput.val()}</span>
+          </div>
+          <div class="cashOptions" style="display: ${returnAmountDisplay.text() ? 'flex' : 'none'};">
+            <span>Cash Return:</span>
+            <span>${returnAmountDisplay.text()}</span>
           </div>
           <div class="barcode">
             <img src="./img/invoicebarcode.png" alt="Barcode">
