@@ -480,6 +480,8 @@ payButton.on("click", () => {
     BillDate: currentDate,
     PaymentMethod: SelectedPaymentMethod,
     TotalAmount: subtotal,
+    ReturnCash: returnAmountDisplay.text(),
+    ReceivedCash: receivedAmountInput.val(),
     Items: items,
   });
 

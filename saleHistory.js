@@ -43,13 +43,17 @@ const SaleHistoryViewBtn = () => {
   viewBtn.each((index, btn) => {
 
     $(btn).on("click", (e) => {
-      let Bill = SaleHistory.find((bill) => e.target.id == bill.BillNo);
+      let bill = SaleHistory.find((bill) => e.target.id == bill.BillNo);
       let receiptContainer = $("#receiptcontainer");
-      const billNo = Bill.BillNo;
-      const billDate = Bill.BillDate;
-      const billPaymentMethod = Bill.PaymentMethod;
-      const billTotal = Bill.TotalAmount;
-      console.log(Bill.Items);
+      const billNo = bill.BillNo;
+      const billDate = bill.BillDate;
+      const billPaymentMethod = bill.PaymentMethod;
+      const billTotal = bill.TotalAmount;
+      const ReceivedCash = bill.ReceivedCash;
+      const ReturnCash = bill.ReturnCash;
+      console.log(ReceivedCash);
+      console.log(ReturnCash);
+
 
       receiptContainer.html(`
         <div class="closeBtn"><i class="ri-close-line"></i></div>
@@ -64,8 +68,8 @@ const SaleHistoryViewBtn = () => {
                 </div>
               </div>
               <div class="bill-details">
-                <p><strong>Bill No: </strong> ${billNo}</p>
-                <p><strong>Bill Date: </strong>${billDate}</p>
+                <p><strong>bill No: </strong> ${billNo}</p>
+                <p><strong>bill Date: </strong>${billDate}</p>
                 <p><strong>Customer Name: </strong></p>
                 <p><strong>Payment Method: </strong> ${billPaymentMethod}</p>
               </div>
@@ -80,6 +84,14 @@ const SaleHistoryViewBtn = () => {
                 <span>TOTAL</span>
                 <span>${billTotal}</span>
               </div>
+          <div class="cashOptions" style="display: ${ReceivedCash > 0 ? 'flex' : 'none'};">
+            <span>Cash Received:</span>
+            <span>${ReceivedCash}</span>
+          </div>
+          <div class="cashOptions" style="display: ${ReturnCash > 0 ? 'flex' : 'none'};">
+            <span>Cash Return:</span>
+            <span>${ReturnCash}</span>
+          </div>
               <div class="barcode">
                 <img src="./img/invoicebarcode.png" alt="Barcode">
               </div>
@@ -88,7 +100,7 @@ const SaleHistoryViewBtn = () => {
             <a href="#" class="print-button">Print Receipt</a>
       `);
       // Add items to receipt
-      Bill.Items.forEach((item) => {
+      bill.Items.forEach((item) => {
         const itemName = item.ItemName;
         const itemQty = item.Qty;
         const itemPrice = item.Rate;
