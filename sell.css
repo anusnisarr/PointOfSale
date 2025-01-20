@@ -513,8 +513,6 @@ outline: none; /* Removes focus outline */
     background-color: white;
     width: 50%;
     height: 42.22px;
-    color: #34344a;
-    border: 3px solid #494949;
     border-radius: 10px;
     font-size: 1.1em;
     font-weight: bolder;
@@ -529,9 +527,10 @@ outline: none; /* Removes focus outline */
     outline: none;
     border-color: white;
 }
-#returnCash:focus {
+
+#receiveCash:hover{
     outline: none;
-    border-color: #494949;
+    border-color: white;
 }
 
 /* Recipt Styling */
