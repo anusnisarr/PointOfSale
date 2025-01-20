@@ -414,7 +414,7 @@ payButton.on("click", () => {
       <div id="receiptbody">
         <div class="receipt">
           <div class="header">
-            <img src="/img/logo.jpg" alt="Logo">
+            <img src="img/logo.jpg" alt="Logo">
             <div class="contact-details">
               <p><strong>Address:</strong> ${address}</p>
               <p><strong>Phone:</strong> ${receiptNumber}</p>
@@ -446,7 +446,7 @@ payButton.on("click", () => {
             <span>${returnCashDisplay.text()}</span>
           </div>
           <div class="barcode">
-            <img src="/img/invoicebarcode.png" alt="Barcode">
+            <img src="img/invoicebarcode.png" alt="Barcode">
           </div>
         </div>
       </div>
