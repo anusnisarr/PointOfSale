@@ -338,8 +338,8 @@ itemContainer.on("click", (event) => {
         subtotal += parseInt(ItemAmountArray[index]);
       }
 
-      $("#subtotal-values").html(`PKR ${subtotal}`);
-      $("#total-values").html(`PKR ${subtotal}`);
+      $("#subtotal-values").html(`PKR ${subtotal ? subtotal : 0}`);
+      $("#total-values").html(`PKR ${subtotal ? subtotal : 0}`);
     };
     calulateInvoice();
     updateReturnCash();

@@ -513,6 +513,7 @@ outline: none; /* Removes focus outline */
     background-color: white;
     width: 50%;
     height: 42.22px;
+    color: #34344a;
     border-radius: 10px;
     font-size: 1.1em;
     font-weight: bolder;
