@@ -39,8 +39,8 @@ lastBillNo = Number(lastBillNo) + 1;
 localStorage.setItem("lastBillNo", lastBillNo);
 
 // Select the received amount input and return amount display elements
-let receivedAmountInput = $("#receiveAmt");
-let returnAmountDisplay = $("#returnAmt");
+let receivedCashInput = $("#receiveCash");
+let returnCashDisplay = $("#returnCash");
 let receiptBalanceTitle = $(".cashOptions");
 
 // Show loader animation
@@ -308,6 +308,7 @@ itemContainer.on("click", (event) => {
         if (alreadyInCart.length === 0) {
           clickedItem.removeClass("clicked");
           clickedItem.css("color", "white");
+
         }
 
         // Remove item from selectedItems array
@@ -315,12 +316,13 @@ itemContainer.on("click", (event) => {
 
         // Recalculate subtotal
         calulateInvoice();
+        updateReturnCash();
       });
     });
 
     // Calculate invoice subtotal
     const calulateInvoice = () => {
-      subtotal = 0;
+      subtotal = null;
       let ItemAmountArray = [];
       const ItemAmount = $(".cart-items-price");
       ItemAmount.each((index, item) => {
@@ -336,6 +338,7 @@ itemContainer.on("click", (event) => {
       $("#total-values").html(`PKR ${subtotal}`);
     };
     calulateInvoice();
+    updateReturnCash();
   }
 });
 
@@ -351,36 +354,42 @@ paymentBtn.on("click", function (e) {
   SelectedPaymentMethod = $(this).attr("id");
   
   if (this.id !== "Cash") {
-    $("#receiveAmtDiv").css("display", "none");
-    $("#returnAmtDiv").css("display", "none");
+    $("#receiveCashDiv").css("display", "none");
+    $("#returnCashDiv").css("display", "none");
 
   }
 
   else{
-    $("#receiveAmtDiv").css("display", "flex");
-    $("#returnAmtDiv").css("display", "flex");
+    $("#receiveCashDiv").css("display", "flex");
+    $("#returnCashDiv").css("display", "flex");
 
   }
 
 });
 
-// Event listener to handle input for cash received amount and return
-receivedAmountInput.on('input', () => {
-  const receivedAmount = parseFloat(receivedAmountInput.val());
 
-  if (receivedAmount > subtotal && subtotal !== null && receivedAmount > 0) {
-    const returnCash = receivedAmount - subtotal;
+//Updates the display of the return cash amount based on the received cash and subtotal.
+const updateReturnCash = ()=>{
+  const receivedCash = parseFloat(receivedCashInput.val());
+  if (subtotal) {
+    
+  }
 
-    returnAmountDisplay.text(returnCash);
+  if (receivedCash > subtotal && receivedCash > 0 && subtotal !== null) {
+      const returnCash = receivedCash - subtotal;
+      returnCashDisplay.text(returnCash);
 
     } else {
-    // $("#returnAmtDiv").css("display", "none");
-
-    returnAmountDisplay.text("");
-    receiptBalanceTitle.addClass("nodisplay");
+      returnCashDisplay.text("");
+      receiptBalanceTitle.addClass("nodisplay");
 
     } 
-  });
+  }
+
+// Event listener to handle input for cash received amount and return
+receivedCashInput.on('input', () => {
+  updateReturnCash()
+});
 
 // When click on Pay Button
 payButton.on("click", () => {
@@ -428,13 +437,13 @@ payButton.on("click", () => {
             <span>Total:</span>
             <span>${subtotal}</span>
           </div>
-          <div class="cashOptions" style="display: ${receivedAmountInput.val() ? 'flex' : 'none'};">
+          <div class="cashOptions" style="display: ${(receivedCashInput.val() && receivedCashInput.val() >= subtotal) ? 'flex' : 'none'};">
             <span>Cash Received:</span>
-            <span>${receivedAmountInput.val()}</span>
+            <span>${receivedCashInput.val()}</span>
           </div>
-          <div class="cashOptions" style="display: ${returnAmountDisplay.text() ? 'flex' : 'none'};">
+          <div class="cashOptions" style="display: ${returnCashDisplay.text() ? 'flex' : 'none'};">
             <span>Cash Return:</span>
-            <span>${returnAmountDisplay.text()}</span>
+            <span>${returnCashDisplay.text()}</span>
           </div>
           <div class="barcode">
             <img src="./img/invoicebarcode.png" alt="Barcode">
@@ -478,8 +487,8 @@ payButton.on("click", () => {
     BillDate: currentDate,
     PaymentMethod: SelectedPaymentMethod,
     TotalAmount: subtotal,
-    ReturnCash: returnAmountDisplay.text(),
-    ReceivedCash: receivedAmountInput.val(),
+    ReturnCash: returnCashDisplay.text(),
+    ReceivedCash: receivedCashInput.val(),
     Items: items,
   });
 
