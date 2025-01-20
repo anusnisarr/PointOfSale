@@ -67,6 +67,7 @@ categories.forEach((category)=>{
     </div> 
     `)
 })
+
 const allCategories = $(".category");
 
 // Iterate over each category and count items
@@ -85,6 +86,7 @@ allCategories.each((index , category) => {
 // Handle category click events
 allCategories.each((index, cat) => {
   $(cat).on("click", () => {
+    
     const itemCountText = $(cat).children().last().text();
     const itemContainer = $("#itemcontainerId");
 
@@ -132,10 +134,12 @@ const keepItemSelected = () => {
 // Handle item search
 const itemSearchHandler = (searchBox, searchIn, callback ) => {
   searchBox.on("input", function () {
-    const searchValue = $(this).val().toLowerCase();
-    const searchResult = searchIn.filter((item) =>
-      item.ItemName.toLowerCase().includes(searchValue)
-    );
+    const searchValue = $(this).val().toLowerCase();    
+  const searchResult = searchIn.filter((item) => {
+    return item.ItemName.toLowerCase().includes(searchValue) ||
+           item.Barcode.toString().includes(searchValue) ||
+           item.SaleRate.toString().includes(searchValue)
+  });
     callback(searchResult);
   });
 };
