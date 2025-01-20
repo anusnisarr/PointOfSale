@@ -86,12 +86,12 @@ allCategories.each((index , category) => {
 // Handle category click events
 allCategories.each((index, cat) => {
   $(cat).on("click", () => {
-    
+    const categoryName = $(cat).find(".category-name").text()
     const itemCountText = $(cat).children().last().text();
     const itemContainer = $("#itemcontainerId");
 
     if (itemCountText === "0 Items") {
-      itemContainer.html("<h3>No Items Available</h3>");
+      itemContainer.html(`<h3>No Item in ${categoryName}</h3>`);
       itemContainer.addClass("centerText").removeClass("itemcontainer");
     } else {
       itemContainer.removeClass("centerText").addClass("itemcontainer");
