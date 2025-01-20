@@ -416,8 +416,8 @@ payButton.on("click", () => {
           <div class="header">
             <img src="img/logo.jpg" alt="Logo">
             <div class="contact-details">
-              <p><strong>Address:</strong> ${address}</p>
-              <p><strong>Phone:</strong> ${receiptNumber}</p>
+              <p style="display: ${address ? 'block':'none'}"><strong>Address:</strong> ${address}</p>
+              <p style="display: ${receiptNumber ? 'block':'none'}"><strong>Phone:</strong> ${receiptNumber}</p>
             </div>
           </div>
           <div class="bill-details">
