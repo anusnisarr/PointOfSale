@@ -151,10 +151,9 @@ outline: none; /* Removes focus outline */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(14vw, 1fr)); /* Adjusted to consume all available space */
     grid-auto-rows: 12vh; /* Sets a consistent row height */
-    gap: 3px; /* Reduced spacing between items */
+    gap: 5px; /* Reduced spacing between items */
     overflow: auto; /* Remove scrolling if not needed */
     min-height: 27%; /* Minimum height */
-    max-height: 28%; /* Maximum height */
     padding: 5px;
 }
 
@@ -162,14 +161,13 @@ outline: none; /* Removes focus outline */
 .category{
     color: #111315;
     display: flex;
-    height: 11vh;
-    width: 14vw;
     flex-direction: column;
     border-radius: 11px;
-    padding: 10px 10px 10px 17px;
+    padding: 10px 0px 10px 10px;
     justify-content:space-between;
     cursor: pointer;
     opacity: 1; /* Initially hidden */
+    overflow: "hidden"
     /* transform: translateY(-30px); Start slightly below */
 }
 .category-name{

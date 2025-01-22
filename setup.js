@@ -1,41 +1,52 @@
+const updateButton = $(".update-btn");
+const ClubItemOnCart = $("#ClubItemOnCart");
+const receiptAddress = $("#address");
+const receiptNumber = $("#receipt-number");
+const receiptNote = $("#note");
+const smallCategorySize = $("#smallCategorySize");
+
+
 // Update and save parameter in Setup
 const setupChange = () => {
-    const ClubItemOnCart = $("#ClubItemOnCart");
-    localStorage.setItem(
-      "ClubItemOnCart",
-      ClubItemOnCart.is(":checked") ? "true" : "false"
-    );
-  
-    const receiptAddress = $("#address");
-    localStorage.setItem("address", receiptAddress.val());
-  
-    const receiptNumber = $("#receipt-number");
-    localStorage.setItem("receiptNumber", receiptNumber.val());
-  
-    const receiptNote = $("#note");
-    localStorage.setItem("note", receiptNote.val());
+
+  let paramters = {
+    ClubItemOnCart : ClubItemOnCart.is(":checked") ? "true" : "false" ,
+    smallCategorySize : smallCategorySize.is(":checked") ? "true" : "false"
+  }  
+    let receiptDetails = {
+      Address : receiptAddress.val(),
+      Number : receiptNumber.val(),
+      Note: receiptNote.val()
+    }    
+    localStorage.setItem("Parameters" , JSON.stringify(paramters))
+    localStorage.setItem("ReceiptDetails", JSON.stringify(receiptDetails));
   };
   
-  if (document.title === "Setup") {
-    const updateButton = $(".update-btn");
-    const ClubItemOnCart = $("#ClubItemOnCart");
-    const receiptAddress = $("#address");
-    const receiptNumber = $("#receipt-number");
-    const receiptNote = $("#note");
-  
-    // Set the value of the checkbox based on the local storage
-    localStorage.getItem("ClubItemOnCart") === "true"
-      ? ClubItemOnCart.prop("checked", true)
-      : ClubItemOnCart.prop("checked", false);
-    localStorage.getItem("address")
-      ? receiptAddress.val(localStorage.getItem("address"))
+  // Set the value of the checkbox based on the local storage
+  const getParameters = JSON.parse(localStorage.getItem("Parameters") || "{}")
+
+    getParameters.ClubItemOnCart === "true"
+      ? ClubItemOnCart.prop("checked" , true)
+      : ClubItemOnCart.prop("checked" , false);
+
+      getParameters.smallCategorySize === "true"
+        ? smallCategorySize.prop("checked" , true)
+        : smallCategorySize.prop("checked" , false);
+      
+  //Saving the values of receipt details in the input feilds based on the local storage
+const getReceiptDetails = JSON.parse(localStorage.getItem("ReceiptDetails"));      
+    localStorage.getItem("getReceiptDetails")
+      ? receiptAddress.val(getReceiptDetails.Address)
       : receiptAddress.val("");
-    localStorage.getItem("receiptNumber")
-      ? receiptNumber.val(localStorage.getItem("receiptNumber"))
+
+    localStorage.getItem("ReceiptDetails")
+      ? receiptNumber.val(getReceiptDetails.Number)
       : receiptNumber.val("");
-    localStorage.getItem("note")
-      ? receiptNote.val(localStorage.getItem("note"))
+
+    localStorage.getItem("ReceiptDetails")
+      ? receiptNote.val(getReceiptDetails.Note)
       : receiptNote.val("");
+      
     updateButton.on("click", () => {
       setupChange();
       showLoader("setup-container");
@@ -44,4 +55,4 @@ const setupChange = () => {
         location.reload();
       }, 1000);
     });
-  }
+  

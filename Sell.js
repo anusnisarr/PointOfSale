@@ -22,7 +22,7 @@ let subtotal = null; // Global variable to store subtotal
 let lastBillNo = localStorage.getItem("lastBillNo") || 0;
 
 // Retrieve receipt note and sale history from localStorage
-let receiptNote = localStorage.getItem("note");
+let receiptNoteValue = localStorage.getItem("note");
 let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
 // Extract all barcodes from items
@@ -32,16 +32,17 @@ const allCategoryCode = categories.map(category => category.CategoryCode);
 // Select the receipt container and retrieve address and receipt number from localStorage
 const receiptContainer = $("#receiptContainer");
 const address = localStorage.getItem("address");
-const receiptNumber = localStorage.getItem("receiptNumber");
+const receiptNumberValue = localStorage.getItem("receiptNumberValue");
 
 // Increment the last bill number and update it in localStorage
-lastBillNo = Number(lastBillNo) + 1;
 localStorage.setItem("lastBillNo", lastBillNo);
 
 // Select the received amount input and return amount display elements
 let receivedCashInput = $("#receiveCash");
 let returnCashDisplay = $("#returnCash");
 let receiptBalanceTitle = $(".cashOptions");
+
+
 
 // Show loader animation
 const showLoader = (mainDiv) => {
@@ -410,6 +411,8 @@ payButton.on("click", () => {
     alert("Please add quantity to the item to proceed");
     return;
   }
+  
+  lastBillNo = Number(lastBillNo) + 1;
 
   // Generate receipt
   receiptContainer.html(`
@@ -421,7 +424,7 @@ payButton.on("click", () => {
             <img src="img/logo.jpg" alt="Logo">
             <div class="contact-details">
               <p style="display: ${address ? 'block':'none'}"><strong>Address:</strong> ${address}</p>
-              <p style="display: ${receiptNumber ? 'block':'none'}"><strong>Phone:</strong> ${receiptNumber}</p>
+              <p style="display: ${receiptNumberValue ? 'block':'none'}"><strong>Phone:</strong> ${receiptNumberValue}</p>
             </div>
           </div>
           <div class="bill-details">
@@ -528,3 +531,82 @@ payButton.on("click", () => {
   $(window).on("keyup", closeReceipt);
 
 });
+
+
+
+const checkParameters = (parameter) => {
+
+const smallCategorySize = parameter.smallCategorySize;
+
+if (smallCategorySize === "true") {
+
+  $("[data-categoryname='Pizza']").css({
+    backgroundPosition: "80px",
+    backgroundSize: "90px"
+  });
+  
+  $("[data-categoryname='Burger']").css({
+    backgroundPosition: "80px",
+    backgroundSize: "90px"
+  });
+  
+  $("[data-categoryname='Pasta']").css({
+    backgroundPosition: "80px",
+    backgroundSize: "90px"
+  });
+
+  $(".categorycontainer").css({
+    gridTemplateColumns: "repeat(auto-fill, minmax(10vw, 1fr))",
+    gridAutoRows: "08vh",
+  });
+
+  $(".category").css({
+    padding: "5px 0px 10px 10px",
+    overflow: "hidden"
+  });
+
+  $(".category-name").css({
+    fontSize: "1em",
+    paddingBottom: "5px"
+  });
+  $(".items-count").css({
+    fontSize: "0.7em"
+  });
+}
+
+else{
+
+  $("[data-categoryname='Pizza']").css({
+    backgroundPosition: "108px",
+    backgroundSize: "145px"
+  });
+  
+  $("[data-categoryname='Burger']").css({
+    backgroundPosition: "108px",
+    backgroundSize: "145px"
+  });
+  
+  $("[data-categoryname='Pasta']").css({
+    backgroundPosition: "108px",
+    backgroundSize: "145px"
+  });
+
+  $(".categorycontainer").css({
+    gridTemplateColumns: "repeat(auto-fill, minmax(14vw, 1fr))",
+    gridAutoRows: "12vh",
+  });
+
+  $(".category").css({
+    padding: "10px 0px 10px 10px",
+  });
+
+  $(".category-name").css({
+    fontSize: "1.6vmax",
+    paddingBottom: "0px"
+  });
+  $(".items-count").css({
+    fontSize: "1vmax"
+  });
+}
+}
+checkParameters(JSON.parse(localStorage.getItem("Parameters")))
