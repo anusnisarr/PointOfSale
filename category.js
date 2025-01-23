@@ -1,38 +1,112 @@
 const addCategoryButton = $(".add-category-btn");
 const categoryContainer = $(".categorycontainer")
+let selectedImage = null;
 
 const addCategoryScreen = () => {
     addCategoryButton.on("click", () => {
         $(".content").html(`
               <div class="content">
-                  <h2>Create New category</h2>
-                  <form class="category-form">
-                      <div class="form-group">
-                          <label for="CategoryName">Category Name</label>
-                          <input type="text" id="categoryName" placeholder="Enter Category Name">
-                      </div>
-  
-                      <div class="form-group">
-                          <label for="categoryCode">Category Code</label>
-                          <input type="text" id="categoryCode" placeholder="Enter Category Code">
-                      </div>
-    
-                      <button type="submit" class="btn">Save category</button>
-                  </form>
+              <h2>Create New category</h2>
+              <form class="category-form">
+
+                  <div class="form-group">
+                  <label for="CategoryName">Category Name</label>
+                  <input type="text" id="categoryName" placeholder="Enter Category Name">
+                  </div>
+      
+                  <div class="form-group">
+                  <label for="categoryCode">Category Code</label>
+                  <input type="text" id="categoryCode" placeholder="Enter Category Code">
+                  </div>
+
+                <div class="form-group">
+                  <label for="searchImage">Search Image</label>
+                  <input type="text" id="searchImage" placeholder="Search Image for category">
+                  </div>
+
+        
+                  <button type="submit" class="btn">Save</button>
+              </form>
+                <div id="imgcontainer" style = "display:none">
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                <div class="images"><img src="" alt=""></div>
+                </div>
               </div>
           `);
 
+            let imagesdiv = $(".images img");
+            let debounceTimer;
 
+            $("#searchImage").on("input", (e) => {
+            clearTimeout(debounceTimer);
 
+            if (!e.target.value) {
+              $("#imgcontainer").slideUp(300);
+              return;
+             };
+
+            const query = e.target.value.trim();
+            if (!query) return;
+
+            debounceTimer = setTimeout(() => {
+              const url = `https://pixabay.com/api/?key=48393748-c303e9d0893551a0a6103a300&q=${query}&per_page=16`;
+              getImages(url);
+            }, 500);
+
+          });
+        
+          const getImages = async (url) => {
+            try {
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              $("#imgcontainer").slideDown(300);
+              const data = await response.json();
+              imagesdiv.each((index, img) => {
+                img.src = data.hits[index].webformatURL || ''; // Set the image source if available
+              });
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          };
+
+          //listen on image click and save in variable.
+          imagesdiv.on("click" , (e)=>{ 
+            selectedImage = e.target.src
+            //removeSelectImageStyle
+            imagesdiv.each((index , img)=>{
+              $(img).css("border", "");
+              $(img).css("box-shadow", "");
+            })
+            
+            $(e.target).css("border", "2px solid #6c63ff");
+            $(e.target).css("box-shadow", "0 0 30px rgba(255, 255, 255, 0.486)");
+            
+          });
 
         const setupAddCategoryHandler = () => {
             const saveButton = $(".btn");
+
             saveButton.on("click", (e) => {
                 e.preventDefault();
 
                 const categoryName = $("#categoryName").val();
                 const categoryCode = Number($("#categoryCode").val());
-
                 
                 let categoryCodeCheck = allCategoryCode.find((CategoryCode) => CategoryCode === categoryCode);
 
@@ -50,6 +124,7 @@ const addCategoryScreen = () => {
                         CategoryId: newCategoryId,
                         CategoryName: categoryName,
                         CategoryCode: categoryCode,
+                        Image:selectedImage,
                         ItemCount: null,
                         IsActive: true,
                     });
@@ -69,9 +144,9 @@ const addCategoryScreen = () => {
 };
 addCategoryScreen()
 
-const categoryListScreen = (categoriesData) => {
+const categoryListScreen = (categories) => {
     const categoryRow = $(".category-table tbody");
-    categoriesData.forEach((category, index) => {
+    categories.forEach((category, index) => {
         categoryRow.append(`
               <tr>
                   <td>${index + 1}</td>
@@ -80,8 +155,7 @@ const categoryListScreen = (categoriesData) => {
                   <td>${category.IsActive ? "Active" : "Inactive"}</td>
                   <td>
                       <button class="edit-btn">Edit</button>
-                      <button class="delete-btn" id="${category.Categoryid
-            }">Delete</button>
+                      <button class="delete-btn" id="${category.CategoryId}">Delete</button>
                   </td>
               </tr>
           `);
@@ -91,9 +165,11 @@ categoryListScreen(categories);
 
 const categoryDeleteFunction = () => {
     let deleteBtn = $(".delete-btn");
+
     deleteBtn.each((index, btn) => {
         $(btn).on("click", (e) => {
-            categories = categories.filter((category) => e.target.id != category.Categoryid);
+            console.log(e.target.id);          
+            categories = categories.filter((category) => e.target.id != category.CategoryId);
             localStorage.setItem("Categories", JSON.stringify(categories));
             showLoader();
             setTimeout(() => {

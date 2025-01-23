@@ -65,8 +65,8 @@ categories.forEach((category)=>{
     <div class="category" data-categorycode="${category.CategoryCode}" data-categoryname="${category.CategoryName}">
         <h2 class="category-name">${category.CategoryName}</h2>
         <h3 class="items-count">0 Items</h3>
-    </div> 
-    `)
+  </div> 
+  `);
 })
 
 const allCategories = $(".category");
