@@ -5,119 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom File Input</title>
   <style>
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
-}
+    body{
+        background-color: black;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 
-.container {
-    position: relative;
-    width: 400px;
-    padding: 20px;
-    background: #2c2c54;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    color: white;
-    text-align: center;
-    z-index: 2;
-}
+    #imgcontainer{
+      display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 15px 0;
-    border: 2px solid #4b4b75;
-    border-radius: 5px;
-    background: #1a1a2e;
-    color: white;
-    font-size: 16px;
-}
-
-/* Cash Drawer */
-.cash-drawer {
-    position: absolute;
-    width: 100%;
-    height: 100px;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 150%); /* Hidden behind */
-    background: linear-gradient(to bottom, #4b4b75, #2c2c54);
-    border-radius: 10px 10px 0 0;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
-    opacity: 0; /* Initially hidden */
-    z-index: 1;
-    transition: transform 0.8s ease-out, opacity 0.8s ease-out;
-}
-
-/* Visible state for cash drawer */
-.cash-drawer.active {
-    transform: translate(-50%, 0); /* Slide into view */
-    opacity: 1;
-}
-
-.return-amount-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-    margin: 20px 0;
-}
-
-
-  
+    .images img {
+      height: 120px;
+      width: 120px;
+      object-fit: cover;
+    }
+    label{
+      color: white;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Enter Amount</h2>
-    <input type="number" id="receivedAmount" placeholder="Enter received amount" />
-    <p>Total: <strong id="totalAmount">500</strong></p>
-    <div class="cash-drawer">
-        <p class="return-amount-text">Return Cash: <span id="returnAmount">0</span></p>
-    </div>
+  <div id="imgcontainer">
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
+  <div class="images"><img src="" alt=""></div>
 </div>
+  <label for="searchimage">Search Image</label>
+  <input type="text" name="" id="searchimage">
 
 
   <script>
-// Grab elements
-const receivedAmountInput = document.getElementById('receivedAmount');
-const totalAmountDisplay = document.getElementById('totalAmount');
-const returnAmountDisplay = document.getElementById('returnAmount');
-const cashDrawer = document.querySelector('.cash-drawer');
+const key  = '48393748-c303e9d0893551a0a6103a300'; // Replace with your actual API key
+let query = 'burger'; // Keyword to search for images
+const per_page = 18; // Number of images to fetch per page
+let url = `https://pixabay.com/api/?key=${key}&q=${query}&per_page=${per_page}`;
+let  imagesdiv = document.querySelectorAll(".images img");
+let imagesURL = [];
 
-// Define total amount (can be dynamic)
-const totalAmount = 500;
-totalAmountDisplay.textContent = totalAmount;
+let inputQuery = document.querySelector("#searchimage").addEventListener("input", (e) => {
+  query = e.target.value;
+  url = `https://pixabay.com/api/?key=${key}&q=${query}&per_page=${per_page}`
+  
 
-// Event listener to handle input
-receivedAmountInput.addEventListener('input', () => {
-    const receivedAmount = parseFloat(receivedAmountInput.value);
+setTimeout(() => {
+  
 
-    if (receivedAmount >= totalAmount) {
-        const returnCash = receivedAmount - totalAmount;
-        returnAmountDisplay.textContent = returnCash;
+fetch(url, {
+    method: 'GET', // HTTP method
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Search Results:', data);
+        
+        imagesURL = []; // Clear the array before each search
+        data.hits.forEach(photo => {
+          imagesURL.push(photo.webformatURL); // Original image URL
+        });
 
-        // Show the drawer with animation
-        cashDrawer.classList.add('active');
+        imagesdiv.forEach((img, index) => {
+          img.src = imagesURL[index] || ''; // Set the image source if available
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+    
+  }, 1500);
 
-        // Optional: Auto-hide the drawer after 5 seconds
-        setTimeout(() => {
-            cashDrawer.classList.remove('active');
-        }, 5000);
-    } else {
-        // Hide the drawer if amount is insufficient
-        cashDrawer.classList.remove('active');
-        returnAmountDisplay.textContent = 0;
-    }
-});
-
-
+  });
   </script>
 </body>
 </html>
