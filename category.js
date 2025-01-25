@@ -2,6 +2,8 @@ const addCategoryButton = $(".add-category-btn");
 const categoryContainer = $(".categorycontainer")
 let selectedImage = null;
 
+
+
 const addCategoryScreen = () => {
     addCategoryButton.on("click", () => {
         $(".content").html(`
@@ -155,7 +157,7 @@ const categoryListScreen = (categories) => {
                   <td>${category.IsActive ? "Active" : "Inactive"}</td>
                   <td>
                       <button class="edit-btn">Edit</button>
-                      <button class="delete-btn" id="${category.CategoryId}">Delete</button>
+                      <button class="delete-btn" id="${category.CategoryCode}">Delete</button>
                   </td>
               </tr>
           `);
@@ -165,17 +167,25 @@ categoryListScreen(categories);
 
 const categoryDeleteFunction = () => {
     let deleteBtn = $(".delete-btn");
-
     deleteBtn.each((index, btn) => {
-        $(btn).on("click", (e) => {
-            console.log(e.target.id);          
-            categories = categories.filter((category) => e.target.id != category.CategoryId);
+
+        $(btn).on("click", (e) => { 
+            let DependencieCheck = items.find((item)=> item.CategoryCode === Number(e.target.id))
+            if (DependencieCheck) {
+              alert("Item already added to this category. Cannot delete it.");
+              return
+              
+            }
+
+            else {
+            categories = categories.filter((category) => e.target.id != category.CategoryCode);
             localStorage.setItem("Categories", JSON.stringify(categories));
             showLoader();
             setTimeout(() => {
                 hideLoader();
                 location.reload();
             }, 1000);
+          };
         });
     });
 };

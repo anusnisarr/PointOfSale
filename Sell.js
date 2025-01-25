@@ -189,7 +189,9 @@ itemContainer.on("click", (event) => {
       const itemName = item.find(".items-name");
       const itemPrice = item.find(".items-price");
       const itemQty = { innerText: 1 }; // Default quantity to 1
-      const ClubItemOnCart = localStorage.getItem("ClubItemOnCart");
+      const ClubItemOnCart = JSON.parse(localStorage.getItem("Parameters")).ClubItemOnCart;
+      console.log(ClubItemOnCart);
+      
       const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
       let clubItemOnSale = booleanValue;
 

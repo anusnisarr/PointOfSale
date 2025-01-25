@@ -122,6 +122,8 @@ const addItemScreen = () => {
   };
   
   const itemListScreen = (itemData) => {
+    console.log(itemData);
+    
     const itemRow = $(".item-table tbody");
     itemData.forEach((item, index) => {
       itemRow.append(`
