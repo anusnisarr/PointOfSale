@@ -22,7 +22,7 @@ let subtotal = null; // Global variable to store subtotal
 let lastBillNo = localStorage.getItem("lastBillNo") || 0;
 
 // Retrieve receipt note and sale history from localStorage
-let receiptNoteValue = localStorage.getItem("note");
+
 let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
 // Extract all barcodes from items
@@ -31,8 +31,9 @@ const allCategoryCode = categories.map(category => category.CategoryCode);
 
 // Select the receipt container and retrieve address and receipt number from localStorage
 const receiptContainer = $("#receiptContainer");
-const address = localStorage.getItem("address");
-const receiptNumberValue = localStorage.getItem("receiptNumberValue");
+const address = JSON.parse(localStorage.getItem("ReceiptDetails")).Address;
+const receiptNumberValue = JSON.parse(localStorage.getItem("ReceiptDetails")).Number;
+let receiptNoteValue = JSON.parse(localStorage.getItem("ReceiptDetails")).Note;
 
 // Increment the last bill number and update it in localStorage
 localStorage.setItem("lastBillNo", lastBillNo);

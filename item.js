@@ -1,6 +1,7 @@
 const addItemScreen = () => {
     let CategoryCode = null;
     const addItemButton = $(".add-item-btn");
+    const editItemButton = $(".edit-btn");
   
     addItemButton.on("click", () => {
       $(".content").html(`
@@ -47,6 +48,109 @@ const addItemScreen = () => {
       setupAddItemHandler();
     });
   
+    editItemButton.on("click", (e) => {
+      let editItemCode = e.target.id
+      let thisitemData = items.find((item)=> item.Barcode === Number(editItemCode))
+      let categoryName = categories.find((cat)=> cat.CategoryCode === thisitemData.CategoryCode).CategoryName
+      console.log(thisitemData);
+      
+      $(".content").html(`
+              <div class="content">
+                  <h2>Create New Item</h2>
+                  <form class="item-form">
+                      <div class="form-group">
+                          <label for="itemName">Item Name</label>
+                          <input type="text" id="itemName" placeholder="Enter item name" value="${thisitemData.ItemName}">
+                      </div>
+  
+                      <div class="form-group">
+                          <label for="itemCode">Item Code</label>
+                          <input type="text" id="itemCode" placeholder="Enter item code" value="${thisitemData.Barcode}">
+                      </div>
+  
+                      <div class="form-group">
+                          <label for="itemPrice">Price</label>
+                          <input type="number" id="itemPrice" placeholder="Enter price" value="${thisitemData.SaleRate}">
+                      </div>
+  
+                      <div class="form-group">
+                          <label for="itemCategory">Category</label>
+                          <select id="itemCategory">
+                              <option value="${thisitemData.CategoryCode}">${categoryName}</option>
+                          </select>
+                      </div>
+  
+                      <button type="submit" class="btn">Save Item</button>
+                  </form>
+              </div>
+          `);
+  
+      const categoryDropDown = $("#itemCategory");
+      
+      categories.forEach((cat) => {
+        if (categoryDropDown.find(`option[value="${cat.CategoryCode}"]`).length === 0) {
+          categoryDropDown.append(`<option value="${cat.CategoryCode}">${cat.CategoryName}</option>`);
+        }
+      });
+      categoryDropDown.on("change", () => {
+        CategoryCode = parseInt(categoryDropDown.val());
+      });
+  
+      setupEditItemHandler(thisitemData ,categoryName );
+    });
+
+    const setupEditItemHandler = (thisitemData) => {
+      const saveButton = $(".btn");
+      saveButton.on("click", (e) => {
+        e.preventDefault();
+  
+        const itemName = $("#itemName").val();
+        const itemCode = Number($("#itemCode").val());
+        const itemPrice = Number($("#itemPrice").val());
+
+        let barocdeCheck = allBarcode.includes(itemCode);
+        let foundCode = allBarcode.find((Barcode)=> Barcode === thisitemData.Barcode)
+                
+
+  
+        if (!itemName) {
+          alert("Please enter the item name.");
+          return;
+        } else if (!itemCode) {
+          alert("Please enter the item code.");
+          return;
+        } else if (!itemPrice) {
+          alert("Please enter the item price.");
+          return;
+        } else if (barocdeCheck && foundCode != itemCode) {
+          alert("Barcode Already Exist");
+          return;
+        } 
+         else {
+            const itemIndex = items.findIndex(item => item.ItemId === thisitemData.ItemId);
+            if (itemIndex !== -1) {
+            items[itemIndex] = {
+              ItemId: thisitemData.ItemId,
+              Barcode: itemCode,
+              CategoryCode: CategoryCode ? CategoryCode : thisitemData.CategoryCode,
+              ItemName: itemName,
+              SaleRate: Number(itemPrice),
+              IsActive: true,
+            };
+            }
+  
+          showLoader();
+          setTimeout(() => {
+            hideLoader();
+            location.reload();
+          }, 1000);
+  
+          localStorage.setItem("items", JSON.stringify(items));
+        }
+      });
+
+    } 
+
     const setupAddItemHandler = () => {
       const saveButton = $(".btn");
       saveButton.on("click", (e) => {
@@ -137,10 +241,8 @@ const addItemScreen = () => {
                   <td>${item.SaleRate}</td>
                   <td>${item.IsActive ? "Active" : "Inactive"}</td>
                   <td>
-                      <button class="edit-btn">Edit</button>
-                      <button class="delete-btn" id="${
-                        item.Barcode
-                      }">Delete</button>
+                      <button class="edit-btn" id="${item.Barcode}">Edit</button>
+                      <button class="delete-btn" id="${item.Barcode}">Delete</button>
                   </td>
               </tr>
           `);
@@ -161,7 +263,7 @@ const addItemScreen = () => {
       });
     });
   };
-  if (document.title === "Items") {
+
     itemImport()
       .then((output) => {
         let DuplicateExist;
@@ -206,4 +308,4 @@ const addItemScreen = () => {
     itemListScreen(items);
     addItemScreen();
     itemDeleteBtn();
-  }
+  

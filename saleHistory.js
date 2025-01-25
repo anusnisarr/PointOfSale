@@ -51,8 +51,6 @@ const SaleHistoryViewBtn = () => {
       const billTotal = bill.TotalAmount;
       const ReceivedCash = bill.ReceivedCash;
       const ReturnCash = bill.ReturnCash;
-      console.log(ReceivedCash);
-      console.log(ReturnCash);
 
 
       receiptContainer.html(`
@@ -64,7 +62,7 @@ const SaleHistoryViewBtn = () => {
                 <img src="./img/logo.jpg" alt="Logo">
                 <div class="contact-details">
                   <p><strong>Address:</strong> ${address}</p>
-                  <p><strong>Phone:</strong> ${receiptNumber}</p>
+                  <p><strong>Phone:</strong> ${receiptNumberValue}</p>
                 </div>
               </div>
               <div class="bill-details">
@@ -127,14 +125,11 @@ SaleHistoryViewBtn();
 
 // Handle receipt close
 const closeReceipt = (event) => {  
-  if (event.type === "click") {
+  console.log(event.key);
+  
+  if (event.type === "click" || event.key === "Escape") {
     $("#receiptcontainer").html("");
-    location.reload();
-  } else if (event.key === "Escape") {
-    $("#receiptcontainer").html("");
-    location.reload();
   }
-  $(window).off("keyup", closeReceipt);
 };
 $("#receiptcontainer").on("click", ".closeBtn", closeReceipt);
 $(window).on("keyup", closeReceipt);
