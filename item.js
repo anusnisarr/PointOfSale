@@ -1,4 +1,3 @@
-const addItemScreen = () => {
     let CategoryCode = null;
     const addItemButton = $(".add-item-btn");
     const editItemButton = $(".edit-btn");
@@ -48,11 +47,11 @@ const addItemScreen = () => {
       setupAddItemHandler();
     });
   
-    editItemButton.on("click", (e) => {
+    $(document).on("click", ".edit-btn", (e) => {
+      
       let editItemCode = e.target.id
       let thisitemData = items.find((item)=> item.Barcode === Number(editItemCode))
       let categoryName = categories.find((cat)=> cat.CategoryCode === thisitemData.CategoryCode).CategoryName
-      console.log(thisitemData);
       
       $(".content").html(`
               <div class="content">
@@ -96,7 +95,7 @@ const addItemScreen = () => {
         CategoryCode = parseInt(categoryDropDown.val());
       });
   
-      setupEditItemHandler(thisitemData ,categoryName );
+      setupEditItemHandler(thisitemData);
     });
 
     const setupEditItemHandler = (thisitemData) => {
@@ -189,7 +188,7 @@ const addItemScreen = () => {
         }
       });
     };
-  };
+
   
   const itemImport = () => {
     return new Promise((resolve, reject) => {
@@ -306,6 +305,5 @@ const addItemScreen = () => {
       });
   
     itemListScreen(items);
-    addItemScreen();
     itemDeleteBtn();
   
