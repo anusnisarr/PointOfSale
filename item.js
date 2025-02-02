@@ -247,12 +247,24 @@
           `);
     });
   };
+
+  let saleHistoryItems = SaleHistory.flatMap((sale) => sale.Items);
+  console.log(saleHistoryItems);
   
+
   const itemDeleteBtn = () => {
     let deleteBtn = $(".delete-btn");
     deleteBtn.each((index, btn) => {
       $(btn).on("click", (e) => {
-        items = items.filter((item) => e.target.id != item.barcode);
+        let itemName = items.find((item) => item.Barcode === Number(e.target.id)).ItemName;        
+        let confirmDelete = confirm(`Are you sure you want to delete item "${itemName}"?`);
+        if (!confirmDelete) return; // Stop if user cancels
+        let isItemSold = saleHistoryItems.find((sale) => sale.ItemName === itemName);
+        if (isItemSold) {
+          alert(`${itemName} Item has been sold. Cannot delete.`);
+          return;
+        }        
+        items = items.filter((item) => e.target.id != item.Barcode);
         localStorage.setItem("items", JSON.stringify(items));
         showLoader();
         setTimeout(() => {

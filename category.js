@@ -162,7 +162,6 @@ let selectedImage = null;
             <div class="content">
             <h2>Create New Category</h2>
             <form class="category-form">
-
                 <div class="form-group">
                 <label for="CategoryName">Category Name</label>
                 <input type="text" id="categoryName" placeholder="Enter Category Name" value="${thisCategroyData.CategoryName}">
@@ -177,8 +176,6 @@ let selectedImage = null;
                 <label for="searchImage">Search Image</label>
                 <input type="text" id="searchImage" placeholder="Search Image for category">
                 </div>
-
-      
                 <button type="submit" class="btn">Save</button>
             </form>
               <div id="imgcontainer" style = "display:none">

@@ -20,7 +20,9 @@ const currentDate = new Date().toLocaleString("en-US");
 let selectedItems = []; // Array to store selected items
 let SelectedPaymentMethod = "Cash";
 let subtotal = null; // Global variable to store subtotal
-let lastBillNo = localStorage.getItem("lastBillNo") || 0;
+let lastBillNo = localStorage.getItem("lastBillNo") || 1;
+console.log(lastBillNo);
+
 
 // Retrieve receipt note and sale history from localStorage
 
@@ -37,7 +39,6 @@ const receiptNumberValue = JSON.parse(localStorage.getItem("ReceiptDetails")).Nu
 let receiptNoteValue = JSON.parse(localStorage.getItem("ReceiptDetails")).Note;
 
 // Increment the last bill number and update it in localStorage
-localStorage.setItem("lastBillNo", lastBillNo);
 
 // Select the received amount input and return amount display elements
 let receivedCashInput = $("#receiveCash");
@@ -173,6 +174,7 @@ const showItemsOnSearch = (searchResult) => {
     `);
   });
 };
+
 // Show Most Ordered items
 const soldItemCount = SaleHistory.flatMap(sale => sale.Items)
   .reduce((acc, item) => {
@@ -184,11 +186,11 @@ $(".most-ordered-btn").on("click", (e) => {
   $(e.target).toggleClass("most-ordered-clicked");
  console.log($(e.target).hasClass("most-ordered-clicked"));
  if ($(e.target).hasClass("most-ordered-clicked")) {
+
   const sortedSoldItems = Object.entries(soldItemCount).sort((a, b) => b[1] - a[1]);
   const soldItemNames = sortedSoldItems.map(item => item[0]);
   const soldItemQty = sortedSoldItems.map(item => item[1]);
   const totalSoldQty = soldItemQty.reduce((acc, qty) => acc + qty, 0);
-  
   let solditems = items.filter(item => soldItemNames.includes(item.ItemName));
   let sortedSoldItemsArray = solditems.slice().sort((a, b) => {
     const aQty = soldItemCount[a.ItemName];
@@ -197,6 +199,7 @@ $(".most-ordered-btn").on("click", (e) => {
   });
 
   showItemsOnSearch(sortedSoldItemsArray);
+  keepItemSelected();
 
   let Items = $(".items");
   Items.each((index, item) => {
@@ -211,6 +214,7 @@ $(".most-ordered-btn").on("click", (e) => {
 
 else{
   showItemsOnSearch(items);
+  keepItemSelected();
 }
 });
 
@@ -221,6 +225,8 @@ showItemsOnSearch(items.filter((item) => item.ItemName.toLowerCase().includes(""
 itemContainer.on("click", (event) => {
   const clickedElement = $(event.target);
   const item = clickedElement.closest(".items");
+  console.log(item);
+  
 
   if (item.length) {
     // Change item color on click
@@ -502,7 +508,8 @@ payButton.on("click", () => {
     return;
   }
   
-  lastBillNo = Number(lastBillNo) + 1;
+  // Increment the last bill number and update it in localStorage
+  localStorage.setItem("lastBillNo", Number(lastBillNo) + 1);
 
   // Generate receipt
   receiptContainer.html(`
@@ -557,7 +564,7 @@ payButton.on("click", () => {
     const itemQty = Number($(item).find(".cart-items-qty").text());
     const itemPrice = $(item).find(".cart-items-price").text() / itemQty;
     const itemAmount = Number($(item).find(".cart-items-price").text());
-
+  
     const cart = $(".cart-item-container");
 
     cart.append(`
