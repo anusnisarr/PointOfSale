@@ -4,6 +4,11 @@ const receiptAddress = $("#address");
 const receiptNumber = $("#receipt-number");
 const receiptNote = $("#note");
 const smallCategorySize = $("#smallCategorySize");
+let   logoFile ;
+const getlogo = $("#logo").on("input", (e)=>{
+    logoFile = e.target.files[0].name
+    
+})
 
 
 // Update and save parameter in Setup
@@ -16,7 +21,9 @@ const setupChange = () => {
     let receiptDetails = {
       Address : receiptAddress.val(),
       Number : receiptNumber.val(),
-      Note: receiptNote.val()
+      Note: receiptNote.val(),
+      Logo: logoFile
+      
     }    
     localStorage.setItem("Parameters" , JSON.stringify(paramters))
     localStorage.setItem("ReceiptDetails", JSON.stringify(receiptDetails));
@@ -46,6 +53,7 @@ const getReceiptDetails = JSON.parse(localStorage.getItem("ReceiptDetails"));
     localStorage.getItem("ReceiptDetails")
       ? receiptNote.val(getReceiptDetails.Note)
       : receiptNote.val("");
+
       
     updateButton.on("click", () => {
       setupChange();

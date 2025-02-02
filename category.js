@@ -50,6 +50,15 @@ let selectedImage = null;
             let imagesdiv = $(".images img");
             let debounceTimer;
 
+            const myHeaders = new Headers();
+            myHeaders.append("x-freepik-api-key", "FPSXd0f65f3bfb484cb68a8d1aad15e0fcf3");
+              
+            const requestOptions = {
+              method: "GET",
+              headers: myHeaders,
+              redirect: "follow"
+              };
+
             $("#searchImage").on("input", (e) => {
             clearTimeout(debounceTimer);
 
@@ -61,8 +70,9 @@ let selectedImage = null;
             const query = e.target.value.trim();
             if (!query) return;
 
+
             debounceTimer = setTimeout(() => {
-              const url = `https://pixabay.com/api/?key=48393748-c303e9d0893551a0a6103a300&q=${query}&per_page=16`;
+              const url = `https://api.freepik.com/v1/icons?term=${query}&filters%5Bcolor%5D=black&per_page=16&filters%5Bshape%5D=outline`;
               getImages(url);
             }, 500);
 
@@ -70,14 +80,17 @@ let selectedImage = null;
         
           const getImages = async (url) => {
             try {
-              const response = await fetch(url);
+              const response = await fetch(url , requestOptions);
               if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
               }
               $("#imgcontainer").slideDown(300);
               const data = await response.json();
               imagesdiv.each((index, img) => {
-                img.src = data.hits[index].webformatURL || ''; // Set the image source if available
+                console.log(data.data[index].thumbnails[0].url);
+                
+                img.src = data.data[index].thumbnails[0].url || ''; // Set the image source if available
+                // img.style.filter = "invert(100%)";
               });
             } catch (error) {
               console.error('Error fetching data:', error);
@@ -142,6 +155,7 @@ let selectedImage = null;
     });
 
   $(document).on("click", ".edit-btn", (e) => {
+    
     let thisCategroyData = categories.find((cat)=>cat.CategoryCode === Number(e.target.id))
   
       $(".content").html(`
@@ -191,6 +205,15 @@ let selectedImage = null;
           let imagesdiv = $(".images img");
           let debounceTimer;
 
+          const myHeaders = new Headers();
+          myHeaders.append("x-freepik-api-key", "FPSXd0f65f3bfb484cb68a8d1aad15e0fcf3");
+            
+          const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow"
+            };
+
           $("#searchImage").on("input", (e) => {
           clearTimeout(debounceTimer);
 
@@ -203,22 +226,24 @@ let selectedImage = null;
           if (!query) return;
 
           debounceTimer = setTimeout(() => {
-            const url = `https://pixabay.com/api/?key=48393748-c303e9d0893551a0a6103a300&q=${query}&per_page=16`;
+            const url = `https://api.freepik.com/v1/icons?term=${query}&filters%5Bcolor%5D=black&per_page=16&filters%5Bshape%5D=outline`;
             getImages(url);
           }, 500);
-
         });
-      
+
         const getImages = async (url) => {
           try {
-            const response = await fetch(url);
+            const response = await fetch(url , requestOptions);
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
             $("#imgcontainer").slideDown(300);
             const data = await response.json();
             imagesdiv.each((index, img) => {
-              img.src = data.hits[index].webformatURL || ''; // Set the image source if available
+              console.log(data.data[index].thumbnails[0].url);
+              
+              img.src = data.data[index].thumbnails[0].url || ''; // Set the image source if available
+              img.style.filter = "invert(100%)";
             });
           } catch (error) {
             console.error('Error fetching data:', error);

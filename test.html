@@ -29,68 +29,8 @@
   </style>
 </head>
 <body>
-  <div id="imgcontainer">
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-  <div class="images"><img src="" alt=""></div>
-</div>
-  <label for="searchimage">Search Image</label>
-  <input type="text" name="" id="searchimage">
-
-<script>
-
-
-
-
-
-
-  let imagesdiv = document.querySelectorAll(".images img");
-
-  let debounceTimer;
-  document.querySelector("#searchimage").addEventListener("input", (e) => {
-    clearTimeout(debounceTimer);
-
-    const query = e.target.value.trim();
-    if (!query) return;
-
-    debounceTimer = setTimeout(() => {
-      const url = `https://pixabay.com/api/?key=48393748-c303e9d0893551a0a6103a300&q=${query}&per_page=18`;
-      getImages(url);
-    }, 500);
-  });
-
-  const getImages = async (url) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      imagesdiv.forEach((img, index) => {
-        img.src = data.hits[index]?.webformatURL || ''; // Set the image source if available
-      });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-
-  </script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="test.js"></script>
 </body>
 
 </html>

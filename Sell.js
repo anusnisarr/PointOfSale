@@ -12,7 +12,8 @@ let categories = JSON.parse(localStorage.getItem("Categories")) || [];
 
 // Select the pay button and get the current date
 const paymentBtn = $(".payment-methods-icons");
-const payButton = $("#placeorder-btn-name");
+const payButton = $(".pay-btn");
+const placeOrder = $(".placeOrder-btn")
 const currentDate = new Date().toLocaleString("en-US");
 
 // Initialize variables for selected items, payment method, subtotal, and last bill number
@@ -110,7 +111,7 @@ const showTheseItems = (CategoryCode) => {
   itemContainer.html("");
   items.forEach((item) => {
     if (item.CategoryCode === CategoryCode) {
-      itemContainer.append(`   <div class="items" id="${item.ItemId}" data-categoryId="${item.CategoryCode}">
+      itemContainer.append(`<div class="items" id="${item.ItemId}" data-categoryId="${item.CategoryCode}">
                         <h2 class="items-name">${item.ItemName}</h2>
                         <h3 class="items-price">${item.SaleRate} Pkr</h3>
                         <div class="items-select-color"></div>
@@ -157,10 +158,11 @@ const showItemsOnSearch = (searchResult) => {
   if (itemContainer.hasClass("centerText")) {
     itemContainer.removeClass("centerText");
     itemContainer.addClass("itemcontainer");
-    
   }
+  console.log(searchResult);
   
   itemContainer.empty(); // Clear previous search results
+
   searchResult.forEach((item) => {    
     itemContainer.append(`
       <div class="items" id="${item.ItemId}" data-categoryCode="${item.CategoryCode}">
@@ -171,6 +173,46 @@ const showItemsOnSearch = (searchResult) => {
     `);
   });
 };
+// Show Most Ordered items
+const soldItemCount = SaleHistory.flatMap(sale => sale.Items)
+  .reduce((acc, item) => {
+    acc[item.ItemName] = (acc[item.ItemName] || 0) + item.Qty;
+    return acc;
+  }, {});
+
+$(".most-ordered-btn").on("click", (e) => {
+  $(e.target).toggleClass("most-ordered-clicked");
+ console.log($(e.target).hasClass("most-ordered-clicked"));
+ if ($(e.target).hasClass("most-ordered-clicked")) {
+  const sortedSoldItems = Object.entries(soldItemCount).sort((a, b) => b[1] - a[1]);
+  const soldItemNames = sortedSoldItems.map(item => item[0]);
+  const soldItemQty = sortedSoldItems.map(item => item[1]);
+  const totalSoldQty = soldItemQty.reduce((acc, qty) => acc + qty, 0);
+  
+  let solditems = items.filter(item => soldItemNames.includes(item.ItemName));
+  let sortedSoldItemsArray = solditems.slice().sort((a, b) => {
+    const aQty = soldItemCount[a.ItemName];
+    const bQty = soldItemCount[b.ItemName];
+    return bQty - aQty;
+  });
+
+  showItemsOnSearch(sortedSoldItemsArray);
+
+  let Items = $(".items");
+  Items.each((index, item) => {
+    const itemName = $(item).find(".items-name").text();
+    const soldItemIndex = soldItemNames.indexOf(itemName);  
+    if (soldItemIndex !== -1) {
+      let soldPercentage = (soldItemQty[soldItemIndex] / totalSoldQty) * 100;
+      $(item).append(`<span class="TopSold"><i class="ri-arrow-up-double-fill"></i> <h3 class="items-sold">${Math.round(soldPercentage)}%</h3></span>`);
+    }
+  });
+}
+
+else{
+  showItemsOnSearch(items);
+}
+});
 
 // Show all items initially
 showItemsOnSearch(items.filter((item) => item.ItemName.toLowerCase().includes("")));
@@ -350,6 +392,51 @@ itemContainer.on("click", (event) => {
   }
 });
 
+// handle place order button
+placeOrder.on("click", (e) => {
+  $(".overlay").css("display" , "flex").html(`
+        <div class="popup">
+            <h2>Select Waiter</h2>
+            <div class="buttons-container">
+                <button class="button" id="w1">Waiter 1</button>
+                <button class="button" id="w2">Waiter 2</button>
+                <button class="button" id="w3">Waiter 3</button>
+                <button class="button" id="w4">Waiter 4</button>
+                <button class="button" id="w5">Waiter 5</button>
+                <button class="button" id="w6">Waiter 6</button>
+                <button class="button" id="w7">Waiter 7</button>
+                <button class="button" id="w8">Waiter 8</button>
+                <button class="button" id="w9">Waiter 9</button>
+                <button class="button" id="w10">Waiter 10</button>
+            </div>
+            <h2>Select Table</h2>
+            <div class="buttons-container">
+                <button class="button" id="t1">Table 1</button>
+                <button class="button" id="t2">Table 2</button>
+                <button class="button" id="t3">Table 3</button>
+                <button class="button" id="t4">Table 4</button>
+                <button class="button" id="t5">Table 5</button>
+                <button class="button" id="t6">Table 6</button>
+                <button class="button" id="t7">Table 7</button>
+                <button class="button" id="t8">Table 8</button>
+                <button class="button" id="t9">Table 9</button>
+                <button class="button" id="t10">Table 10</button>
+            </div>
+        </div>`
+  );
+
+  $(".button").on("click", (e)=>{
+      getTableWaiterName(e.target.id)
+      
+  })
+
+})
+
+const getTableWaiterName = (tablename)=>{
+  console.log("Table:" , tablename);
+  
+}
+
 // Handle payment method selection
 paymentBtn.on("click", function (e) {
   // Reset styles for all buttons
@@ -467,9 +554,9 @@ payButton.on("click", () => {
   let items = [];
   $(".cart-items").each((index, item) => {
     const itemName = $(item).find(".cart-items-name").text();
-    const itemQty = $(item).find(".cart-items-qty").text();
+    const itemQty = Number($(item).find(".cart-items-qty").text());
     const itemPrice = $(item).find(".cart-items-price").text() / itemQty;
-    const itemAmount = $(item).find(".cart-items-price").text();
+    const itemAmount = Number($(item).find(".cart-items-price").text());
 
     const cart = $(".cart-item-container");
 
@@ -612,4 +699,11 @@ else{
   });
 }
 }
+
+
 checkParameters(JSON.parse(localStorage.getItem("Parameters")))
+
+
+console.log(soldItemCount);
+
+

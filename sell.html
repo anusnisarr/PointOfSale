@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="sell.css" />
+    <title>Sell</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="sell.css"/>
-  <title>Sell</title>
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
-</head>
-
-<body>
+  <body>
     <!-- For Nav Content -->
-  <div class="nav-container"></div>
+    <div class="nav-container"></div>
 
-  <div class="main-container">
-    <div class="container" id="selectedContainers">
-      <div class="cat-items-container">
-        <div class="categorycontainer"></div>
-        
-        <div class="line"></div>
+    <div class="main-container">
+      <div class="container" id="selectedContainers">
+        <div class="cat-items-container">
+          <div class="categorycontainer"></div>
 
-        <div id="search-item">
-          <i class="ri-search-line"></i>
-          <input type="search" name="Search" id="itemsearchbox" placeholder="Search" value=""/>
-        </div>
+          <div id="search-item">
+            <i class="ri-search-line"></i>
+            <input type="search"name="Search"id="itemsearchbox"placeholder="Search"value=""/>
+            <button class="most-ordered-btn">
+              <i class="fas fa-fire"></i> Most Ordered
+          </button>
+          </div>
 
-        <br />
+          <br />
 
-        <div class="itemcontainer" id="itemcontainerId">
-          <!-- <div class="items" id="color-7">
+          <div class="itemcontainer" id="itemcontainerId">
+            <!-- <div class="items" id="color-7">
                         <h2 class="items-name">Margherita</h2>
                         <h3 class="items-price">350 Pkr</h3>
                         <div class="qtycontainer">
@@ -36,80 +39,170 @@
                             <div id="items-qty">1</div>
                             <div id="minusbutton"><i class="ri-subtract-line"></i></div>
                         </div> -->
+          </div>
+          <div id="pendingOrdersContainer">
+            <div class="pendingOrders">
+              <div class="tableName">
+                <h2>T4</h2>
+              </div>
+              <div class="leftSideInfoContainer">
+                <div class="waiterNamAndStatus">
+                  <div class="waiterName">
+                    <h3>Faraz</h3>
+                  </div>
+                  <div class="status">
+                    <h4>Pending</h4>
+                  </div>
+                </div>
+                <div class="itemCount">
+                  <h4>6 Items</h4>
+                </div>
+              </div>
+            </div>
+            <div class="pendingOrders">
+              <div class="tableName">
+                <h2>T4</h2>
+              </div>
+              <div class="leftSideInfoContainer">
+                <div class="waiterNamAndStatus">
+                  <div class="waiterName">
+                    <h3>Faraz</h3>
+                  </div>
+                  <div class="status">
+                    <h4>Pending</h4>
+                  </div>
+                </div>
+                <div class="itemCount">
+                  <h4>6 Items</h4>
+                </div>
+              </div>
+            </div>
+            <div class="pendingOrders">
+              <div class="tableName">
+                <h2>T4</h2>
+              </div>
+              <div class="leftSideInfoContainer">
+                <div class="waiterNamAndStatus">
+                  <div class="waiterName">
+                    <h3>Faraz</h3>
+                  </div>
+                  <div class="status">
+                    <h4>Pending</h4>
+                  </div>
+                </div>
+                <div class="itemCount">
+                  <h4>6 Items</h4>
+                </div>
+              </div>
+            </div>
+            <div class="pendingOrders">
+              <div class="tableName">
+                <h2>T4</h2>
+              </div>
+              <div class="leftSideInfoContainer">
+                <div class="waiterNamAndStatus">
+                  <div class="waiterName">
+                    <h3>Faraz</h3>
+                  </div>
+                  <div class="status">
+                    <h4>Pending</h4>
+                  </div>
+                </div>
+                <div class="itemCount">
+                  <h4>6 Items</h4>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="rightSidePanel">
+          <div class="cart-items-container"></div>
+
+          <div class="rightSidePanelBottom">
+            <div class="bill-calc-container">
+              <div class="calc-lines" id="subtotal">
+                <h3 class="calc-title" id="subtotal-title">Sub Total</h3>
+                <h4 class="calc-values" id="subtotal-values">PKR 0</h4>
+              </div>
+              <div class="calc-lines" id="tax">
+                <h3 class="calc-title" id="tax-title">Tax</h3>
+                <h4 class="calc-values" id="tax-values">PKR 0</h4>
+              </div>
+      
+              <div class="line"></div>
+
+              <div class="calc-lines" id="total">
+                <h3 class="calc-title-tax" id="total-title">Total</h3>
+                <h4 class="calc-values-tax" id="total-values">PKR 0</h4>
+              </div>
+            </div>
+            <!-- <div class="placeOrder-btn">
+              <h2>PLACE ORDER</h2>
+            </div> -->
+            <h3 id="total-payment-title">Payment Methods:</h3>
+            <div class="payment-methods-container">
+              <div class="payment-methods-btns">
+                <div>
+                  <i
+                    id="Cash"
+                    class="ri-cash-fill payment-methods-icons payment-methods-select"
+                  ></i>
+                </div>
+                <h4>CASH</h4>
+              </div>
+              <div class="payment-methods-btns">
+                <div>
+                  <i
+                    id="Card"
+                    class="ri-bank-card-fill payment-methods-icons"
+                  ></i>
+                </div>
+                <h4>CARD</h4>
+              </div>
+              <div class="payment-methods-btns">
+                <div>
+                  <i
+                    id="Party"
+                    class="ri-split-cells-vertical payment-methods-icons"
+                  ></i>
+                </div>
+                <h4>PARTY</h4>
+              </div>
+            </div>
+            <div id="paymentFurtherOptions">
+              <div id="receiveCashDiv">
+                <h4>Received Cash ?</h4>
+                <input type="number" name="receiveCash" id="receiveCash" />
+              </div>
+              <div id="returnCashDiv">
+                <h4>Return Cash</h4>
+                <h3 id="returnCash"></h3>
+                <!-- <input type="number" name="receiveAmt" id="returnAmt"> -->
+              </div>
+            </div>
+            <div class="pay-btn">
+              <h2>PAY</h2>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="rightSidePanel">
-        <div class="cart-items-container">
-
-        </div>
-
-        <div class="rightSidePanelBottom">
-          <div class="bill-calc-container">
-            <div class="calc-lines" id="subtotal">
-              <h3 class="calc-title" id="subtotal-title">Subtotal</h3>
-              <h4 class="calc-values" id="subtotal-values">PKR 0</h4>
-            </div>
-            <div class="calc-lines" id="tax">
-              <h3 class="calc-title" id="tax-title">Tax</h3>
-              <h4 class="calc-values" id="tax-values">PKR 0</h4>
-            </div>
-            <br />
-
-            <div class="line"></div>
-
-            <div class="calc-lines" id="total">
-              <h3 class="calc-title-tax" id="total-title">Total</h3>
-              <h4 class="calc-values-tax" id="total-values">PKR 0</h4>
-            </div>
-          </div>
-          <h3 id="total-payment-title">Payment Methods:</h3>
-          <div class="payment-methods-container">
-            <div class="payment-methods-btns">
-              <div>
-                <i id="Cash" class="ri-cash-fill payment-methods-icons payment-methods-select"></i>
-              </div>
-              <h4>CASH</h4>
-            </div>
-            <div class="payment-methods-btns">
-              <div>
-                <i id="Card" class="ri-bank-card-fill payment-methods-icons"></i>
-              </div>
-              <h4>CARD</h4>
-            </div>
-            <div class="payment-methods-btns">
-              <div>
-                <i id="Party" class="ri-split-cells-vertical payment-methods-icons"></i>
-              </div>
-              <h4>PARTY</h4>
-            </div>
-          </div>
-          <div id="paymentFurtherOptions">
-          <div id="receiveCashDiv">
-            <h4>Received Cash ?</h4>
-            <input type="number" name="receiveCash" id="receiveCash">
-          </div>
-          <div id="returnCashDiv">
-            <h4>Return Cash</h4>
-            <h3 id="returnCash"></h3>
-            <!-- <input type="number" name="receiveAmt" id="returnAmt"> -->
-          </div>
-        </div>
-          <div class="placeorder-btn">
-            <h2 id="placeorder-btn-name">PAY</h2>
-          </div>
-        </div>
-      </div>
+      <div id="receiptContainer"></div>
+      <div class="overlay"></div>
     </div>
-    <div id="receiptContainer"></div>
-  </div>
-  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-  crossorigin="anonymous"></script>
-  <script src="Sell.js"></script>
-  <script src="category.js"></script>
-  <script src="nav.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
-    integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</body>
-
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="Sell.js"></script>
+    <script src="category.js"></script>
+    <script src="nav.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </body>
 </html>

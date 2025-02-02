@@ -10,6 +10,7 @@
     border-radius: 20px; /* Rounded corners */
     transform: translate(-50%, 0); /* Center horizontally */
     transition: top 0.5s ease; /* Smooth slide-in effect */
+    z-index: 1000;
   }
   
   .nav-bar {
