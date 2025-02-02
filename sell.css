@@ -732,6 +732,25 @@ outline: none;
     border-color: #4a90e2;
 }
 
+/* Recipt Styling */
+#receiptContainer {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #111315;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: black;
+    background-color: #ffffff;
+    transform: translate(-50% , -50%);
+    max-height: 100vh;
+    overflow-y: auto;
+}
+#receiptbody{
+    color: black;
+    font-family: Arial, sans-serif;
+}
 
 /* Receipt Container */
 #receiptbody .receipt {
@@ -741,7 +760,6 @@ outline: none;
     background-color: #ffffff;
     padding: 15px;
     border-radius: 8px;
-
 }
 
 /* Header Section */
