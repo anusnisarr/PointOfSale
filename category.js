@@ -207,8 +207,7 @@ let selectedImage = null;
           const requestOptions = {
             method: "GET",
             headers: myHeaders,
-            redirect: "follow",
-            mode: "no-cors"
+            redirect: "follow"
           };
 
           $("#searchImage").on("input", (e) => {
