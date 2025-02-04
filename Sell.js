@@ -181,12 +181,11 @@ const soldItemCount = SaleHistory.flatMap(sale => sale.Items)
     acc[item.ItemName] = (acc[item.ItemName] || 0) + item.Qty;
     return acc;
   }, {});
-
+  
 $(".most-ordered-btn").on("click", (e) => {
   $(e.target).toggleClass("most-ordered-clicked");
  console.log($(e.target).hasClass("most-ordered-clicked"));
  if ($(e.target).hasClass("most-ordered-clicked")) {
-
   const sortedSoldItems = Object.entries(soldItemCount).sort((a, b) => b[1] - a[1]);
   const soldItemNames = sortedSoldItems.map(item => item[0]);
   const soldItemQty = sortedSoldItems.map(item => item[1]);
@@ -507,7 +506,7 @@ payButton.on("click", () => {
     alert("Please add quantity to the item to proceed");
     return;
   }
-  
+
   // Increment the last bill number and update it in localStorage
   localStorage.setItem("lastBillNo", Number(lastBillNo) + 1);
 

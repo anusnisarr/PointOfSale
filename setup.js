@@ -55,7 +55,7 @@ const getReceiptDetails = JSON.parse(localStorage.getItem("ReceiptDetails"));
       : receiptNote.val("");
 
       
-    updateButton.on("click", () => {
+    updateButton.on("click", () => {    
       setupChange();
       showLoader("setup-container");
       setTimeout(() => {

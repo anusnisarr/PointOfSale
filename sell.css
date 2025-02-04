@@ -132,8 +132,8 @@ border: none;
 background-color: #303134;
 border-radius: 5px;
 padding: 5px 0 5px 30px;
-height: 4.5vh;
-width: 20vw;
+height: 34px;
+width: 85%;
 outline: none;
 }
 
@@ -144,11 +144,13 @@ outline: none;
     font-weight: bold;
     padding: 7px 12px;
     margin-left: 5px;
+    width: 15%;
     border: 2px solid #ffa54d; /* Outline effect */
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px; /* Space between icon and text */
     transition: all 0.3s ease;
 }

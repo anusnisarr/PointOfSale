@@ -201,15 +201,15 @@ let selectedImage = null;
 
           let imagesdiv = $(".images img");
           let debounceTimer;
-
           const myHeaders = new Headers();
           myHeaders.append("x-freepik-api-key", "FPSXd0f65f3bfb484cb68a8d1aad15e0fcf3");
-            
+
           const requestOptions = {
             method: "GET",
             headers: myHeaders,
-            redirect: "follow"
-            };
+            redirect: "follow",
+            mode: "no-cors"
+          };
 
           $("#searchImage").on("input", (e) => {
           clearTimeout(debounceTimer);
