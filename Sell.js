@@ -23,7 +23,12 @@ let lastBillNo = localStorage.getItem("lastBillNo") || 1;
 
 // Retrieve tax percentage based on selected payment method
 let SelectedPaymentMethod = "Cash";
-let selectedTaxPercentage = SelectedPaymentMethod === "Cash" ? JSON.parse(localStorage.getItem("Tax")).CashTax : JSON.parse(localStorage.getItem("Tax")).CardTax; 
+let selectedTaxPercentage;
+if (localStorage.getItem("Tax")) {
+  selectedTaxPercentage = SelectedPaymentMethod === "Cash" ? JSON.parse(localStorage.getItem("Tax")).CashTax : JSON.parse(localStorage.getItem("Tax")).CardTax;
+} else {
+  selectedTaxPercentage = SelectedPaymentMethod === "Cash" ? 0 : 0; // Default tax percentage if not available in localStorage
+}
 
 let subtotal = 0; // Global variable to store subtotal
 let total = 0 // Global variable to store total
