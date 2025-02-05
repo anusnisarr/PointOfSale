@@ -5,7 +5,7 @@ const SaleHistoryList = () => {
               <tr>
                   <td>${sale.BillNo}</td>
                   <td>${sale.BillDate}</td>
-                  <td>${sale.TotalAmount}</td>
+                  <td>${sale.Total}</td>
                   <td>${sale.PaymentMethod}</td>
                     <td>
                       <button class="receipt-btn" id="${sale.BillNo}">View</button>
@@ -44,13 +44,17 @@ const SaleHistoryViewBtn = () => {
 
     $(btn).on("click", (e) => {
       let bill = SaleHistory.find((bill) => e.target.id == bill.BillNo);
+      console.log(bill);
+      
       let receiptContainer = $("#receiptcontainer");
       const billNo = bill.BillNo;
       const billDate = bill.BillDate;
       const billPaymentMethod = bill.PaymentMethod;
-      const billTotal = bill.TotalAmount;
+      const SubTotal = bill.SubTotal;
       const ReceivedCash = bill.ReceivedCash;
       const ReturnCash = bill.ReturnCash;
+      const total = bill.Total;
+      const tax = bill.Tax;
 
 
       receiptContainer.html(`
@@ -78,10 +82,19 @@ const SaleHistoryViewBtn = () => {
                 <span>Amount</span>
               </div>
               <div class="cart-item-container"></div>
-              <div class="total">
-                <span>TOTAL</span>
-                <span>${billTotal}</span>
-              </div>
+              <div class="subTotalOnReceipt">
+                  <span>Sub Total:</span>
+                  <span>${SubTotal}</span>
+                </div>
+                <div class="taxOnReceipt">
+                  <span>Tax (${selectedTaxPercentage}%):</span>
+                  <span>${tax}</span>
+                </div>
+                <div class="totalOnReceipt">
+                  <span>Total:</span>
+                  <span>${total}</span>
+                </div>
+              
           <div class="cashOptions" style="display: ${ReceivedCash > 0 ? 'flex' : 'none'};">
             <span>Cash Received:</span>
             <span>${ReceivedCash}</span>

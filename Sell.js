@@ -18,15 +18,21 @@ const currentDate = new Date().toLocaleString("en-US");
 
 // Initialize variables for selected items, payment method, subtotal, and last bill number
 let selectedItems = []; // Array to store selected items
-let SelectedPaymentMethod = "Cash";
-let subtotal = null; // Global variable to store subtotal
+
 let lastBillNo = localStorage.getItem("lastBillNo") || 1;
-console.log(lastBillNo);
+
+// Retrieve tax percentage based on selected payment method
+let SelectedPaymentMethod = "Cash";
+let selectedTaxPercentage = SelectedPaymentMethod === "Cash" ? JSON.parse(localStorage.getItem("Tax")).CashTax : JSON.parse(localStorage.getItem("Tax")).CardTax; 
+
+let subtotal = 0; // Global variable to store subtotal
+let total = 0 // Global variable to store total
+let taxvalue = 0; // Global variable to store tax value
 
 
 // Retrieve receipt note and sale history from localStorage
 
-let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
+
 
 // Extract all barcodes from items
 const allBarcode = items.map((item) => item.Barcode);
@@ -176,6 +182,7 @@ const showItemsOnSearch = (searchResult) => {
 };
 
 // Show Most Ordered items
+let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || "{}";
 const soldItemCount = SaleHistory.flatMap(sale => sale.Items)
   .reduce((acc, item) => {
     acc[item.ItemName] = (acc[item.ItemName] || 0) + item.Qty;
@@ -184,37 +191,43 @@ const soldItemCount = SaleHistory.flatMap(sale => sale.Items)
   
 $(".most-ordered-btn").on("click", (e) => {
   $(e.target).toggleClass("most-ordered-clicked");
- console.log($(e.target).hasClass("most-ordered-clicked"));
- if ($(e.target).hasClass("most-ordered-clicked")) {
-  const sortedSoldItems = Object.entries(soldItemCount).sort((a, b) => b[1] - a[1]);
-  const soldItemNames = sortedSoldItems.map(item => item[0]);
-  const soldItemQty = sortedSoldItems.map(item => item[1]);
-  const totalSoldQty = soldItemQty.reduce((acc, qty) => acc + qty, 0);
-  let solditems = items.filter(item => soldItemNames.includes(item.ItemName));
-  let sortedSoldItemsArray = solditems.slice().sort((a, b) => {
-    const aQty = soldItemCount[a.ItemName];
-    const bQty = soldItemCount[b.ItemName];
-    return bQty - aQty;
-  });
+  console.log($(e.target).hasClass("most-ordered-clicked"));
+  if ($(e.target).hasClass("most-ordered-clicked")) {
+    const sortedSoldItems = Object.entries(soldItemCount).sort(
+      (a, b) => b[1] - a[1]
+    );
+    const soldItemNames = sortedSoldItems.map((item) => item[0]);
+    const soldItemQty = sortedSoldItems.map((item) => item[1]);
+    const totalSoldQty = soldItemQty.reduce((acc, qty) => acc + qty, 0);
+    let solditems = items.filter((item) =>
+      soldItemNames.includes(item.ItemName)
+    );
+    let sortedSoldItemsArray = solditems.slice().sort((a, b) => {
+      const aQty = soldItemCount[a.ItemName];
+      const bQty = soldItemCount[b.ItemName];
+      return bQty - aQty;
+    });
 
-  showItemsOnSearch(sortedSoldItemsArray);
-  keepItemSelected();
+    showItemsOnSearch(sortedSoldItemsArray);
+    keepItemSelected();
 
-  let Items = $(".items");
-  Items.each((index, item) => {
-    const itemName = $(item).find(".items-name").text();
-    const soldItemIndex = soldItemNames.indexOf(itemName);  
-    if (soldItemIndex !== -1) {
-      let soldPercentage = (soldItemQty[soldItemIndex] / totalSoldQty) * 100;
-      $(item).append(`<span class="TopSold"><i class="ri-arrow-up-double-fill"></i> <h3 class="items-sold">${Math.round(soldPercentage)}%</h3></span>`);
-    }
-  });
-}
-
-else{
-  showItemsOnSearch(items);
-  keepItemSelected();
-}
+    let Items = $(".items");
+    Items.each((index, item) => {
+      const itemName = $(item).find(".items-name").text();
+      const soldItemIndex = soldItemNames.indexOf(itemName);
+      if (soldItemIndex !== -1) {
+        let soldPercentage = (soldItemQty[soldItemIndex] / totalSoldQty) * 100;
+        $(item).append(
+          `<span class="TopSold"><i class="ri-arrow-up-double-fill"></i> <h3 class="items-sold">${Math.round(
+            soldPercentage
+          )}%</h3></span>`
+        );
+      }
+    });
+  } else {
+    showItemsOnSearch(items);
+    keepItemSelected();
+  }
 });
 
 // Show all items initially
@@ -224,7 +237,7 @@ showItemsOnSearch(items.filter((item) => item.ItemName.toLowerCase().includes(""
 itemContainer.on("click", (event) => {
   const clickedElement = $(event.target);
   const item = clickedElement.closest(".items");
-  console.log(item);
+
   
 
   if (item.length) {
@@ -238,7 +251,6 @@ itemContainer.on("click", (event) => {
       const itemPrice = item.find(".items-price");
       const itemQty = { innerText: 1 }; // Default quantity to 1
       const ClubItemOnCart = JSON.parse(localStorage.getItem("Parameters")).ClubItemOnCart;
-      console.log(ClubItemOnCart);
       
       const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
       let clubItemOnSale = booleanValue;
@@ -377,7 +389,9 @@ itemContainer.on("click", (event) => {
 
     // Calculate invoice subtotal
     const calulateInvoice = () => {
-      subtotal = null;
+      subtotal = 0;
+      taxvalue = 0;
+      total = 0;
       let ItemAmountArray = [];
       const ItemAmount = $(".cart-items-price");
       ItemAmount.each((index, item) => {
@@ -388,9 +402,15 @@ itemContainer.on("click", (event) => {
       for (let index = 0; index < ItemAmountArray.length; index++) {
         subtotal += parseInt(ItemAmountArray[index]);
       }
-
       $("#subtotal-values").html(`PKR ${subtotal ? subtotal : 0}`);
-      $("#total-values").html(`PKR ${subtotal ? subtotal : 0}`);
+
+      taxvalue = (subtotal * selectedTaxPercentage / 100); 
+      $("#tax-values").html(`PKR ${taxvalue ? taxvalue : 0}`);
+      $("#tax-title").html(`Tax (${selectedTaxPercentage}%)`);
+
+      total = subtotal + (subtotal * selectedTaxPercentage / 100);      
+      $("#total-values").html(`PKR ${total ? total : 0}`);
+
     };
     calulateInvoice();
     updateReturnCash();
@@ -452,6 +472,14 @@ paymentBtn.on("click", function (e) {
 
   // Get the selected payment method ID
   SelectedPaymentMethod = $(this).attr("id");
+
+  if (SelectedPaymentMethod === "Cash") {
+    selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")).CashTax;
+  }
+  else if (SelectedPaymentMethod === "Card"){
+    selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")).CardTax;
+  }
+
   
   if (this.id !== "Cash") {
     $("#receiveCashDiv").css("display", "none");
@@ -471,7 +499,7 @@ paymentBtn.on("click", function (e) {
 //Updates the display of the return cash amount based on the received cash and subtotal.
 const updateReturnCash = ()=>{
   const receivedCash = parseFloat(receivedCashInput.val());
-  if (subtotal) {
+  if (total) {
     
   }
 
@@ -536,9 +564,17 @@ payButton.on("click", () => {
             <span>Amount</span>
           </div>
           <div class="cart-item-container"></div>
-          <div class="total">
-            <span>Total:</span>
+          <div class="subTotalOnReceipt">
+            <span>Sub Total:</span>
             <span>${subtotal}</span>
+          </div>
+          <div class="taxOnReceipt">
+            <span>Tax (${selectedTaxPercentage}%):</span>
+            <span>${taxvalue}</span>
+          </div>
+          <div class="totalOnReceipt">
+            <span>Total:</span>
+            <span>${total}</span>
           </div>
           <div class="cashOptions" style="display: ${(receivedCashInput.val() && receivedCashInput.val() >= subtotal) ? 'flex' : 'none'};">
             <span>Cash Received:</span>
@@ -583,16 +619,20 @@ payButton.on("click", () => {
     });
 
   });
+  let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || "{}";
 
 // Add in localStorage SaleHistory
   SaleHistory.push({
     BillNo: lastBillNo,
     BillDate: currentDate,
     PaymentMethod: SelectedPaymentMethod,
-    TotalAmount: subtotal,
+    SubTotal: subtotal,
+    Tax: taxvalue,
+    Total: total,
     ReturnCash: returnCashDisplay.text(),
     ReceivedCash: receivedCashInput.val(),
     Items: items,
+    TaxPercentage: selectedTaxPercentage,
   });
 
   localStorage.setItem("SaleHistory", JSON.stringify(SaleHistory));

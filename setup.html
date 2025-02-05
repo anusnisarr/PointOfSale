@@ -52,7 +52,8 @@
 
       <!-- Toggle Section -->
       <div class="toggle-section">
-        <span id="ClubItemOnCart-Paramter" class="alignCenter">
+        
+        <span class="alignCenter">
             <label for="club-toggle" class="toggle-label">Club Item on Cart</label>
             <label class="switch">
                 <input type="checkbox" id="ClubItemOnCart" unchecked />
@@ -60,17 +61,30 @@
             </label>
         </span>
     
-        <span id="smallCategorySize-Paramter" class="alignCenter">
+        <span class="alignCenter">
             <label for="club-toggle" class="toggle-label">Small Category Size</label>
             <label class="switch">
                 <input type="checkbox" id="smallCategorySize" unchecked />
                 <span class="slider round"></span>
             </label>
         </span>
-    </div>
 
+        <span class="alignCenter">
+          <label for="club-toggle" class="toggle-label">Tax Setup </label>
+
+          <label for="cashTax">Cash:</label>
+          <input type="number" name="cashTax" id="cashTax" class="taxBox" placeholder="%">
+
+          <label for="cashTax">Card:</label>
+          <input type="number" name="cardTax" id="cardTax" class="taxBox" placeholder="%">
+          
+          <label class="switch">
+              <input type="checkbox" id="taxSetup" unchecked />
+              <span class="slider round"></span>
+          </label>
+      </span>
       
-
+    </div>
       <!-- Update Button -->
       <button class="update-btn">UPDATE</button>
     </div>

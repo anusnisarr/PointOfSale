@@ -3,14 +3,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Inter", sans-serif;
+    font-family: "Poppins", sans-serif; /* Modern font */
 }
 
 body {
     display: flex;
     min-height: 100vh;
-    background-color: #121212;
-    color: #E5E5E6ff;
+    background-color: #0A0A0A; /* Dark background */
+    color: #F5F5F5; /* Light text */
 }
 
 .container {
@@ -22,158 +22,135 @@ body {
 .content {
     flex: 1;
     padding: 20px;
-    background-color: #1e1e2d;
-    border-radius: 10px;
+    background-color: #1A1A1A; /* Dark container */
+    border-radius: 15px;
     margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Shadow for depth */
 }
 
-/* Add category Button Styling */
+/* Header Bar */
 .header-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
+/* Add Category Button */
 .add-category-btn {
-    background-color: #6c63ff;
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
     padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border-radius: 10px;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .add-category-btn:hover {
-    background-color: #574bff;
+    transform: scale(1.05); /* Slight scale effect */
 }
-
-
+/* File Input */
 input[type="file"] {
     display: none;
-  }
-
+}
+/* Import File Button */
 #fileInput {
     display: inline-block;
-    background-color: #ff8763;
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
     padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border-radius: 10px;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
-#fileInput:hover {
-    background-color: #fd6739;
+#fileInput:hover {  
+    transform: scale(1.05); /* Slight scale effect */
 }
 
 
 /* Table Styling */
 .table-wrapper {
-    overflow-x: auto;
-    border-radius: 10px;
-    background-color: #2c2c3c;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    /* overflow-x: auto; */
+    border-radius: 15px;
 }
 
 .category-table {
     width: 100%;
     border-collapse: collapse;
-    color: #dcdcdc;
+    color: #F5F5F5; /* Light text */
 }
 
-.category-table th, 
+.category-table th,
 .category-table td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #444; /* Subtle border */
 }
 
 .category-table thead {
-    background-color: #34344a;
+    background-color: #424242; /* Darker header background */
 }
 
 .category-table th {
     font-size: 1rem;
-    font-weight: bold;
-    color: #ffffff;
+    font-weight: 600;
+    color: #F5F5F5; /* Light text */
 }
 
-.category-table tbody tr:nth-child(even) {
-    background-color: #2e2e3a;
+.category-table tbody tr {
+    background-color: #262626; /* Alternate row color */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .category-table tbody tr:hover {
-    background-color: #3b3b4f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translate(-1px);
+    box-shadow: 0 1px 17px rgba(0, 0, 0, 0.5);
 }
 
-.edit-btn, 
+/* Buttons in Table */
+.edit-btn,
 .delete-btn {
     padding: 8px 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9rem;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
 }
 
+/* Edit Button */
 .edit-btn {
-    background-color: #6c63ff;
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
 }
 
 .edit-btn:hover {
-    background-color: #574bff;
+    transform: scale(1.05); /* Slight scale effect */
 }
-
 .delete-btn {
-    background-color: #ff4d4d;
-    color: #ffffff;
+    background-color: #FF4D4D; /* Vibrant red */
+    color: #0A0A0A; /* Dark text */
 }
 
 .delete-btn:hover {
-    background-color: #ff3333;
-}
-
-h2 {
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    color: #f5f5f5;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .leftSidePanel {
-        width: 200px;
-    }
-    .category-table th, 
-    .category-table td {
-        font-size: 0.8rem;
-        padding: 8px;
-    }
-}
-
-
-
-body {
-    display: flex;
-    min-height: 100vh;
-    background-color: #121212; /* Dark background */
-    color: #ffffff;
+    background-color: #FF3333; /* Darker red on hover */
+    transform: scale(1.05); /* Slight scale effect */
 }
 
 /* Sidebar */
 .leftSidePanel {
-    background-color: #1e1e2d; /* Darker sidebar background */
+    background-color: #1A1A1A; /* Dark sidebar background */
     width: 250px;
     min-height: 100vh;
     padding: 20px 15px;
@@ -183,7 +160,7 @@ body {
 }
 
 .logo {
-    color: #ffffff;
+    color: #F5F5F5; /* Light text */
     font-size: 1.8rem;
     margin-bottom: 20px;
     text-transform: uppercase;
@@ -198,10 +175,10 @@ body {
 .menu li {
     padding: 12px 15px;
     margin: 5px 0;
-    color: #bdbdbd; /* Light gray */
+    color: #DCDCDC; /* Light gray */
     font-size: 1rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -213,35 +190,17 @@ body {
 
 .menu li:hover,
 .menu li.active {
-    background-color: #34344a; /* Dark hover effect */
-    color: #f1f1f1;
-}
-
-/* Main Content */
-.content {
-    flex: 1;
-    padding: 40px;
-    background-color: #1e1e2d; /* Slightly lighter dark background */
-    border-radius: 10px;
-    margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-h2 {
-    font-size: 2rem;
-    color: #f5f5f5;
-    margin-bottom: 20px;
+    background-color: #34344A; /* Dark hover effect */
+    color: #F5F5F5; /* Light text */
 }
 
 /* Form Styling */
 .category-form {
     display: flex;
     gap: 20px;
-    background: #232332; /* Dark form background */
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
+
 
 .form-group {
     flex: 1 1 calc(50% - 20px);
@@ -253,16 +212,16 @@ h2 {
     margin-bottom: 8px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #dcdcdc;
+    color: #DCDCDC; /* Light gray */
 }
 
 .form-group input,
 .form-group select {
     padding: 10px 12px;
-    border: 1px solid #444;
-    background-color: #2e2e3a;
-    color: #f1f1f1;
-    border-radius: 5px;
+    border: 1px solid #444; /* Subtle border */
+    background-color: #2E2E3A; /* Dark input background */
+    color: #F5F5F5; /* Light text */
+    border-radius: 10px;
     font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -270,117 +229,66 @@ h2 {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #6c63ff; /* Purple focus border */
-    box-shadow: 0 0 5px rgba(108, 99, 255, 0.6);
+    border-color: #FF6B6B; /* Vibrant red for focus */
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.6); /* Glow effect */
 }
 
-#imgcontainer{
+/* Image Container */
+#imgcontainer {
     display: flex;
     justify-content: center;
     padding-top: 20px;
     flex-wrap: wrap;
     gap: 5px;
-  }
+}
 
-  .images img {
+.images img {
     height: 120px;
     width: 120px;
     object-fit: cover;
     cursor: pointer;
-  }
-
-.images img:hover {
-    border: 2px solid #6c63ff; /* Add a border to indicate selection */
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.486); /* Add a glow effect */
-    transform: scale(1.05); /* Slightly enlarge the image */
-    transition: all 0.2s ease; /* Smooth transition for all effects */
+    border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
+.images img:hover {
+    border: 2px solid #FF6B6B; /* Vibrant red border */
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.6); /* Glow effect */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+/* Buttons */
 button.btn {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #6c63ff; /* Accent color */
-    color: #ffffff;
+    background-color: #FF6B6B; /* Vibrant red */
+    color: #0A0A0A; /* Dark text */
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button.btn:hover {
-    background-color: #574bff;
-    transform: scale(1.05);
+    background-color: #FF4C4C; /* Darker red on hover */
+    transform: scale(1.05); /* Slight scale effect */
 }
-
-.loader {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: sticky; /* Fixed to make it stay on screen */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for the loader's own dimensions */
-    width: 120px;
-    height: 90px;
-    margin: 0 auto;
-    z-index: 1000; /* Optional: ensures it's above other content */
-    background-blend-mode: darken;
-}
-
-  .loader:before {
-    content: "";
-    position: absolute;
-    bottom: 30px;
-    left: 50px;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    background: #FF3D00;
-    animation: loading-bounce 0.5s ease-in-out infinite alternate;
-  }
-  .loader:after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 7px;
-    width: 45px;
-    border-radius: 4px;
-    box-shadow: 0 5px 0 #fff, -35px 50px 0 #fff, -70px 95px 0 #fff;
-    animation: loading-step 1s ease-in-out infinite;
-  }
-
-  @keyframes loading-bounce {
-    0% { transform: scale(1, 0.7)}
-    40% { transform: scale(0.8, 1.2)}
-    60% { transform: scale(1, 1)}
-    100% { bottom: 140px }
-  }
-  @keyframes loading-step {
-    0% {
-      box-shadow: 0 10px 0 rgba(0,0,0,0),
-                  0 10px 0 #fff,
-                -35px 50px 0 #fff,
-                -70px 90px 0 #fff;
-    }
-    100% {
-      box-shadow: 0 10px 0 #fff,
-                -35px 50px 0 #fff,
-                -70px 90px 0 #fff,
-                -70px 90px 0 rgba(0,0,0,0);
-    }
-  }
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .leftSidePanel {
+        width: 200px;
+    }
+
     .form-group {
         flex: 1 1 100%;
     }
 
-    .leftSidePanel {
-        width: 200px;
+    .category-table th,
+    .category-table td {
+        font-size: 0.8rem;
+        padding: 8px;
     }
 }

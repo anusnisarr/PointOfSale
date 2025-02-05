@@ -9,8 +9,8 @@
 body {
     display: flex;
     min-height: 100vh;
-    background-color: #121212;
-    color: #E5E5E6ff;
+    background-color: #121212; /* Dark background */
+    color: #E5E5E6ff; /* Light text */
 }
 
 .container {
@@ -22,13 +22,13 @@ body {
 .content {
     flex: 1;
     padding: 20px;
-    background-color: #1e1e2d;
+    background-color: #1A1A1A; /* Dark container */
     border-radius: 10px;
     margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
 }
 
-/* Add Item Button Styling */
+/* Header Bar */
 .header-bar {
     display: flex;
     justify-content: space-between;
@@ -36,144 +36,129 @@ body {
     margin-bottom: 15px;
 }
 
+/* Add Item Button */
 .add-item-btn {
-    background-color: #6c63ff;
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
     padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .add-item-btn:hover {
-    background-color: #574bff;
+    transform: scale(1.05); /* Slight scale effect */
 }
 
-
+/* File Input */
 input[type="file"] {
     display: none;
-  }
+}
 
 #fileInput {
     display: inline-block;
-    background-color: #ff8763;
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
     padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 #fileInput:hover {
-    background-color: #fd6739;
+    transform: scale(1.05); /* Slight scale effect */
 }
-
 
 /* Table Styling */
 .table-wrapper {
-    overflow-x: auto;
-    border-radius: 10px;
-    background-color: #2c2c3c;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    /* overflow-x: auto; */
+    border-radius: 15px;
 }
 
 .item-table {
     width: 100%;
     border-collapse: collapse;
-    color: #dcdcdc;
+    color: #dcdcdc; /* Light text */
 }
 
-.item-table th, 
+
+
+.item-table th,
 .item-table td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #444; /* Subtle border */
 }
 
 .item-table thead {
-    background-color: #34344a;
+    background-color: #424242; /* Darker header background */
 }
 
 .item-table th {
     font-size: 1rem;
     font-weight: bold;
-    color: #ffffff;
+    color: #ffffff; /* Light text */
 }
 
-.item-table tbody tr:nth-child(even) {
-    background-color: #2e2e3a;
+.item-table tbody tr {
+    background-color: #262626; /* Alternate row color */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .item-table tbody tr:hover {
-    background-color: #3b3b4f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translate(-1px);
+    box-shadow: 0 1px 17px rgba(0, 0, 0, 0.5);
 }
 
-.edit-btn, 
+/* Edit and Delete Buttons */
+.edit-btn,
 .delete-btn {
     padding: 8px 12px;
-    border: none;
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .edit-btn {
-    background-color: #6c63ff;
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
 }
 
 .edit-btn:hover {
-    background-color: #574bff;
+    transform: scale(1.05); /* Slight scale effect */
 }
 
 .delete-btn {
-    background-color: #ff4d4d;
-    color: #ffffff;
+    background-color: #FF4D4D; /* Vibrant red */
+    
 }
 
 .delete-btn:hover {
-    background-color: #ff3333;
+    background-color: #FF4D4D; /* Vibrant red */
+    transform: scale(1.05); /* Slight scale effect */
 }
 
+/* Heading */
 h2 {
     margin-bottom: 20px;
     font-size: 1.8rem;
-    color: #f5f5f5;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .leftSidePanel {
-        width: 200px;
-    }
-    .item-table th, 
-    .item-table td {
-        font-size: 0.8rem;
-        padding: 8px;
-    }
-}
-
-
-
-body {
-    display: flex;
-    min-height: 100vh;
-    background-color: #121212; /* Dark background */
-    color: #ffffff;
+    color: #f5f5f5; /* Light text */
 }
 
 /* Sidebar */
 .leftSidePanel {
-    background-color: #1e1e2d; /* Darker sidebar background */
+    background-color: #1e1e2d; /* Dark sidebar background */
     width: 250px;
     min-height: 100vh;
     padding: 20px 15px;
@@ -183,7 +168,7 @@ body {
 }
 
 .logo {
-    color: #ffffff;
+    color: #ffffff; /* Light text */
     font-size: 1.8rem;
     margin-bottom: 20px;
     text-transform: uppercase;
@@ -214,23 +199,7 @@ body {
 .menu li:hover,
 .menu li.active {
     background-color: #34344a; /* Dark hover effect */
-    color: #f1f1f1;
-}
-
-/* Main Content */
-.content {
-    flex: 1;
-    padding: 40px;
-    background-color: #1e1e2d; /* Slightly lighter dark background */
-    border-radius: 10px;
-    margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-h2 {
-    font-size: 2rem;
-    color: #f5f5f5;
-    margin-bottom: 20px;
+    color: #f1f1f1; /* Light text */
 }
 
 /* Form Styling */
@@ -241,7 +210,7 @@ h2 {
     background: #232332; /* Dark form background */
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Shadow for depth */
 }
 
 .form-group {
@@ -254,15 +223,15 @@ h2 {
     margin-bottom: 8px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #dcdcdc;
+    color: #dcdcdc; /* Light gray */
 }
 
 .form-group input,
 .form-group select {
     padding: 10px 12px;
-    border: 1px solid #444;
-    background-color: #2e2e3a;
-    color: #f1f1f1;
+    border: 1px solid #444; /* Subtle border */
+    background-color: #2e2e3a; /* Dark input background */
+    color: #f1f1f1; /* Light text */
     border-radius: 5px;
     font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -271,28 +240,32 @@ h2 {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #6c63ff; /* Purple focus border */
-    box-shadow: 0 0 5px rgba(108, 99, 255, 0.6);
+    border-color: #FF6B6B; /* Vibrant red for focus */
+    box-shadow: 0 0 5px rgba(255, 107, 107, 0.6); /* Glow effect */
 }
 
+/* Buttons */
 button.btn {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #6c63ff; /* Accent color */
-    color: #ffffff;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: bold;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 button.btn:hover {
-    background-color: #574bff;
-    transform: scale(1.05);
+    background-color: #FFA500; /* Orange on hover */
+    color: #0A0A0A; /* Dark text */
+    border-color: #FFA500; /* Orange outline on hover */
+    transform: scale(1.05); /* Slight scale effect */
 }
 
+/* Loader */
 .loader {
     display: flex;
     justify-content: center;
@@ -308,7 +281,7 @@ button.btn:hover {
     background-blend-mode: darken;
 }
 
-  .loader:before {
+.loader:before {
     content: "";
     position: absolute;
     bottom: 30px;
@@ -318,8 +291,9 @@ button.btn:hover {
     border-radius: 50%;
     background: #FF3D00;
     animation: loading-bounce 0.5s ease-in-out infinite alternate;
-  }
-  .loader:after {
+}
+
+.loader:after {
     content: "";
     position: absolute;
     right: 0;
@@ -329,29 +303,29 @@ button.btn:hover {
     border-radius: 4px;
     box-shadow: 0 5px 0 #fff, -35px 50px 0 #fff, -70px 95px 0 #fff;
     animation: loading-step 1s ease-in-out infinite;
-  }
+}
 
-  @keyframes loading-bounce {
-    0% { transform: scale(1, 0.7)}
-    40% { transform: scale(0.8, 1.2)}
-    60% { transform: scale(1, 1)}
-    100% { bottom: 140px }
-  }
-  @keyframes loading-step {
+@keyframes loading-bounce {
+    0% { transform: scale(1, 0.7); }
+    40% { transform: scale(0.8, 1.2); }
+    60% { transform: scale(1, 1); }
+    100% { bottom: 140px; }
+}
+
+@keyframes loading-step {
     0% {
-      box-shadow: 0 10px 0 rgba(0,0,0,0),
-                  0 10px 0 #fff,
-                -35px 50px 0 #fff,
-                -70px 90px 0 #fff;
+        box-shadow: 0 10px 0 rgba(0, 0, 0, 0),
+                    0 10px 0 #fff,
+                    -35px 50px 0 #fff,
+                    -70px 90px 0 #fff;
     }
     100% {
-      box-shadow: 0 10px 0 #fff,
-                -35px 50px 0 #fff,
-                -70px 90px 0 #fff,
-                -70px 90px 0 rgba(0,0,0,0);
+        box-shadow: 0 10px 0 #fff,
+                    -35px 50px 0 #fff,
+                    -70px 90px 0 #fff,
+                    -70px 90px 0 rgba(0, 0, 0, 0);
     }
-  }
-
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -362,4 +336,10 @@ button.btn:hover {
     .leftSidePanel {
         width: 200px;
     }
-}
+
+    .item-table th,
+    .item-table td {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+}   

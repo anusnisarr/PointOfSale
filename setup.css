@@ -6,6 +6,8 @@
     font-family: "Poppins", sans-serif; /* Modern font */
 }
 
+
+
 body {
     background-color: #0A0A0A; /* Dark background */
     color: #F5F5F5;
@@ -84,8 +86,8 @@ body {
 
 /* Toggle Section */
 .toggle-section {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping of toggle items */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns of equal width */
     gap: 20px; /* Spacing between toggle items */
     margin-bottom: 30px;
 }
@@ -100,12 +102,19 @@ body {
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 56px;
 }
 
 .alignCenter:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
+
+/* Target the third item and place it in the first column of the second row */
+.alignCenter:nth-child(3) {
+    grid-column: 1 / 2; /* Place it in the first column of the second row */
+}
+
 
 .toggle-label {
     font-size: 1rem;
@@ -156,6 +165,29 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(16px);
 }
+
+.taxBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1A1A1A;
+    border: none;
+    width: 10%;
+    height: 100%;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1em;
+    text-align: center;
+}
+
+.taxBox::-webkit-outer-spin-button,
+.taxBox::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
 
 /* Update Button */
 .update-btn {
