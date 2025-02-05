@@ -248,7 +248,7 @@
   };
 
   let saleHistoryItems = SaleHistory ? SaleHistory.flatMap((sale) => sale.Items) : [];
-
+  
   const itemDeleteBtn = () => {
     let deleteBtn = $(".delete-btn");
     deleteBtn.each((index, btn) => {
