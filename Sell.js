@@ -58,8 +58,6 @@ const address = JSON.parse(localStorage.getItem("ReceiptDetails")).Address;
 const receiptNumberValue = JSON.parse(localStorage.getItem("ReceiptDetails")).Number;
 let receiptNoteValue = JSON.parse(localStorage.getItem("ReceiptDetails")).Note;
 
-// Increment the last bill number and update it in localStorage
-
 // Select the received amount input and return amount display elements
 let receivedCashInput = $("#receiveCash");
 let returnCashDisplay = $("#returnCash");
@@ -196,12 +194,15 @@ const showItemsOnSearch = (searchResult) => {
 };
 
 // Show Most Ordered items
-let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || "{}";
-const soldItemCount = SaleHistory.flatMap(sale => sale.Items)
-  .reduce((acc, item) => {
-    acc[item.ItemName] = (acc[item.ItemName] || 0) + item.Qty;
-    return acc;
-  }, {});
+let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory"));
+let soldItemCount = {};
+if (SaleHistory) {
+  soldItemCount = SaleHistory.flatMap(sale => sale.Items)
+    .reduce((acc, item) => {
+      acc[item.ItemName] = (acc[item.ItemName] || 0) + item.Qty;
+      return acc;
+    }, {});
+}
   
 $(".most-ordered-btn").on("click", (e) => {
   $(e.target).toggleClass("most-ordered-clicked");
@@ -633,7 +634,7 @@ payButton.on("click", () => {
     });
 
   });
-  let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || "{}";
+  let SaleHistory = JSON.parse(localStorage.getItem("SaleHistory")) || [];
 
 // Add in localStorage SaleHistory
   SaleHistory.push({
