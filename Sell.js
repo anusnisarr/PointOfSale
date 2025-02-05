@@ -762,7 +762,7 @@ else{
 }
 
 
-checkParameters(JSON.parse(localStorage.getItem("Parameters")))
+checkParameters(JSON.parse(localStorage.getItem("Parameters")) || {});
 
 
 console.log(soldItemCount);
