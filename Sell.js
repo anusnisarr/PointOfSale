@@ -43,6 +43,15 @@ let taxvalue = 0; // Global variable to store tax value
 const allBarcode = items.map((item) => item.Barcode);
 const allCategoryCode = categories.map(category => category.CategoryCode);
 
+// Check if the receipt details are available in localStorage, if not initialize them
+if (!localStorage.getItem("ReceiptDetails")) {
+  let receiptDetails = {
+    Address: "",
+    Number: "",
+    Note: "",
+  };
+  localStorage.setItem("ReceiptDetails", JSON.stringify(receiptDetails));  
+}
 // Select the receipt container and retrieve address and receipt number from localStorage
 const receiptContainer = $("#receiptContainer");
 const address = JSON.parse(localStorage.getItem("ReceiptDetails")).Address;
