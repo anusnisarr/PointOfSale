@@ -265,7 +265,6 @@ itemContainer.on("click", (event) => {
       const itemPrice = item.find(".items-price");
       const itemQty = { innerText: 1 }; // Default quantity to 1
       const ClubItemOnCart = JSON.parse(localStorage.getItem("Parameters")) ? JSON.parse(localStorage.getItem("Parameters")).ClubItemOnCart : "";
-      
       const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
       let clubItemOnSale = booleanValue;
 
@@ -488,10 +487,10 @@ paymentBtn.on("click", function (e) {
   SelectedPaymentMethod = $(this).attr("id");
 
   if (SelectedPaymentMethod === "Cash") {
-    selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")).CashTax;
+    selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")) ? JSON.parse(localStorage.getItem("Tax")).CashTax : 0;
   }
   else if (SelectedPaymentMethod === "Card"){
-    selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")).CardTax;
+    selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")) ? JSON.parse(localStorage.getItem("Tax")).CardTax : 0;
   }
 
   
