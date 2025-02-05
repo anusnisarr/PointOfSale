@@ -178,7 +178,6 @@ const showItemsOnSearch = (searchResult) => {
     itemContainer.removeClass("centerText");
     itemContainer.addClass("itemcontainer");
   }
-  console.log(searchResult);
   
   itemContainer.empty(); // Clear previous search results
 
@@ -763,8 +762,3 @@ else{
 
 
 checkParameters(JSON.parse(localStorage.getItem("Parameters")) || {});
-
-
-console.log(soldItemCount);
-
-

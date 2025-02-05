@@ -225,7 +225,6 @@
   };
   
   const itemListScreen = (itemData) => {
-    console.log(itemData);
     
     const itemRow = $(".item-table tbody");
     itemData.forEach((item, index) => {
@@ -248,9 +247,7 @@
     });
   };
 
-  let saleHistoryItems = SaleHistory.flatMap((sale) => sale.Items);
-  console.log(saleHistoryItems);
-  
+  let saleHistoryItems = SaleHistory ? SaleHistory.flatMap((sale) => sale.Items) : [];
 
   const itemDeleteBtn = () => {
     let deleteBtn = $(".delete-btn");
