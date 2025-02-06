@@ -18,7 +18,7 @@ let selectedImage = null;
                   <input type="text" id="categoryCode" placeholder="Enter Category Code">
                   </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display:none">
                   <label for="searchImage">Search Image</label>
                   <input type="text" id="searchImage" placeholder="Search Image for category">
                   </div>
@@ -172,7 +172,7 @@ let selectedImage = null;
                 <input type="text" id="categoryCode" placeholder="Enter Category Code" value="${thisCategroyData.CategoryCode}">
                 </div>
 
-              <div class="form-group">
+              <div class="form-group" style="display:none">
                 <label for="searchImage">Search Image</label>
                 <input type="text" id="searchImage" placeholder="Search Image for category">
                 </div>

@@ -492,7 +492,9 @@ paymentBtn.on("click", function (e) {
   else if (SelectedPaymentMethod === "Card"){
     selectedTaxPercentage = JSON.parse(localStorage.getItem("Tax")) ? JSON.parse(localStorage.getItem("Tax")).CardTax : 0;
   }
-
+  else if (SelectedPaymentMethod === "Party"){
+    selectedTaxPercentage = 0;
+  }
   
   if (this.id !== "Cash") {
     $("#receiveCashDiv").css("display", "none");
@@ -581,7 +583,7 @@ payButton.on("click", () => {
             <span>Sub Total:</span>
             <span>${subtotal}</span>
           </div>
-          <div class="taxOnReceipt">
+          <div class="taxOnReceipt" style="display: ${taxvalue === 0 ? 'none':'flex'}">
             <span>Tax (${selectedTaxPercentage}%):</span>
             <span>${taxvalue}</span>
           </div>

@@ -13,6 +13,12 @@ body {
     color: #E5E5E6ff; /* Light text */
 }
 
+#itemPrice::-webkit-outer-spin-button,
+#itemPrice::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .container {
     display: flex;
     width: 100%;
@@ -25,7 +31,7 @@ body {
     background-color: #1A1A1A; /* Dark container */
     border-radius: 10px;
     margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    
 }
 
 /* Header Bar */
@@ -151,7 +157,6 @@ input[type="file"] {
 
 /* Heading */
 h2 {
-    margin-bottom: 20px;
     font-size: 1.8rem;
     color: #f5f5f5; /* Light text */
 }
@@ -207,7 +212,7 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    background: #232332; /* Dark form background */
+    background: #262626; /* Dark form background */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Shadow for depth */
@@ -230,7 +235,7 @@ h2 {
 .form-group select {
     padding: 10px 12px;
     border: 1px solid #444; /* Subtle border */
-    background-color: #2e2e3a; /* Dark input background */
+    background-color: #1A1A1A; /* Dark input background */
     color: #f1f1f1; /* Light text */
     border-radius: 5px;
     font-size: 1rem;
@@ -259,9 +264,6 @@ button.btn {
 }
 
 button.btn:hover {
-    background-color: #FFA500; /* Orange on hover */
-    color: #0A0A0A; /* Dark text */
-    border-color: #FFA500; /* Orange outline on hover */
     transform: scale(1.05); /* Slight scale effect */
 }
 
