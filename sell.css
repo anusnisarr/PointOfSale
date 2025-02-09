@@ -620,7 +620,7 @@ outline: none;
     padding-top: 5px;
 }
 
-.placeOrder-btn {
+/* .placeOrder-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -635,48 +635,68 @@ outline: none;
 
 .placeOrder-btn:hover {
     background-color: #388e3c;
-}
-
+} */
+ 
+/* Overlay */
 .overlay {
-    position: absolute;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+    z-index: 1000; /* Ensure it's above other content */
 }
 
+/* Popup */
 .popup {
-    background: #303134;
+    background-color: #1A1A1A; /* Dark background */
+    border-radius: 15px;
     padding: 20px;
-    border-radius: 10px;
-    width: 55%;
-    border: 1px solid #424242;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    width: 90%;
+    max-width: 550px;
+    text-align: center;
 }
 
+.popup h2 {
+    font-size: 1.5rem;
+    color: #F5F5F5; /* Light text */
+    margin-bottom: 20px;
+}
+
+/* Buttons Container */
 .buttons-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin: 15px 0;
+    gap: 10px; /* Spacing between buttons */
+    /* justify-content: center; */
+    margin-bottom: 20px;
 }
 
+/* Buttons */
 .button {
-    background: #4a90e2;
-    color: #fff;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
+    background-color: transparent; /* Transparent background */
+    color: #FF6B6B; /* Vibrant red text */
+    padding: 10px 20px;
+    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    flex: 1 1 calc(33.33% - 20px); /* Responsive button sizing */
+    max-width: 120px; /* Limit button width */
 }
 
 .button:hover {
-    background: #357abd;
+    background-color: #FF6B6B; /* Orange on hover */
+    color: white; /* Dark text */
+    border-color: #FF6B6B; /* Orange outline on hover */
+    transform: scale(1.05); /* Slight scale effect */
 }
 
 .pay-btn {

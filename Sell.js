@@ -446,18 +446,13 @@ removeFromCart()
 placeOrder.on("click", (e) => {
   $(".overlay").css("display" , "flex").html(`
         <div class="popup">
+        <div class="closeBtn"><i class="ri-close-line"></i></div>
             <h2>Select Waiter</h2>
             <div class="buttons-container">
                 <button class="button" id="w1">Waiter 1</button>
                 <button class="button" id="w2">Waiter 2</button>
                 <button class="button" id="w3">Waiter 3</button>
                 <button class="button" id="w4">Waiter 4</button>
-                <button class="button" id="w5">Waiter 5</button>
-                <button class="button" id="w6">Waiter 6</button>
-                <button class="button" id="w7">Waiter 7</button>
-                <button class="button" id="w8">Waiter 8</button>
-                <button class="button" id="w9">Waiter 9</button>
-                <button class="button" id="w10">Waiter 10</button>
             </div>
             <h2>Select Table</h2>
             <div class="buttons-container">
@@ -471,12 +466,18 @@ placeOrder.on("click", (e) => {
                 <button class="button" id="t8">Table 8</button>
                 <button class="button" id="t9">Table 9</button>
                 <button class="button" id="t10">Table 10</button>
+                <button class="button" id="t9">Table 11</button>
+                <button class="button" id="t10">Table 12</button>
             </div>
         </div>`
   );
 
   $(".button").on("click", (e)=>{
       getTableWaiterName(e.target.id)
+  })
+
+  $(".closeBtn").on("click", (e)=>{
+    $(".overlay").css("display", "none");
   })
 
 })
@@ -586,7 +587,6 @@ directPay.on("click", (e) => {
   // Generate receipt
   receiptContainer.html(`
     <div class="closeBtn"><i class="ri-close-line"></i></div>
-
       <div id="receiptbody">
         <div class="receipt">
           <div class="header">
@@ -644,7 +644,6 @@ directPay.on("click", (e) => {
     const itemQty = Number($(item).find(".cart-items-qty").text());
     const itemPrice = $(item).find(".cart-items-price").text() / itemQty;
     const itemAmount = Number($(item).find(".cart-items-price").text());
-  
     const cart = $(".cart-item-container");
 
     cart.append(`

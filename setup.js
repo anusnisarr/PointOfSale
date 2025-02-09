@@ -6,8 +6,7 @@ const receiptNote = $("#note");
 const smallCategorySize = $("#smallCategorySize");
 let   logoFile ;
 const getlogo = $("#logo").on("input", (e)=>{
-    logoFile = e.target.files[0].name
-    
+    logoFile = e.target.files[0].name;    
 })
 const taxSetup = $("#taxSetup");
 const cashTax = $("#cashTax");
@@ -28,10 +27,8 @@ $("input[type=checkbox]").on("change", function (e) {
   
 })
 
-
 // Update and save parameter in Setup
 const setupChange = () => {
-
   let paramters = {
     ClubItemOnCart : ClubItemOnCart.is(":checked") ? "true" : "false" ,
     smallCategorySize : smallCategorySize.is(":checked") ? "true" : "false" ,
@@ -42,14 +39,12 @@ const setupChange = () => {
       Number : receiptNumber.val(),
       Note: receiptNote.val(),
       Logo: logoFile
-      
     }    
 
     let tax = {
       CashTax : Number(cashTax.val()),
       CardTax : Number(cardTax.val())
     }
-
 
     localStorage.setItem("Parameters" , JSON.stringify(paramters))
     localStorage.setItem("ReceiptDetails", JSON.stringify(receiptDetails));
@@ -61,11 +56,9 @@ const setupChange = () => {
     }
     else{
       localStorage.setItem("Tax", JSON.stringify(tax));    
-
     }
   };
   
-
   // Set the value of the checkbox based on the local storage
   const getParameters = JSON.parse(localStorage.getItem("Parameters") || "{}")
 
@@ -104,8 +97,6 @@ const setupChange = () => {
       ? cardTax.val(getTax.CardTax)
       : cardTax.val("");
 
-
-      
     updateButton.on("click", () => {    
       setupChange();
       showLoader("setup-container");
