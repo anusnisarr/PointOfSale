@@ -13,6 +13,7 @@ let categories = JSON.parse(localStorage.getItem("Categories")) || [];
 // Select the pay button and get the current date
 const paymentBtn = $(".payment-methods-icons");
 const payButton = $(".pay-btn");
+const directPay = $("#directPay")
 const placeOrder = $(".placeOrder-btn")
 const currentDate = new Date().toLocaleString("en-US");
 
@@ -356,6 +357,7 @@ itemContainer.on("click", (event) => {
         const cartItemsPrice = cartItem.find(".cart-items-price");
         cartItemsPrice.text(itemPrice * editedQty);
         calulateInvoice();
+        updateReturnCash();        
       };
 
       $(qty).on("keydown", (e) => {
@@ -388,7 +390,10 @@ itemContainer.on("click", (event) => {
         if (alreadyInCart.length === 0) {
           clickedItem.removeClass("clicked");
           clickedItem.css("color", "white");
-
+        }
+         
+        if (!selectedItems.length) {          
+          receivedCashInput.val("") 
         }
 
         // Remove item from selectedItems array
@@ -465,14 +470,12 @@ placeOrder.on("click", (e) => {
 
   $(".button").on("click", (e)=>{
       getTableWaiterName(e.target.id)
-      
   })
 
 })
 
 const getTableWaiterName = (tablename)=>{
   console.log("Table:" , tablename);
-  
 }
 
 // Handle payment method selection
@@ -499,33 +502,25 @@ paymentBtn.on("click", function (e) {
   if (this.id !== "Cash") {
     $("#receiveCashDiv").css("display", "none");
     $("#returnCashDiv").css("display", "none");
-
   }
 
   else{
     $("#receiveCashDiv").css("display", "flex");
     $("#returnCashDiv").css("display", "flex");
-
   }
 
 });
 
-
 //Updates the display of the return cash amount based on the received cash and subtotal.
 const updateReturnCash = ()=>{
   const receivedCash = parseFloat(receivedCashInput.val());
-  if (total) {
-    
-  }
-
-  if (receivedCash > subtotal && receivedCash > 0 && subtotal !== null) {
-      const returnCash = receivedCash - subtotal;
+  if (receivedCash > total && receivedCash > 0 && total !== null) {
+      const returnCash = receivedCash - total;
       returnCashDisplay.text(returnCash);
 
     } else {
       returnCashDisplay.text("");
       receiptBalanceTitle.addClass("nodisplay");
-
     } 
   }
 
@@ -534,8 +529,36 @@ receivedCashInput.on('input', () => {
   updateReturnCash()
 });
 
+
+
+// Append options container to the body
+payButton.on("click", ()=>{
+  toggleDropdown()
+})
+
+
+function toggleDropdown() {
+  let menu = $("#dropdownMenu");
+  if (menu.css("display") === "none") {
+    menu.show();
+  } else {
+    menu.hide();
+  }
+}
+
+$(document).on("click", function(event) {
+  let menu = $("#dropdownMenu");
+  let button = $(".pay-btn");
+  if (!button.is(event.target) && !menu.is(event.target) && menu.has(event.target).length === 0) {
+    menu.hide();
+  }
+});
+
 // When click on Pay Button
-payButton.on("click", () => {
+directPay.on("click", (e) => {
+  actionMenu = $("#dropdownMenu");
+  actionMenu.css("display", "none")
+
   if (!subtotal) {
     alert("Please select an item to proceed");
     return;

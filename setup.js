@@ -13,6 +13,21 @@ const taxSetup = $("#taxSetup");
 const cashTax = $("#cashTax");
 const cardTax = $("#cardTax");
 
+$(document).ready(function() {
+  $("input[type=checkbox]:checked").closest(".alignCenter").css("border", "1.5px solid #FF6B6B");
+});
+
+// Change the border color of the parameter when checked
+$("input[type=checkbox]").on("change", function (e) {
+  let parameter = $(e.target).closest(".alignCenter")
+  if (e.target.checked) {
+    parameter.css("border", "1.5px solid #FF6B6B")
+  } else {
+    parameter.css("border", "1px solid rgba(255, 255, 255, 0.1)")
+  }
+  
+})
+
 
 // Update and save parameter in Setup
 const setupChange = () => {

@@ -1,36 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom File Input</title>
-  <style>
-    body{
-        background-color: black;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    #imgcontainer{
-      display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .images img {
-      height: 120px;
-      width: 120px;
-      object-fit: cover;
-    }
-    label{
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS More Options</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .options-container {
+            position: relative;
+            display: inline-block;
+        }
+        .options-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            padding: 10px 0;
+        }
+        .dropdown-menu a {
+            color: white;
+            padding: 10px 15px;
+            display: block;
+            text-decoration: none;
+        }
+        .dropdown-menu a:hover {
+            background-color: #575757;
+        }
+        .submenu {
+            display: none;
+            background-color: #444;
+            margin-left: 10px;
+        }
+        .dropdown-menu a.dine-in:hover + .submenu,
+        .submenu:hover {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script src="test.js"></script>
-</body>
+    <div class="options-container">
+        <button class="options-button" onclick="toggleDropdown()">More Options</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#">Make Order</a>
+            <a href="#">Send to Kitchen</a>
+            <a href="#">Double Print</a>
+            <a href="#">Direct Pay</a>
+            <a href="#" class="dine-in">Takeaway / Dine-In ▸</a>
+            <div class="submenu">
+                <a href="#">Takeaway</a>
+                <a href="#">Dine-In</a>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        function toggleDropdown() {
+            let menu = document.getElementById("dropdownMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        document.addEventListener("click", function(event) {
+            let menu = document.getElementById("dropdownMenu");
+            let button = document.querySelector(".options-button");
+            if (!button.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    </script>
+</body>
 </html>
