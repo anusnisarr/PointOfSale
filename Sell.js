@@ -204,10 +204,10 @@ if (SaleHistory) {
     }, {});
 }
   
-$(".most-ordered-btn").on("click", (e) => {
-  $(e.target).toggleClass("most-ordered-clicked");
-  console.log($(e.target).hasClass("most-ordered-clicked"));
-  if ($(e.target).hasClass("most-ordered-clicked")) {
+$(".trending-btn").on("click", (e) => {
+  $(e.target).toggleClass("trending-btn-clicked");
+  console.log($(e.target).hasClass("trending-btn-clicked"));
+  if ($(e.target).hasClass("trending-btn-clicked")) {
     const sortedSoldItems = Object.entries(soldItemCount).sort(
       (a, b) => b[1] - a[1]
     );
@@ -286,6 +286,7 @@ itemContainer.on("click", (event) => {
         });
       };
       CartArrayMaker();
+      
 
       // Check if the item is already added or not
       const clubItemId = selectedItems.find((id) => id.id === itemId);
@@ -372,38 +373,11 @@ itemContainer.on("click", (event) => {
       });
     });
 
-    // Handle item removal from cart
-    $(".ri-delete-back-2-fill").each((index, item) => {
-      $(item).on("click", (e) => {
-        const cartItem = $(e.target).closest(".cart-items");
-        const itemId = cartItem.attr("id");
-        cartItem.remove();
-        const clickedItem = $(".items").filter(function () {
-          return $(this).attr("id") === itemId;
-        });
+    calulateInvoice();
+    updateReturnCash();
 
-        // Remove clicked class and color if no item in cart matches the clicked item
-        let alreadyInCart = $(".cart-items").filter(function () {
-          return $(this).attr("id") === clickedItem.attr("id");
-        });
-
-        if (alreadyInCart.length === 0) {
-          clickedItem.removeClass("clicked");
-          clickedItem.css("color", "white");
-        }
-         
-        if (!selectedItems.length) {          
-          receivedCashInput.val("") 
-        }
-
-        // Remove item from selectedItems array
-        selectedItems = selectedItems.filter((item) => item.id !== itemId);
-
-        // Recalculate subtotal
-        calulateInvoice();
-        updateReturnCash();
-      });
-    });
+  }
+});
 
     // Calculate invoice subtotal
     const calulateInvoice = () => {
@@ -430,10 +404,43 @@ itemContainer.on("click", (event) => {
       $("#total-values").html(`PKR ${total ? total : 0}`);
 
     };
+
+const removeFromCart = () => {
+  // Handle item removal from cart
+  cartContainer.on("click", ".ri-delete-back-2-fill", (e) => {
+    const cartItem = $(e.target).closest(".cart-items");
+    const itemId = cartItem.attr("id");
+    const clickedItem = $(`.items#${itemId}`);
+
+    cartItem.remove();
+
+    // Remove clicked class and color if no item in cart matches the clicked item
+    if ($(`.cart-items#${itemId}`).length === 0) {
+      clickedItem.removeClass("clicked").css("color", "white");
+    }
+    if (!selectedItems.length) {
+      receivedCashInput.val("");
+    }
+    // Remove item from selectedItems array
+    selectedItems = selectedItems.filter((item) => item.id !== itemId);
+
+    // Recalculate subtotal
     calulateInvoice();
     updateReturnCash();
-  }
-});
+  });
+
+  $(".discard-order-btn").on("click", () => {    
+    if ($(".cart-items").length === 0) return
+    let clearItemConfirm = confirm("Are you sure you want to discard the order?");    
+      if (!clearItemConfirm) return; // Stop if user cancels
+      $(".cart-items").remove();
+      $(".items").removeClass("clicked").css("color", "white");
+      selectedItems = [];
+      calulateInvoice();
+      updateReturnCash();
+    });
+}
+removeFromCart()
 
 // handle place order button
 placeOrder.on("click", (e) => {

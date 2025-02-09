@@ -137,7 +137,7 @@ width: 85%;
 outline: none;
 }
 
-.most-ordered-btn {
+.trending-btn{
     background: transparent;
     color: #ffa54d; /* Soft orange outline */
     font-size: 14px;
@@ -155,19 +155,52 @@ outline: none;
     transition: all 0.3s ease;
 }
 
-.most-ordered-btn:hover {
+.trending-btn:hover {
     background: #ffa54d;
     color: white;
 }
 
-.most-ordered-clicked {
+.trending-btn-clicked {
     background: #ffa54d;
     color: white;
 }
 
-.most-ordered-btn:active {
+.trending-btn:active {
     background: #ff8c1a; /* Slightly darker orange on click */
     border-color: #ff8c1a;
+}
+
+.discard-order-btn{
+    background: transparent;
+    color: #E57373; /* Soft orange outline */
+    font-size: 14px;
+    font-weight: bold;
+    padding: 7px 12px;
+    margin-left: 5px;
+    width: 15%;
+    border: 2px solid #E57373; /* Outline effect */
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+    transition: all 0.3s ease;
+}
+
+.discard-order-btn:hover {
+    background: #E57373;
+    color: white;
+}
+
+.discard-order-btn-clicked {
+    background: #E57373;
+    color: white;
+}
+
+.discard-order-btn:active {
+    background: #E57373; /* Slightly darker orange on click */
+    border-color: #E57373;
 }
 
 /* Optional: Icon Styling */
