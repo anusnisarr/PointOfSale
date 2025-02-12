@@ -256,6 +256,7 @@ itemContainer.on("click", (event) => {
   
 
   if (item.length) {
+
     // Change item color on click
     item.addClass("clicked");
     item.css("color", "black");
@@ -269,27 +270,10 @@ itemContainer.on("click", (event) => {
       const booleanValue = ClubItemOnCart ? ClubItemOnCart === "true" : false;
       let clubItemOnSale = booleanValue;
 
-      let CartArrayMaker = () => {
-        let cart = $(".cart-items");
-        cart.each((index, item) => {
-          let quantity = $(item).children().eq(0).text();
-          let name = $(item).children().eq(1).children().eq(0).text();
-          let price = $(item).children().eq(1).children().eq(1).text();
-          let id = $(item).attr("id");
-
-          selectedItems.push({
-            id: id,
-            name: name,
-            price: price,
-            qty: quantity,
-          });
-        });
-      };
-      CartArrayMaker();
-      
-
       // Check if the item is already added or not
-      const clubItemId = selectedItems.find((id) => id.id === itemId);
+      const clubItemId = $(".cart-items").filter(function() {
+        return $(this).attr("id") === itemId;
+      }).length > 0;
 
       // Create the main container div for cart item
       const cartItem = $("<div>").addClass("cart-items").attr("id", itemId);
@@ -341,8 +325,6 @@ itemContainer.on("click", (event) => {
         const cartItemsPrice = itemsWithId.find(".cart-items-price");
         cartItemsPrice.text(parseInt(itemPrice.text()) * qtyToInt);
       }
-    };
-    addItemInCart();
 
     // Make item quantity editable
     let cartItemsQty = $(".cart-items-qty");
@@ -373,9 +355,31 @@ itemContainer.on("click", (event) => {
       });
     });
 
+
+
+  };
+  addItemInCart();
+
+    let cart = $(".cart-items");
+    selectedItems = []
+
+    cart.each((index, item) => {
+      let quantity = $(item).children().eq(0).text();
+      let name = $(item).children().eq(1).children().eq(0).text();
+      let price = $(item).children().eq(1).children().eq(1).text();
+      let id = $(item).attr("id");
+      
+      selectedItems.push({
+        id: id,
+        name: name,
+        price: price,
+        qty: quantity,
+      });
+
+    });
+ 
     calulateInvoice();
     updateReturnCash();
-
   }
 });
 
@@ -442,49 +446,137 @@ const removeFromCart = () => {
 }
 removeFromCart()
 
+
+
+
 // handle place order button
 placeOrder.on("click", (e) => {
+
   $(".overlay").css("display" , "flex").html(`
         <div class="popup">
         <div class="closeBtn"><i class="ri-close-line"></i></div>
             <h2>Select Waiter</h2>
             <div class="buttons-container">
-                <button class="button" id="w1">Waiter 1</button>
-                <button class="button" id="w2">Waiter 2</button>
-                <button class="button" id="w3">Waiter 3</button>
-                <button class="button" id="w4">Waiter 4</button>
+                <button class="waiterButton" id="w1">Waiter 1</button>
+                <button class="waiterButton" id="w2">Waiter 2</button>
+                <button class="waiterButton" id="w3">Waiter 3</button>
+                <button class="waiterButton" id="w4">Waiter 4</button>
             </div>
             <h2>Select Table</h2>
             <div class="buttons-container">
-                <button class="button" id="t1">Table 1</button>
-                <button class="button" id="t2">Table 2</button>
-                <button class="button" id="t3">Table 3</button>
-                <button class="button" id="t4">Table 4</button>
-                <button class="button" id="t5">Table 5</button>
-                <button class="button" id="t6">Table 6</button>
-                <button class="button" id="t7">Table 7</button>
-                <button class="button" id="t8">Table 8</button>
-                <button class="button" id="t9">Table 9</button>
-                <button class="button" id="t10">Table 10</button>
-                <button class="button" id="t9">Table 11</button>
-                <button class="button" id="t10">Table 12</button>
+                <button class="tableButton" id="T1">Table 1</button>
+                <button class="tableButton" id="T2">Table 2</button>
+                <button class="tableButton" id="T3">Table 3</button>
+                <button class="tableButton" id="T4">Table 4</button>
+                <button class="tableButton" id="T5">Table 5</button>
+                <button class="tableButton" id="T6">Table 6</button>
+                <button class="tableButton" id="T7">Table 7</button>
+                <button class="tableButton" id="T8">Table 8</button>
+                <button class="tableButton" id="T9">Table 9</button>
+                <button class="tableButton" id="T10">Table 10</button>
+                <button class="tableButton" id="T11">Table 11</button>
+                <button class="tableButton" id="T12">Table 12</button>
             </div>
+            <button class="submit-button" id="T12">Submit</button>
         </div>`
   );
 
-  $(".button").on("click", (e)=>{
-      getTableWaiterName(e.target.id)
-  })
+  let order =  JSON.parse(localStorage.getItem("OrderDetails"))
+  if (order) {    
+    $(".tableButton").filter((index, table) => order.some(o => o.Table === table.id)).addClass("disabled");
+    
+  }
+  
 
-  $(".closeBtn").on("click", (e)=>{
-    $(".overlay").css("display", "none");
+
+let selectedTable;
+let selectedWaiter;
+
+  $(".tableButton").on("click", (e)=>{
+    $(".tableButton").removeClass("selected");
+    $(e.target).addClass("selected");
+    selectedTable = e.target.id;
   })
+  
+  $(".waiterButton").on("click", (e)=>{
+    $(".waiterButton").css("backgroundColor", "transparent");
+    $(".waiterButton").css("color", "#6BFFD8");
+    $(e.target).css("backgroundColor", "#6BFFD8");
+    $(e.target).css("color", "black");  
+    selectedWaiter = $(e.target).text();
+})
+
+let currentDate = new Date().toISOString().split('T')[0].replace(/-/g, '');
+let sequentialNumber = localStorage.getItem("sequentialNumber") || 1;
+let orderNo = `${currentDate}-${sequentialNumber}`;
+
+let OrderDetails = JSON.parse(localStorage.getItem("OrderDetails")) || [];
+
+$(".submit-button").on("click", (e)=>{
+  if (!selectedTable || !selectedWaiter) {
+      alert("You missed selecting table or waiter!")
+    
+  }
+  if (selectedItems.length === 0) {
+    alert("You haven't selected any item!")
+  }
+  else{
+sequentialNumber = parseInt(sequentialNumber) + 1;
+localStorage.setItem("sequentialNumber", sequentialNumber);
+  OrderDetails.push({
+    OrderNo: orderNo,
+    Table: selectedTable,
+    Waiter: selectedWaiter,
+    Items: selectedItems,
+    TaxPercentage: selectedTaxPercentage,
+    Tax: taxvalue,
+    SubTotal: subtotal,
+    Total: total,
+    PaymentMethod: SelectedPaymentMethod,
+    Date: currentDate
+  });
+  
+  localStorage.setItem("OrderDetails", JSON.stringify(OrderDetails));
+  
+$("#pendingOrdersContainer").prepend(`
+  <div class="pendingOrders" id="${orderNo}">
+  <div class="tableName">
+    <h2>${selectedTable}</h2>
+  </div>
+  <div class="leftSideInfoContainer">
+    <div class="waiterNamAndStatus">
+      <div class="waiterName">
+        <h3>${selectedWaiter}</h3>
+      </div>
+      <div class="status">
+        <h4>Pending</h4>
+      </div>
+    </div>
+    <div class="itemCount">
+      <h4>${selectedItems.length} Items</h4>
+    </div>
+  </div>
+</div>
+`);
+
+cartContainer.html("");
+$(".items").removeClass("clicked").css("color", "white");
+selectedItems = [];
+calulateInvoice();
+updateReturnCash();
+$(".overlay").css("display", "none");
+
+}
+});
+
+    $(".closeBtn").on("click", (e)=>{
+    $(".overlay").css("display", "none");
+      })
 
 })
 
-const getTableWaiterName = (tablename)=>{
-  console.log("Table:" , tablename);
-}
+
+
 
 // Handle payment method selection
 paymentBtn.on("click", function (e) {

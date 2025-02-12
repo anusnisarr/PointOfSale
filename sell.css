@@ -383,7 +383,8 @@ outline: none;
 
 #pendingOrdersContainer{
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
+    gap: 20px;
     align-items: center;
     border-top: 0.5px solid #ffffff4f;
     padding: 10px 0px;
@@ -677,12 +678,12 @@ outline: none;
     margin-bottom: 20px;
 }
 
-/* Buttons */
-.button {
+/* Waiter Buttons */
+.waiterButton {
     background-color: transparent; /* Transparent background */
-    color: #FF6B6B; /* Vibrant red text */
+    color: #6BFFD8; /* Vibrant red text */
     padding: 10px 20px;
-    border: 2px solid #FF6B6B; /* Vibrant red outline */
+    border: 2px solid #6BFFD8; /* Vibrant red outline */
     border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
@@ -692,10 +693,73 @@ outline: none;
     max-width: 120px; /* Limit button width */
 }
 
-.button:hover {
-    background-color: #FF6B6B; /* Orange on hover */
-    color: white; /* Dark text */
-    border-color: #FF6B6B; /* Orange outline on hover */
+.waiterButton:hover {
+    background-color: #6BFFD8; /* Orange on hover */
+    color: black; /* Dark text */
+    border-color: #6BFFD8; /* Orange outline on hover */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+/* Table Buttons */
+.tableButton {
+    background-color: transparent; /* Transparent background */
+    color: #FFA56B; /* Vibrant red text */
+    padding: 10px 20px;
+    border: 2px solid #FFA56B; /* Vibrant red outline */
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    flex: 1 1 calc(33.33% - 20px); /* Responsive button sizing */
+    max-width: 120px; /* Limit button width */
+}
+
+
+
+.tableButton:hover {
+    background-color: #FFA56B; /* Orange on hover */
+    color: black; /* Dark text */
+    border-color: #FFA56B; /* Orange outline on hover */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+.tableButton.selected {
+    background-color: #FFA56B; /* Orange on hover */
+    color: black; /* Dark text */
+    border-color: #FFA56B; /* Orange outline on hover */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+
+/* Disabled Button Styling */
+.tableButton.disabled {
+    background-color: rgba(128, 128, 128, 0.6); /* Gray color with transparency */
+    color: rgba(255, 255, 255, 0.7); /* Light gray text */
+    cursor: not-allowed; /* Show "not allowed" cursor */
+    pointer-events: none; /* Disable click events */
+    opacity: 0.7; /* Make the button look faded */
+}
+
+
+
+/* Submit Button Styling */
+.submit-button {
+    display: block; /* Ensure it behaves as a block element */
+    padding: 10px 18px;
+    background-color: #4caf50; /* Orange-red color */
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px; /* Add some space above the button */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    margin-left: auto; /* Push the button to the right */
+}
+
+.submit-button:hover {
+    background-color: #4caf50; /* Solid orange-red on hover */
     transform: scale(1.05); /* Slight scale effect */
 }
 
