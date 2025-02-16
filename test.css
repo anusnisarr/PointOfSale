@@ -1,44 +1,115 @@
+/* General Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .nav-container {
-    position: fixed;
-    top: -50px; /* Hidden by default */
-    left: 0;
-    width: 100%;
-    background-color: #333;
-    overflow: hidden;
-    transition: top 0.3s ease; /* Smooth slide-in effect */
-  }
-  
-  .nav-bar {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-  }
-  
-  .nav-bar a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    padding: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .nav-bar a:hover {
-    background-color: #555;
-    border-radius: 4px;
-  }
-  
-  .content {
-    padding: 100px;
-    text-align: center;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif; /* Modern font */
+}
+
+
+
+body {
+  background-color: #1A1A1A; /* Dark background */
+  color: #F5F5F5;
+  overflow: hidden;
+}
+
+/* KDS Screen Styling */
+.kds-screen {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.kds-screen h1 {
+  text-align: center;
+  color: #ff6b6b; /* Soft coral for headings */
+  margin-bottom: 20px;
+}
+
+/* Order Cards Container */
+.order-cards-container {
+  display: flex;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+  gap: 15px;
+}
+
+/* Order Card Styling */
+.order-card {
+  min-width: 279px;
+  background-color: #262626;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.order-card:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-number {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff6b6b; /* Soft coral for order number */
+}
+
+.order-time {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7); /* Light gray text */
+}
+
+.order-details {
+  margin-bottom: 15px;
+}
+
+.order-details p {
+  margin: 5px 0;
+  color: rgba(255, 255, 255, 0.8); /* Light white text */
+}
+
+.items-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.items-list li {
+  background-color: #1A1A1A; /* Semi-transparent white background */
+  padding: 5px 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.9); /* Light white text */
+}
+
+/* Complete Button Styling */
+.complete-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff6b6b; /* Soft coral */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.complete-button:hover {
+  background-color: #ff5252; /* Darker coral on hover */
+}
+
+.complete-button:disabled {
+  background-color: rgba(128, 128, 128, 0.6); /* Gray for disabled */
+  color: rgba(255, 255, 255, 0.7); /* Light gray text */
+  cursor: not-allowed; /* Show "not allowed" cursor */
+  pointer-events: none; /* Disable click events */
+}

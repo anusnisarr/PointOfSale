@@ -9,6 +9,7 @@ const saleHistorySearchBox = $("#salesearchbox")
 // Retrieve items /categories from localStorage or initialize an empty array
 let items = JSON.parse(localStorage.getItem("items")) || [];
 let categories = JSON.parse(localStorage.getItem("Categories")) || [];
+let OrderDetails =  JSON.parse(localStorage.getItem("OrderDetails"))|| [];
 
 // Select the pay button and get the current date
 const paymentBtn = $(".payment-methods-icons");
@@ -360,28 +361,32 @@ itemContainer.on("click", (event) => {
   };
   addItemInCart();
 
-    let cart = $(".cart-items");
-    selectedItems = []
-
-    cart.each((index, item) => {
-      let quantity = $(item).children().eq(0).text();
-      let name = $(item).children().eq(1).children().eq(0).text();
-      let price = $(item).children().eq(1).children().eq(1).text();
-      let id = $(item).attr("id");
-      
-      selectedItems.push({
-        id: id,
-        name: name,
-        price: price,
-        qty: quantity,
-      });
-
-    });
- 
+    updateSelectedItemsArray();
     calulateInvoice();
     updateReturnCash();
+    
   }
 });
+
+updateSelectedItemsArray = ()=>{
+  let cart = $(".cart-items");
+  selectedItems = []
+
+  cart.each((index, item) => {
+    let quantity = $(item).children().eq(0).text();
+    let name = $(item).children().eq(1).children().eq(0).text();
+    let price = $(item).children().eq(1).children().eq(1).text();
+    let id = $(item).attr("id");
+    
+    selectedItems.push({
+      id: id,
+      name: name,
+      price: price,
+      qty: quantity,
+    });
+
+  });
+}
 
     // Calculate invoice subtotal
     const calulateInvoice = () => {
@@ -451,7 +456,6 @@ removeFromCart()
 
 // handle place order button
 placeOrder.on("click", (e) => {
-
   $(".overlay").css("display" , "flex").html(`
         <div class="popup">
         <div class="closeBtn"><i class="ri-close-line"></i></div>
@@ -481,14 +485,8 @@ placeOrder.on("click", (e) => {
         </div>`
   );
 
-  let order =  JSON.parse(localStorage.getItem("OrderDetails"))
-  if (order) {    
-    $(".tableButton").filter((index, table) => order.some(o => o.Table === table.id)).addClass("disabled");
-    
-  }
+  $(".tableButton").filter((index, table) => OrderDetails.some(o => o.Table === table.id)).addClass("disabled");
   
-
-
 let selectedTable;
 let selectedWaiter;
 
@@ -506,11 +504,12 @@ let selectedWaiter;
     selectedWaiter = $(e.target).text();
 })
 
-let currentDate = new Date().toISOString().split('T')[0].replace(/-/g, '');
+let orderNoDate = new Date().toISOString().split('T')[0].replace(/-/g, '');
+let currentDate = new Date().toLocaleDateString();
 let sequentialNumber = localStorage.getItem("sequentialNumber") || 1;
-let orderNo = `${currentDate}-${sequentialNumber}`;
-
-let OrderDetails = JSON.parse(localStorage.getItem("OrderDetails")) || [];
+let orderNo = `${orderNoDate}-${sequentialNumber}`;
+let colors = ["#ffe9ba","#e9ffba","#f1baff","#ffbad9","#d4ffba","#ffdfba","#ffbaba","#babdff","#bae9ff"]
+let colorIndex = Math.floor(Math.random() * 10);
 
 $(".submit-button").on("click", (e)=>{
   if (!selectedTable || !selectedWaiter) {
@@ -524,6 +523,7 @@ $(".submit-button").on("click", (e)=>{
 sequentialNumber = parseInt(sequentialNumber) + 1;
 localStorage.setItem("sequentialNumber", sequentialNumber);
   OrderDetails.push({
+    TableColor: colors[colorIndex],
     OrderNo: orderNo,
     Table: selectedTable,
     Waiter: selectedWaiter,
@@ -540,7 +540,7 @@ localStorage.setItem("sequentialNumber", sequentialNumber);
   
 $("#pendingOrdersContainer").prepend(`
   <div class="pendingOrders" id="${orderNo}">
-  <div class="tableName">
+  <div class="tableName" style="background-color: ${colors[colorIndex]}">
     <h2>${selectedTable}</h2>
   </div>
   <div class="leftSideInfoContainer">
@@ -559,14 +559,16 @@ $("#pendingOrdersContainer").prepend(`
 </div>
 `);
 
-cartContainer.html("");
-$(".items").removeClass("clicked").css("color", "white");
-selectedItems = [];
-calulateInvoice();
-updateReturnCash();
-$(".overlay").css("display", "none");
 
-}
+
+    cartContainer.html("");
+    $(".items").removeClass("clicked").css("color", "white");
+    selectedItems = [];
+    calulateInvoice();
+    updateReturnCash();
+    $(".overlay").css("display", "none");
+    window.location.reload()
+  }
 });
 
     $(".closeBtn").on("click", (e)=>{
@@ -576,6 +578,147 @@ $(".overlay").css("display", "none");
 })
 
 
+window.onload = function() {
+  
+OrderDetails.forEach((order)=>{
+  $("#pendingOrdersContainer").prepend(`
+        <div class="pendingOrders" id="${order.OrderNo}">
+        <div class="tableName"  style="background-color: ${order.TableColor}">
+        <h2>${order.Table}</h2>
+      </div>
+      <div class="leftSideInfoContainer">
+      <div class="waiterNamAndStatus">
+          <div class="waiterName">
+            <h3>${order.Waiter}</h3>
+          </div>
+            <div class="status">
+              <h4>Pending</h4>
+            </div>
+        </div>
+            <div class="itemCount">
+              <h4>${order.Items.length} Items</h4>
+            </div>
+          </div>
+        </div>
+        `);  
+      })
+}
+
+$(document).on("click", ".pendingOrders", (e) => {
+  let clickedOrderNo = e.target.closest(".pendingOrders").id;
+  let selectedOrderIndex = OrderDetails.findIndex((order) => order.OrderNo === clickedOrderNo);
+  let selectedOrder = OrderDetails[selectedOrderIndex];
+  let selectedTableNo = selectedOrder.Table;
+  let selectedTableColor = selectedOrder.TableColor;
+  
+  // Check if order is already selected
+  const existingCartItem = cartContainer.id;
+  
+   if (existingCartItem) {
+      alert("Already Selected")
+      return
+   }
+    cartContainer.html("")
+
+  // Add item to cart on click
+  selectedOrder.Items.forEach((item) => {
+    const itemId = item.id
+    const itemName = item.name
+    const itemPrice = item.price
+    const itemQty = item.qty
+
+      // Add new item to the cart
+      const cartItem = `
+        <div class="cart-items" id="${itemId}">
+          <h4 class="cart-items-qty">${itemQty}</h4>
+         <div class="cart-price-name-container">
+            <h3 class="cart-items-name">${itemName}</h3>
+            <h4 class="cart-items-price">${itemPrice}</h4>
+          </div>
+          <i class="ri-delete-back-2-fill"></i>
+        </div>
+      `;
+      cartContainer.append(cartItem)
+
+      // Update selected items array
+      updateSelectedItemsArray();
+});
+  
+  $(".placeOrder-btn").css("display" , "none")
+  $(".dropdown-menu").prepend(`<a class="updateOrder-btn" href="#">Update Order</a>`)
+  $(".updateOrder-btn").on("click" ,()=>{
+    updateSelectedItemsArray();
+    OrderDetails[selectedOrderIndex].Items = selectedItems
+    localStorage.setItem("OrderDetails", JSON.stringify(OrderDetails));
+    window.location.reload()
+  })
+
+    // Recalculate subtotal and update return cash
+    calulateInvoice();
+    updateReturnCash();
+    $(".discard-order-btn").on("click" , ()=>{
+      cartContainer.id =""  
+      $(".OrderRecall").css("display" , "none")
+      $(".placeOrder-btn").css("display" , "block")
+      $(".updateOrder-btn").css("display" , "none")
+    })
+    if ($(".cart-items-container").children().length === 0) {
+      cartContainer.id =""  
+      $(".OrderRecall").css("display" , "none")
+    }
+
+      $(".rightSidePanel").prepend(`
+        <div class="OrderRecall">
+          <h3 class="recallHeadings" id="orderNoHeading">Order# ${clickedOrderNo}</h3>
+          <div class="tableHeading">
+              <i class="ri-edit-2-fill" id="tableEditIcon"></i>
+              <h3 class="recallHeadings" id="tableNameHeading">Table: ${selectedTableNo}</h3>
+          </div>
+        </div>
+      `)
+      $(".tableHeading").css("color" , `${selectedTableColor}`)
+    
+      cartContainer.id = clickedOrderNo
+      // $("#tableEditIcon").on("click", ()=>{
+      //   console.log("Hi");
+        
+      // //   $(".overlay").css("display" , "flex").html(`
+      // //     <div class="popup">
+      // //     <div class="closeBtn"><i class="ri-close-line"></i></div>
+      // //         <h2>Change Waiter</h2>
+      // //         <div class="buttons-container">
+      // //             <button class="waiterButton" id="w1">Waiter 1</button>
+      // //             <button class="waiterButton" id="w2">Waiter 2</button>
+      // //             <button class="waiterButton" id="w3">Waiter 3</button>
+      // //             <button class="waiterButton" id="w4">Waiter 4</button>
+      // //         </div>
+      // //         <h2>Change Table</h2>
+      // //         <div class="buttons-container">
+      // //             <button class="tableButton" id="T1">Table 1</button>
+      // //             <button class="tableButton" id="T2">Table 2</button>
+      // //             <button class="tableButton" id="T3">Table 3</button>
+      // //             <button class="tableButton" id="T4">Table 4</button>
+      // //             <button class="tableButton" id="T5">Table 5</button>
+      // //             <button class="tableButton" id="T6">Table 6</button>
+      // //             <button class="tableButton" id="T7">Table 7</button>
+      // //             <button class="tableButton" id="T8">Table 8</button>
+      // //             <button class="tableButton" id="T9">Table 9</button>
+      // //             <button class="tableButton" id="T10">Table 10</button>
+      // //             <button class="tableButton" id="T11">Table 11</button>
+      // //             <button class="tableButton" id="T12">Table 12</button>
+      // //         </div>
+      // //         <button class="submit-button" id="T12">Update</button>
+      // //     </div>`
+      // // );
+      // // if (OrderDetails) {    
+      // //   $(".tableButton").filter((index, table) => OrderDetails.some(o => o.Table === table.id)).addClass("disabled");
+        
+      // // }
+      
+      // })
+
+      
+});
 
 
 // Handle payment method selection

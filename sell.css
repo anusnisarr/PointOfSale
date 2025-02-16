@@ -281,6 +281,7 @@ outline: none;
     overflow: hidden;
     transition: color 0.8s cubic-bezier(0.8, 0, 0.7, 1), background-color 0.3s ease;
     animation: fadeDown 0.5s ease-in-out;
+    
 
 
 }
@@ -290,6 +291,7 @@ outline: none;
         opacity: 0;
         transform: translateY(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -299,6 +301,13 @@ outline: none;
 .items:hover {
     background-color: #616161;
 }
+
+/* Click Animation */
+.items:active {
+    transform: scale(0.95); /* Rotate the top side backward */
+    transition: transform 0.2s ease; /* Quick transition for the click effect */
+}
+
 .items::before {
     content: "";
     position: absolute;
@@ -396,6 +405,12 @@ outline: none;
     height: 36px;
     width: 214px;
     border-right: 0.9px solid #ffffff4f;
+    cursor : pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.pendingOrders:hover{
+    transform: scale(1.1);
 }
 
 .tableName{
@@ -480,6 +495,34 @@ outline: none;
     gap: 16px;
 }
 
+
+.OrderRecall {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #303134;
+    width: 100%;
+    border-radius: 8px 8px 0px 0px;
+    padding: 8px;
+    height: 60px;
+    margin-bottom: 16px;
+}
+.tableHeading{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#tableEditIcon{
+    color: #4caf50;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.recallHeadings{
+    font-size: 0.91em;
+    /* font-weight: bold; */
+}
 .cart-items {
     display: flex;
     align-items: center;
@@ -487,7 +530,7 @@ outline: none;
     background-color: #303134;
     width: 100%;
     border-radius: 8px;
-    padding: 8px;
+    padding: 8px; 
 }
 
 .cart-items-qty {
@@ -740,8 +783,6 @@ outline: none;
     pointer-events: none; /* Disable click events */
     opacity: 0.7; /* Make the button look faded */
 }
-
-
 
 /* Submit Button Styling */
 .submit-button {

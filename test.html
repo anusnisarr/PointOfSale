@@ -4,80 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS More Options</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .options-container {
-            position: relative;
-            display: inline-block;
-        }
-        .options-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: #333;
-            color: white;
-            min-width: 160px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            padding: 10px 0;
-        }
-        .dropdown-menu a {
-            color: white;
-            padding: 10px 15px;
-            display: block;
-            text-decoration: none;
-        }
-        .dropdown-menu a:hover {
-            background-color: #575757;
-        }
-        .submenu {
-            display: none;
-            background-color: #444;
-            margin-left: 10px;
-        }
-        .dropdown-menu a.dine-in:hover + .submenu,
-        .submenu:hover {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="test.css">
 </head>
 <body>
-    <div class="options-container">
-        <button class="options-button" onclick="toggleDropdown()">More Options</button>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <a href="#">Make Order</a>
-            <a href="#">Send to Kitchen</a>
-            <a href="#">Double Print</a>
-            <a href="#">Direct Pay</a>
-            <a href="#" class="dine-in">Takeaway / Dine-In ▸</a>
-            <div class="submenu">
-                <a href="#">Takeaway</a>
-                <a href="#">Dine-In</a>
+    <div class="kds-screen">
+        <h1>Kitchen Display System</h1>
+        <div class="order-cards-container">
+            <!-- Order Card 1 -->
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-number">Order #101</span>
+                    <span class="order-time">10:15 AM</span>
+                </div>
+                <div class="order-details">
+                    <p><strong>Waiter:</strong> Waiter 3</p>
+                    <p><strong>Table:</strong> Table 5</p>
+                    <p><strong>Items:</strong></p>
+                    <ul class="items-list">
+                        <li>2x Burger</li>
+                        <li>1x Fries</li>
+                        <li>1x Coke</li>
+                    </ul>
+                </div>
+                <button class="complete-button">Mark as Prepared</button>
             </div>
+    
+            <!-- Order Card 2 -->
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-number">Order #102</span>
+                    <span class="order-time">10:20 AM</span>
+                </div>
+                <div class="order-details">
+                    <p><strong>Waiter:</strong> Waiter 1</p>
+                    <p><strong>Table:</strong> Table 2</p>
+                    <p><strong>Items:</strong></p>
+                    <ul class="items-list">
+                        <li>1x Pizza</li>
+                        <li>2x Garlic Bread</li>
+                        <li>1x Water</li>
+                    </ul>
+                </div>
+                <button class="complete-button">Mark as Prepared</button>
+            </div>
+    
+            <!-- Add more order cards as needed -->
         </div>
     </div>
-
-    <script>
-        function toggleDropdown() {
-            let menu = document.getElementById("dropdownMenu");
-            menu.style.display = (menu.style.display === "block") ? "none" : "block";
-        }
-
-        document.addEventListener("click", function(event) {
-            let menu = document.getElementById("dropdownMenu");
-            let button = document.querySelector(".options-button");
-            if (!button.contains(event.target) && !menu.contains(event.target)) {
-                menu.style.display = "none";
-            }
-        });
-    </script>
+<script src="test.js"></script>
 </body>
 </html>
